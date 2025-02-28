@@ -1,0 +1,29 @@
+[project]
+name = "tts-data-pipeline"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.28.1",
+    "loguru>=0.7.3",
+    "pandas>=2.2.3",
+    "pip>=25.0.1",
+    "requests>=2.32.3",
+    "selectolax>=0.3.28",
+    "setuptools>=75.8.2",
+    "tqdm>=4.67.1",
+    "wheel>=0.45.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.8",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
