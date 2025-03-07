@@ -6,8 +6,8 @@ import aiofiles
 import httpx
 from tqdm.asyncio import tqdm
 
-from pipeline import utils
-from pipeline.utils import audio, text
+from tts_data_pipeline import utils, constants
+from rich import print
 
 
 async def fetch_download_audio_url(book_url: str) -> List[str]:
@@ -65,7 +65,7 @@ async def download_text(url: str, file_path: str):
         response = await client.get(url)
         response.raise_for_status()
 
-        total_size = int(response.headers.get("content-length", 0))
+        total_size = int(response.headers.get("Content-Length", 0))
 
         async with (
             aiofiles.open(file_path, "wb") as file,
@@ -103,24 +103,33 @@ async def main():
     """
     Main function to get all audiobook URLs and download them.
     """
-    os.makedirs(audio.SAVEPATH, exist_ok=True)
-    all_audio_urls = await audio.get_all_audiobook_url()
-    all_audio_names = [await audio.get_book_name(url) for url in all_audio_urls]
+    os.makedirs(constants.AUDIO_SAVEPATH, exist_ok=True)
+
+    print("Getting all audiobook URLs and names")
+    all_audio_urls = await utils.audio.get_all_audiobook_url()
+    print(f"Found {len(all_audio_urls)} audiobooks")
 
     # Save all audiobook's URLs
-    async with aiofiles.open("../../data/all_urls.txt", "w") as f:
-        await f.write("\n".join(all_audio_urls))
+    print(f"Saving all audiobook URLs to {constants.ALL_AUDIOBOOK_URLS_SAVEPATH} file")
+    async with aiofiles.open(constants.ALL_AUDIOBOOK_URLS_SAVEPATH, "w") as f:
+        for url in all_audio_urls:
+            await f.write(url + "\n")
 
     # Filter books that exist in text source
     audio_urls = [
         url
-        for url, name in zip(all_audio_urls, all_audio_names)
-        if await text.check_exists(name)
+        for url in all_audio_urls
+        if await utils.text.check_exists(url.split("/")[-1])
     ]
-    print(f"Found {len(audio_urls)} audiobooks to download")
+    print(
+        f"After checking the existence of the book in the text source, found {len(audio_urls)} audiobooks to download"
+    )
 
     # Get metadata for each book
-    text_urls = [text.TEXT_BASE_URL + url.split("/")[-1] for url in audio_urls]
+    print(
+        f"Getting metadata for each book and save it to JSON file in {constants.METADATA_SAVEPATH}"
+    )
+    text_urls = [constants.TEXT_BASE_URL + url.split("/")[-1] for url in audio_urls]
     await asyncio.gather(
         *[
             utils.get_metadata(text_url, audio_url, save=True)
@@ -131,11 +140,11 @@ async def main():
     )
 
     # Download books concurrently
+    print("Downloading books concurrently")
     await asyncio.gather(
         *(
-            download_full_book(audio_url, text_url, audio.SAVEPATH)
+            download_full_book(audio_url, text_url, constants.SAVEPATH)
             for audio_url, text_url in zip(audio_urls, text_urls)
         )
     )
-
     print("Download complete!")

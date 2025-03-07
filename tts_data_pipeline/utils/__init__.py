@@ -1,12 +1,10 @@
-import asyncio
 import json
 import os
-from typing import Dict, List, Tuple
+from typing import Dict
 
 import httpx
-import requests
 from selectolax.parser import HTMLParser
-from tqdm import tqdm
+from . import audio, text
 
 
 async def get_web_content(url: str) -> HTMLParser:
@@ -19,7 +17,7 @@ async def get_web_content(url: str) -> HTMLParser:
     Returns:
         HTMLParser: Parsed HTML content.
     """
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30) as client:
         response = await client.get(url)
         response.raise_for_status()
         return HTMLParser(response.text)

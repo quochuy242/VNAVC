@@ -1,12 +1,17 @@
 import httpx
+import string
 
-SAVEPATH = "../../data/text/"
-TEXT_BASE_URL = "https://tiemsach.org/"
+from tts_data_pipeline import constants
+
+
+def remove_punctuations(sentence: str):
+    translator = str.maketrans("", "", string.punctuation)
+    return sentence.translate(translator)
 
 
 async def check_exists(name: str) -> bool:
     """Check if a book exists in the text source."""
-    url = TEXT_BASE_URL + name.replace(" ", "-").lower()
+    url = constants.TEXT_BASE_URL + name
 
     async with httpx.AsyncClient() as client:
         response = await client.get(url)

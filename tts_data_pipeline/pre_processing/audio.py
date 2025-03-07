@@ -1,12 +1,15 @@
+import contextlib
 import os
 import shutil
-from tqdm import tqdm
-from pydub import AudioSegment
 import wave
-import contextlib
+
+from pydub import AudioSegment
+from tqdm import tqdm
+
+from tts_data_pipeline import constants
 
 
-def convert_mp3_to_wav(mp3_path: str, wav_path: str):
+def convert_mp3_to_wav(mp3_path: str, wav_path: str) -> bool:
     """
     Convert an MP3 file to WAV format
 
@@ -46,7 +49,7 @@ def process_audio_files(
     mp3_dir: str,
     qualified_dir: str,
     unqualified_dir: str,
-    min_sample_rate: int = 24000,
+    min_sample_rate: int = constants.MIN_SAMPLE_RATE,
 ):
     """
     Process all MP3 files in a directory:
@@ -77,7 +80,9 @@ def process_audio_files(
     # Process each MP3 file with progress bar
     for mp3_file in tqdm(mp3_files, desc="Processing audio files"):
         mp3_path = os.path.join(mp3_dir, mp3_file)
-        wav_filename = os.path.splitext(mp3_file)[0] + ".wav"
+        wav_filename = (
+            os.path.splitext(mp3_file)[0] + ".wav"
+        )  # Change extension to .wav
         wav_path = os.path.join(qualified_dir, wav_filename)
 
         # Convert MP3 to WAV
@@ -95,6 +100,7 @@ def process_audio_files(
                     )
                     unqualified_count += 1
                 else:
+                    # Move to qualified directory
                     print(f"Qualified: {wav_filename} (sample rate: {sample_rate} Hz)")
                     qualified_count += 1
 

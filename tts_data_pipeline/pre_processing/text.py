@@ -1,9 +1,15 @@
-import os
-import re
 import glob
-from tqdm import tqdm
+import os
+
 import pypdf
 import underthesea
+from tqdm import tqdm
+
+
+# TODO: Build a custom Semiotic Normaliztion to normalize Vietnamese number, currency, address, date, etc.
+class ViSemioticNorm:
+    def __init__(self):
+        pass
 
 
 def convert_pdf_to_text(pdf_path: str):
@@ -32,20 +38,23 @@ def convert_pdf_to_text(pdf_path: str):
         return ""
 
 
-def normalize_sentence(sentence: str):
+def process_sentence(sentence: str) -> str:
     """
-    Normalize a sentence by removing extra spaces, normalizing whitespace,
-    and other text cleaning operations.
+    Process a sentence by removing leading and trailing spaces,
+    removing punctuation, normalizing, and converting to uppercase.
 
     Args:
-        sentence (str): Input sentence
+        sentence (str): Sentence to process
 
     Returns:
-        str: Normalized sentence
+        str: Processed sentence
     """
-    sentence = sentence.strip()
-    sentence = re.sub(r"\s+", " ", sentence)
-    sentence = underthesea.normalize(sentence)
+    from tts_data_pipeline import utils
+
+    sentence = sentence.strip()  # remove leading and trailing spaces
+    sentence = utils.text.remove_punctuations(sentence)  # remove punctuation
+    sentence = underthesea.normalize(sentence)  # Normalize sentence (NFC)
+    sentence = sentence.upper()  # convert to uppercase
     return sentence
 
 
@@ -81,7 +90,7 @@ def process_pdfs(pdf_dir: str, output_dir: str):
             sentences = underthesea.sent_tokenize(text)
 
             # Normalize each sentence
-            normalized_sentences = [normalize_sentence(sent) for sent in sentences]
+            normalized_sentences = [process_sentence(sent) for sent in sentences]
 
             # Filter out empty sentences
             normalized_sentences = [sent for sent in normalized_sentences if sent]

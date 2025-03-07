@@ -14,6 +14,7 @@ dependencies = [
     "pydub>=0.25.1",
     "pypdf>=5.3.1",
     "requests>=2.32.3",
+    "rich>=13.9.4",
     "selectolax>=0.3.28",
     "setuptools>=75.8.2",
     "tqdm>=4.67.1",
@@ -27,8 +28,9 @@ dev = [
 ]
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["pipeline"]
+include = ["tts_data_pipeline"]
+exclude = ["tests"]
