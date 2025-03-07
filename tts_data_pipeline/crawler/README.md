@@ -17,8 +17,15 @@ The crawler is designed for Text-to-Speech (TTS) applications. It offers an effi
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/yourusername/tts-data-pipeline.git
+# Clone the repository
+git clone https://github.com/quochuy242/tts-data-pipeline.git
 cd tts-data-pipeline
+
+# Activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 

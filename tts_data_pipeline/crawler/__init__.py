@@ -105,6 +105,7 @@ async def main():
     """
     os.makedirs(constants.AUDIO_SAVEPATH, exist_ok=True)
 
+    # Get all audiobook URLs
     print("Getting all audiobook URLs and names")
     all_audio_urls = await utils.audio.get_all_audiobook_url()
     print(f"Found {len(all_audio_urls)} audiobooks")
@@ -118,7 +119,7 @@ async def main():
     # Filter books that exist in text source
     audio_urls = [
         url
-        for url in all_audio_urls
+        for url in tqdm(all_audio_urls, desc="Checking existence from text source")
         if await utils.text.check_exists(url.split("/")[-1])
     ]
     print(
