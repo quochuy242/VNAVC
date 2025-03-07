@@ -1,12 +1,5 @@
 import asyncio
-import json
-import os
-from typing import Dict, List, Tuple
-
-import httpx
-import requests
-from selectolax.parser import HTMLParser
-from tqdm import tqdm
+from typing import List
 
 from pipeline import utils
 

@@ -1,13 +1,4 @@
-import asyncio
-import json
-import os
-from typing import Dict
-
-import aiofiles
 import httpx
-from tqdm.asyncio import tqdm
-
-from pipeline import utils
 
 SAVEPATH = "../../data/text/"
 TEXT_BASE_URL = "https://tiemsach.org/"
