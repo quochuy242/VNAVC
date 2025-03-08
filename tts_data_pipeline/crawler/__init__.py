@@ -4,10 +4,10 @@ from typing import List
 
 import aiofiles
 import httpx
+from rich import print
 from tqdm.asyncio import tqdm
 
-from tts_data_pipeline import utils, constants
-from rich import print
+from tts_data_pipeline import constants, utils
 
 
 async def fetch_download_audio_url(book_url: str) -> List[str]:
@@ -82,19 +82,21 @@ async def download_text(url: str, file_path: str):
                 progress.update(len(chunk))
 
 
-async def download_full_book(audio_url: str, text_url: str, save_path: str):
+async def download_full_book(
+    audio_url: str, text_url: str, audio_savepath: str, text_savepath: str
+):
     """Fetch download URLs and download all audio parts of a book."""
     book_name = audio_url.split("/")[-1]
     audio_download_urls = await fetch_download_audio_url(audio_url)
     text_download_url = await fetch_download_text_url(text_url)
 
     tasks = []
-    text_path = os.path.join(save_path, f"{book_name}.pdf")
+    text_path = os.path.join(text_savepath, f"{book_name}.pdf")
     tasks.append(download_text(text_download_url, text_path))
 
     for idx, url in enumerate(audio_download_urls):
-        audio_path = os.path.join(save_path, f"{book_name}_{idx}.mp3")
-        tasks.append(download_audio(audio_url, audio_path))
+        audio_path = os.path.join(audio_savepath, f"{book_name}_{idx}.mp3")
+        tasks.append(download_audio(url, audio_path))
 
     await asyncio.gather(*tasks)
 
@@ -123,7 +125,8 @@ async def main():
         if await utils.text.check_exists(url.split("/")[-1])
     ]
     print(
-        f"After checking the existence of the book in the text source, found {len(audio_urls)} audiobooks to download"
+        f"""After checking the existence of the book in the text source,
+        found {len(audio_urls)} audiobooks to download"""
     )
 
     # Get metadata for each book
@@ -144,7 +147,9 @@ async def main():
     print("Downloading books concurrently")
     await asyncio.gather(
         *(
-            download_full_book(audio_url, text_url, constants.SAVEPATH)
+            download_full_book(
+                audio_url, text_url, constants.AUDIO_SAVEPATH, constants.TEXT_SAVEPATH
+            )
             for audio_url, text_url in zip(audio_urls, text_urls)
         )
     )
