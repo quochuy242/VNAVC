@@ -12,6 +12,7 @@ TEXT_SAVE_PATH = "./data/text/"
 AUDIO_CATEGORY_URL = "https://sachnoiviet.net/danh-muc-sach/"
 TEXT_BASE_URL = "https://thuviensachpdf.com/"
 TEXT_DOWNLOAD_URL = "https://cloud.thuviensachpdf.com/pdf/vi/"
+NARRATOR_DOWNLOAD_URL = "https://docs.google.com/spreadsheets/d/1kaZ4PRYq_JvJAwWJN89Gcw_BuWHUogvDA43IZOd6MbE/edit?gid=0#gid=0"
 
 # Crawler config
 USER_AGENTS = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"

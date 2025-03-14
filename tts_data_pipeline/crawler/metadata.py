@@ -7,11 +7,11 @@ from typing import List, Optional
 import httpx
 import pandas as pd
 from tqdm.asyncio import tqdm
+import requests
 
 from tts_data_pipeline import constants, Book, Narrator, convert_duration
 from tts_data_pipeline.crawler import utils
 from tts_data_pipeline.crawler.utils import logger
-
 
 async def get_book_metadata(
   text_url: str, audio_url: str, semaphore: asyncio.Semaphore, save_path: str = ""
@@ -147,6 +147,17 @@ def convert_metadata_to_csv():
     logger.info("No metadata files were processed.")
 
 
-# TODO: Get metadata for each narrator from google sheet file
 def get_narrator_metadata():
-  pass
+  """
+  Get metadata for each narrator from google sheet file.
+  """
+  os.makedirs(os.path.dirname(constants.METADATA_NARRATOR_PATH), exist_ok=True)
+
+  response = requests.get(constants.NARRATOR_DOWNLOAD_URL)
+  if response.status_code != 200:
+      raise Exception(f"Error: {response.status_code}")
+
+  with open(constants.METADATA_NARRATOR_PATH, "wb") as f:
+      f.write(response.content)
+
+  return pd.read_csv(constants.METADATA_NARRATOR_PATH)
