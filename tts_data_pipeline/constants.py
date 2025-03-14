@@ -7,13 +7,13 @@ TEXT_SAVE_PATH = "./data/text/"
 
 # Base url
 AUDIO_CATEGORY_URL = "https://sachnoiviet.net/danh-muc-sach/"
-# TEXT_BASE_URL = "https://tiemsach.org/"
-TEXT_DOWNLOAD_URL = lambda x: f"https://cloud.thuviensachpdf.com/pdf/vi/{x}.pdf"
+TEXT_BASE_URL = "https://thuviensachpdf.com/"
+TEXT_DOWNLOAD_URL = "https://cloud.thuviensachpdf.com/pdf/vi/"
 
 # Crawler config
 USER_AGENTS = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-FETCH_METADATA_LIMIT = 10
-DOWNLOAD_BOOK_LIMIT = 5
+FETCH_METADATA_LIMIT = 20
+DOWNLOAD_BOOK_LIMIT = 10
 
 # Pre-processing config
 MIN_SAMPLE_RATE = 24000
