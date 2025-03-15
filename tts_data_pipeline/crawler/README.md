@@ -31,16 +31,41 @@ pip install -r requirements.txt
 
 ## Usage
 
-```bash
-python3 -m tts_data_pipeline.crawler
+This script provides an asynchronous pipeline to download audiobooks, fetch metadata, and process the data efficiently.
+
+### Command Line Options
+
+Run the script with various options to control the workflow:
+
+```
+$ python3 -m tts_data_pipeline.crawler --help
+
+usage: __main__.py [-h] [--save-urls] [--fetch-metadata] [--convert-metadata] [--download-books]
+
+Audiobook Download Pipeline
+
+options:
+  -h, --help          show this help message and exit
+  --save-urls         Saving all audiobook URLs to a file
+  --fetch-metadata    Fetch metadata for each book
+  --convert-metadata  Convert metadata to CSV
+  --download-books    Download books
 ```
 
-The pipeline performs the following steps:
+You can combine multiple operations in a single command:
 
-1. Fetches all audiobook URLs and their names
-2. Filters books to ensure they exist in the text source
-3. Collects and saves metadata for each book
-4. Downloads audio files and corresponding text files concurrently
+```bash
+python3 -m tts_data_pipeline.crawler --save-urls --fetch-metadata --convert-metadata --download-books
+```
+
+### Expected Output
+
+- Audiobook URLs are stored in the specified path.
+- Metadata is saved in JSON format.
+- Converted metadata is available as a CSV file.
+- Audiobooks are downloaded and stored in the appropriate directories.
+
+For troubleshooting or additional configurations, check the `constants.py` file.
 
 ## Contributing
 
