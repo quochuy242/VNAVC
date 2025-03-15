@@ -19,10 +19,12 @@ DOWNLOAD_BOOK_LIMIT = 10
 MIN_SAMPLE_RATE = 24000
 
 # Pre-processing saving path
-SENTENCE_DIR = "./data/text/sentences/"
-PDF_DIR = "./data/text/pdf/"
-RAW_DIR = "./data/audio/raw/"
-QUALIFIED_DIR = "./data/audio/qualified/"
-UNQUALIFIED_DIR = "./data/audio/unqualified/"
+TEXT_SENTENCE_DIR = "./data/text/sentences/"
+TEXT_PDF_DIR = "./data/text/pdf/"
+TEXT_TXT_DIR = "./data/text/txt/"
+AUDIO_RAW_DIR = "./data/audio/raw/"
+AUDIO_QUALIFIED_DIR = "./data/audio/qualified/"
+AUDIO_UNQUALIFIED_DIR = "./data/audio/unqualified/"
 METADATA_BOOK_PATH = "./data/metadata/metadata_book.csv"
 METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
+PROCESSED_METADATA_PATH = "./data/metadata/processed/"

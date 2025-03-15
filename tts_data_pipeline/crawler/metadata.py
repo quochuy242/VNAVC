@@ -89,6 +89,14 @@ def convert_metadata_to_csv():
     """
     Reads JSON metadata files, saves all metadata to a single file as CSV.
     """
+
+    def process_df(df: pd.DataFrame) -> pd.DataFrame:
+        # Convert duration to hours
+        df["duration_hour"] = df["duration"].apply(convert_duration, unit="hour")
+        # Remove the tvshow
+        df = df[~df["audio_url"].str.contains("tvshows", na=False)]
+        return df
+
     metadata_path = Path(constants.METADATA_SAVE_PATH)
 
     # Create the output directory if it doesn't exist
@@ -101,14 +109,7 @@ def convert_metadata_to_csv():
     for json_file in json_files:
         with open(json_file, "r", encoding="utf-8") as f:
             try:
-                # Load JSON data
                 data = json.load(f)
-
-                # Convert duration to hours
-                if "duration" in data and isinstance(data["duration"], str):
-                    data["duration_hours"] = convert_duration(data["duration"], "hour")
-
-                # Append to the list
                 all_metadata.append(data)
             except json.JSONDecodeError:
                 print(f"Error parsing JSON file: {json_file}")
@@ -116,6 +117,7 @@ def convert_metadata_to_csv():
     # Convert to DataFrame
     if all_metadata:
         df = pd.DataFrame(all_metadata)
+        df = process_df(df)
 
         # Save the combined metadata as CSV
         df.to_csv(constants.METADATA_BOOK_PATH, index=True)

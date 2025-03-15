@@ -56,10 +56,8 @@ def process_sentence(sentence: str) -> str:
     Returns:
         str: Processed sentence
     """
-    from tts_data_pipeline import utils
-
     sentence = sentence.strip()  # remove leading and trailing spaces
-    sentence = utils.text.remove_punctuations(sentence)  # remove punctuation
+    sentence = remove_punctuations(sentence)  # remove punctuation
     sentence = underthesea.normalize(sentence)  # Normalize sentence (NFC)
     sentence = sentence.upper()  # convert to uppercase
     return sentence
