@@ -5,7 +5,7 @@ from tts_data_pipeline import constants
 from . import utils
 
 
-async def download_by_cli(url: str, directory: str):
+async def download_by_cli(url: str, directory: str, filename: str = None):
     """
     Download file using wget
 
@@ -15,9 +15,14 @@ async def download_by_cli(url: str, directory: str):
     """
     os.makedirs(directory, exist_ok=True)
 
-    # Configure wget command
+    if filename:
+        ext = os.path.splitext(url.split("/")[-1])[1]
+        save_path = os.path.join(directory, filename + ext)
+    else:
+        save_path = os.path.join(directory, url.split("/")[-1])
 
-    cmd = f'wget {url} -q --user-agent "{constants.USER_AGENTS}" -O {directory}{url.split("/")[-1]}'
+    # Configure wget command
+    cmd = f'wget {url} -q --user-agent "{constants.USER_AGENTS}" -O {save_path}'
 
     # Start the process
     process = await asyncio.create_subprocess_shell(
@@ -45,12 +50,19 @@ async def download_full_book(
         audio_save_path (str): The file path to save the downloaded audio file.
         text_save_path (str): The file path to save the downloaded text file.
     """
+    name_book = text_url.split("/")[-1].split(".")[0]
     try:
         # Each downloading URL of audio is the part of the book. Contrast, the text one is a book
         audio_download_urls = await utils.fetch_download_audio_url(audio_url)
 
-        tasks = [download_by_cli(url, audio_save_path) for url in audio_download_urls]
-        tasks.append(download_by_cli(text_url, text_save_path))
+        # Download audio
+        tasks = [
+            download_by_cli(url, audio_save_path, filename=f"{name_book}_{idx}")
+            for idx, url in enumerate(audio_download_urls, start=1)
+        ]
+
+        # Download text
+        tasks.append(download_by_cli(text_url, text_save_path, filename=name_book))
 
         await asyncio.gather(*tasks)
     except httpx.HTTPStatusError:

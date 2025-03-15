@@ -38,11 +38,6 @@ async def main():
         async with aiofiles.open(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH, "r") as f:
             audio_urls = (await f.read()).splitlines()
 
-    # Get text URLs from valid audio URLs
-    text_download_urls = [
-        await utils.get_text_download_url(url.split("/")[-1]) for url in audio_urls
-    ]
-
     # Get metadata for each book
     # text_urls = [f"{constants.TEXT_BASE_URL}{url.split('/')[-1]}" for url in audio_urls]
     # print(
@@ -66,6 +61,17 @@ async def main():
     # ):
     #     await task
 
+    # Prepare book metadata
+    if not os.path.exists(constants.METADATA_BOOK_PATH):
+        await asyncio.to_thread(metadata.convert_metadata_to_csv)
+
+    # Get text URLs from valid audio URLs
+    valid_audio_urls = await asyncio.to_thread(metadata.get_valid_audio_urls)
+    text_download_urls = [
+        await utils.get_text_download_url(url.split("/")[-1])
+        for url in valid_audio_urls
+    ]
+
     # Download books with limited concurrency
     print("Downloading books concurrently")
     download_semaphore = asyncio.Semaphore(
@@ -79,7 +85,7 @@ async def main():
             text_save_path=constants.PDF_DIR,
             download_semaphore=download_semaphore,
         )
-        for audio_url, text_url in zip(audio_urls, text_download_urls)
+        for audio_url, text_url in zip(valid_audio_urls, text_download_urls)
     ]
     for task in tqdm(
         asyncio.as_completed(download_tasks),

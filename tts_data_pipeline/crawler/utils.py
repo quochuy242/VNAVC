@@ -1,8 +1,8 @@
 import asyncio
-
 from typing import List, Tuple
 
 import httpx
+from playwright.async_api import async_playwright
 from selectolax.parser import HTMLParser
 
 from tts_data_pipeline import constants
@@ -86,6 +86,16 @@ async def get_all_audiobook_url() -> Tuple[List[str]]:
 
 
 async def fetch_download_audio_url(book_url: str) -> List[str]:
-    """Fetch all download URLs for a given book."""
-    parser = await get_web_content(book_url)
-    return [node.attributes.get("href") for node in parser.css("a.ai-track-btn")]
+    """Fetch all download URLs for a given book using Playwright."""
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        await page.goto(book_url)
+
+        # Lấy tất cả các link có class 'ai-track-btn'
+        mp3_links = await page.locator("a.ai-track-btn").evaluate_all(
+            "elements => elements.map(el => el.href)"
+        )
+
+        await browser.close()
+        return mp3_links

@@ -2,7 +2,7 @@
 AUDIO_SAVE_PATH = "./data/audio/"
 ALL_AUDIOBOOK_URLS_SAVE_PATH = "./data/all_audiobook_urls.txt"
 TEXT_BOOK_URLS_SAVE_PATH = "./data/text_book_urls.txt"
-METADATA_SAVE_PATH = "./data/metadata/"
+METADATA_SAVE_PATH = "./data/metadata/book/"
 TEXT_SAVE_PATH = "./data/text/"
 
 # Base url
@@ -24,3 +24,5 @@ PDF_DIR = "./data/text/pdf/"
 RAW_DIR = "./data/audio/raw/"
 QUALIFIED_DIR = "./data/audio/qualified/"
 UNQUALIFIED_DIR = "./data/audio/unqualified/"
+METADATA_BOOK_PATH = "./data/metadata/metadata_book.csv"
+METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
