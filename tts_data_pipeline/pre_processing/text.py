@@ -5,6 +5,13 @@ import pypdf
 import underthesea
 from tqdm import tqdm
 
+import string
+
+
+def remove_punctuations(sentence: str):
+    translator = str.maketrans("", "", string.punctuation)
+    return sentence.translate(translator)
+
 
 # TODO: Build a custom Semiotic Normaliztion to normalize Vietnamese number, currency, address, date, etc.
 class ViSemioticNorm:
