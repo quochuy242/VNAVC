@@ -1,3 +1,7 @@
+LOG_DIR = "./logs/"
+FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+
+
 # Crawler saving path
 AUDIO_SAVE_PATH = "./data/audio/"
 ALL_AUDIOBOOK_URLS_SAVE_PATH = "./data/all_audiobook_urls.txt"

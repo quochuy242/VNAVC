@@ -2,7 +2,7 @@ import asyncio
 import json
 import os
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import httpx
 import pandas as pd
@@ -10,6 +10,7 @@ import pandas as pd
 from tts_data_pipeline import constants
 
 from . import utils
+import random as randomlib
 
 
 async def get_metadata(
@@ -33,6 +34,7 @@ async def get_metadata(
         except httpx.HTTPStatusError:
             return
 
+        title = text_parser.css_first("h1.title-detail")
         author = text_parser.css_first(
             "div.product-price span.text-brand"
         )  # The text source is more reliable than audio one
@@ -42,7 +44,7 @@ async def get_metadata(
         metadata = {
             "audio_url": audio_url,
             "text_url": text_url,
-            "title": audio_url.split("/")[-1],
+            "title": title.text(strip=True) if title else "",
             "author": author.text(strip=True) if author else "",
             "duration": duration.text(strip=True) if duration else "",
             "narrator": narrator.text(strip=True) if narrator else "",
@@ -95,6 +97,8 @@ def convert_metadata_to_csv():
         df["duration_hour"] = df["duration"].apply(convert_duration, unit="hour")
         # Remove the tvshow
         df = df[~df["audio_url"].str.contains("tvshows", na=False)]
+        # Fill NA narrators with "Unknown"
+        df["narrator"].fillna("Unknown", inplace=True)
         return df
 
     metadata_path = Path(constants.METADATA_SAVE_PATH)
@@ -120,7 +124,7 @@ def convert_metadata_to_csv():
         df = process_df(df)
 
         # Save the combined metadata as CSV
-        df.to_csv(constants.METADATA_BOOK_PATH, index=True)
+        df.to_csv(constants.METADATA_BOOK_PATH, index=False)
 
         print(
             f"Metadata processing complete. {len(all_metadata)} files processed. Saved to {constants.METADATA_BOOK_PATH}"
@@ -129,8 +133,29 @@ def convert_metadata_to_csv():
         print("No metadata files were processed.")
 
 
-def get_valid_audio_urls() -> List[str]:
+def get_valid_audio_urls(
+    query: Optional[str],
+    name: Optional[str],
+    author: Optional[str],
+    narrator: Optional[str],
+    random: int = 0,
+) -> List[str]:
     """
     Get a list of valid audio URLs from the metadata CSV file.
     """
-    return pd.read_csv(constants.METADATA_BOOK_PATH)["audio_url"].tolist()
+    df = pd.read_csv(constants.METADATA_BOOK_PATH)
+
+    if random > 0:
+        return randomlib.sample(df["audio_url"].tolist(), random)
+
+    if query == "all":
+        return df["audio_url"].tolist()
+    else:
+        mask = pd.Series([True] * len(df))
+        if name:
+            mask &= df["title"].str.contains(name, na=False)
+        if author:
+            mask &= df["author"].str.contains(author, na=False)
+        if narrator:
+            mask &= df["narrator"].str.contains(narrator, na=False)
+        return df[mask]["audio_url"].tolist()
