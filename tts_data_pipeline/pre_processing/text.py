@@ -6,6 +6,21 @@ import underthesea
 from tqdm import tqdm
 
 import string
+from tts_data_pipeline import constants
+
+from loguru import logger
+
+logger.remove()
+logger.add(
+    f"{constants.LOG_DIR}/text_processing.log",
+    level="INFO",
+    rotation="10 MB",
+    encoding="utf-8",
+    format=constants.FORMAT_LOG,
+    colorize=True,
+    diagnose=True,
+    enqueue=True,
+)
 
 
 def remove_punctuations(sentence: str):
@@ -41,7 +56,7 @@ def convert_pdf_to_text(pdf_path: str):
 
             return text
     except Exception as e:
-        print(f"Error processing {pdf_path}: {e}")
+        logger.error(f"Error processing {pdf_path}: {e}")
         return ""
 
 
@@ -56,10 +71,13 @@ def process_sentence(sentence: str) -> str:
     Returns:
         str: Processed sentence
     """
-    sentence = sentence.strip()  # remove leading and trailing spaces
-    sentence = remove_punctuations(sentence)  # remove punctuation
-    sentence = underthesea.normalize(sentence)  # Normalize sentence (NFC)
-    sentence = sentence.upper()  # convert to uppercase
+    try:
+        sentence = sentence.strip()  # remove leading and trailing spaces
+        sentence = remove_punctuations(sentence)  # remove punctuation
+        sentence = underthesea.normalize(sentence)  # Normalize sentence (NFC)
+        sentence = sentence.upper()  # convert to uppercase
+    except Exception as e:
+        logger.error(f"Error processing sentence: {e}")
     return sentence
 
 
@@ -74,7 +92,7 @@ def process_pdfs(pdf_dir: str, output_dir: str):
     """
     # Make sure the directory exists
     if not os.path.exists(pdf_dir):
-        print(f"Directory {pdf_dir} does not exist")
+        logger.warning(f"Directory {pdf_dir} does not exist")
         return
 
     # Get all PDF files in the directory
@@ -82,7 +100,7 @@ def process_pdfs(pdf_dir: str, output_dir: str):
 
     # Check if any PDF files were found
     if not pdf_files:
-        print(f"No PDF files found in {pdf_dir}")
+        logger.warning(f"No PDF files found in {pdf_dir}")
         return
 
     # Process each PDF file with progress bar
@@ -106,5 +124,5 @@ def process_pdfs(pdf_dir: str, output_dir: str):
             for sentence in normalized_sentences:
                 f.write(sentence + "\n")
 
-    print("Processing complete.")
+    logger.success("Processing complete.")
     return

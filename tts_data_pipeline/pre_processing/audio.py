@@ -8,6 +8,20 @@ from tqdm import tqdm
 
 from tts_data_pipeline import constants
 
+from loguru import logger
+
+logger.remove()
+logger.add(
+    f"{constants.LOG_DIR}/text_processing.log",
+    level="INFO",
+    rotation="10 MB",
+    encoding="utf-8",
+    format=constants.FORMAT_LOG,
+    colorize=True,
+    diagnose=True,
+    enqueue=True,
+)
+
 
 def convert_mp3_to_wav(mp3_path: str, wav_path: str) -> bool:
     """
@@ -22,7 +36,7 @@ def convert_mp3_to_wav(mp3_path: str, wav_path: str) -> bool:
         sound.export(wav_path, format="wav")
         return True
     except Exception as e:
-        print(f"Error converting {mp3_path}: {e}")
+        logger.error(f"Error converting {mp3_path}: {e}")
         return False
 
 
@@ -41,7 +55,7 @@ def get_wav_sample_rate(wav_path: str):
             sample_rate = wf.getframerate()
             return sample_rate
     except Exception as e:
-        print(f"Error getting sample rate for {wav_path}: {e}")
+        logger.error(f"Error getting sample rate for {wav_path}: {e}")
         return None
 
 
@@ -71,7 +85,7 @@ def process_audio_files(
     mp3_files = [f for f in os.listdir(mp3_dir) if f.lower().endswith(".mp3")]
 
     if not mp3_files:
-        print(f"No MP3 files found in {mp3_dir}")
+        logger.warning(f"No MP3 files found in {mp3_dir}")
         return
 
     qualified_count = 0
@@ -95,16 +109,20 @@ def process_audio_files(
                     # Move to unqualified directory
                     unqualified_path = os.path.join(unqualified_dir, wav_filename)
                     shutil.move(wav_path, unqualified_path)
-                    print(
+                    logger.warning(
                         f"Moved {wav_filename} to unqualified folder (sample rate: {sample_rate} Hz)"
                     )
                     unqualified_count += 1
                 else:
                     # Move to qualified directory
-                    print(f"Qualified: {wav_filename} (sample rate: {sample_rate} Hz)")
+                    logger.success(
+                        f"Qualified: {wav_filename} (sample rate: {sample_rate} Hz)"
+                    )
                     qualified_count += 1
 
-    print("\nProcessing complete:")
-    print(f"- Total files processed: {len(mp3_files)}")
-    print(f"- Qualified files (≥ {min_sample_rate} Hz): {qualified_count}")
-    print(f"- Unqualified files (< {min_sample_rate} Hz): {unqualified_count}")
+    logger.info(f"""
+Processing complete: \n
+- Total files processed: {len(mp3_files)}
+- Qualified files (≥ {min_sample_rate} Hz): {qualified_count}
+- Unqualified files (< {min_sample_rate} Hz): {unqualified_count}
+""")
