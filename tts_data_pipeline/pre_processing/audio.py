@@ -175,6 +175,7 @@ def process_audio_files(
     )
 
 
+# For testing
 if __name__ == "__main__":
     logger.info("Test audio processing")
 

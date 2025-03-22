@@ -1,13 +1,14 @@
 import glob
 import os
+import re
+import string
+
 import pdfplumber
 import underthesea
+from loguru import logger
 from tqdm import tqdm
 
-import string
 from tts_data_pipeline import constants
-
-from loguru import logger
 
 logger.remove()
 logger.add(
@@ -22,15 +23,60 @@ logger.add(
 )
 
 
-def remove_punctuations(sentence: str):
-    translator = str.maketrans("", "", string.punctuation)
-    return sentence.translate(translator)
-
-
-# TODO: Build a custom Semiotic Normaliztion to normalize Vietnamese number, currency, address, date, etc.
+# // TODO: Build a custom Semiotic Normaliztion to normalize Vietnamese number, currency, address, date, etc.
 class ViSemioticNorm:
     def __init__(self):
-        pass
+        # Define regex patterns
+        self.number_pattern = re.compile(
+            r"\b\d{1,3}(?:\.\d{3})*(?:,\d+)?|\b\d+(?:,\d+)?"
+        )  # e.g., 1.000, 10,5
+        self.currency_pattern = re.compile(
+            r"\b\d+(?:\.\d+)?\s?(VND|vnđ|đ|USD|$|€|¥)\b", re.IGNORECASE
+        )
+        self.date_pattern = re.compile(
+            r"\b(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})\b"
+        )  # dd/mm/yyyy or dd-mm-yyyy
+        self.address_pattern = re.compile(r"\b(Số\s\d+,\s)?(?:đường|Đường)\s[\w\s]+\b")
+
+    def normalize_number(self, text: str) -> str:
+        def replace_number(match):
+            number_str = match.group().replace(".", "").replace(",", ".")
+            return number_str  # You can convert to int/float or even to words
+
+        return self.number_pattern.sub(replace_number, text)
+
+    def normalize_currency(self, text: str) -> str:
+        def replace_currency(match):
+            value = match.group()
+            normalized = (
+                value.replace("đ", "VND").replace("vnđ", "VND").replace("$", "USD")
+            )
+            return normalized.upper()
+
+        return self.currency_pattern.sub(replace_currency, text)
+
+    def normalize_date(self, text: str) -> str:
+        def replace_date(match):
+            day, month, year = match.groups()
+            normalized = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+            return normalized
+
+        return self.date_pattern.sub(replace_date, text)
+
+    def normalize_address(self, text: str) -> str:
+        def replace_address(match):
+            addr = match.group().strip()
+            normalized = addr.title()
+            return normalized
+
+        return self.address_pattern.sub(replace_address, text)
+
+    def normalize_all(self, text: str) -> str:
+        text = self.normalize_currency(text)
+        text = self.normalize_number(text)
+        text = self.normalize_date(text)
+        text = self.normalize_address(text)
+        return text
 
 
 def convert_pdf_to_text(pdf_path: str):
@@ -45,6 +91,11 @@ def convert_pdf_to_text(pdf_path: str):
         return ""
 
 
+def remove_punctuations(sentence: str):
+    translator = str.maketrans("", "", string.punctuation)
+    return sentence.translate(translator)
+
+
 def process_sentence(sentence: str) -> str:
     """
     Process a sentence by removing leading and trailing spaces,
@@ -56,10 +107,14 @@ def process_sentence(sentence: str) -> str:
     Returns:
         str: Processed sentence
     """
+
+    semiotic_norm = ViSemioticNorm()
     try:
         sentence = sentence.strip()  # remove leading and trailing spaces
+        sentence = sentence.replace("D-", "Đ")  # special case for D- error
         sentence = remove_punctuations(sentence)  # remove punctuation
         sentence = underthesea.text_normalize(sentence)  # Normalize sentence (NFC)
+        sentence = semiotic_norm.normalize_all(sentence)
         sentence = sentence.upper()  # convert to uppercase
     except Exception as e:
         logger.error(f"Error processing sentence: {e}")
@@ -115,6 +170,7 @@ def process_pdfs(pdf_dir: str, output_dir: str):
     return
 
 
+# For testing
 if __name__ == "__main__":
     logger.info("Starting PDF text processing...")
 
