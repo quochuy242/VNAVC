@@ -1,7 +1,6 @@
 import glob
 import os
-
-import pypdf
+import pdfplumber
 import underthesea
 from tqdm import tqdm
 
@@ -17,7 +16,7 @@ logger.add(
     rotation="10 MB",
     encoding="utf-8",
     format=constants.FORMAT_LOG,
-    colorize=True,
+    colorize=False,
     diagnose=True,
     enqueue=True,
 )
@@ -35,26 +34,12 @@ class ViSemioticNorm:
 
 
 def convert_pdf_to_text(pdf_path: str):
-    """
-    Convert a PDF file to text.
-
-    Args:
-        pdf_path (str): Path to the PDF file
-
-    Returns:
-        str: Extracted text from the PDF
-    """
     try:
-        with open(pdf_path, "rb") as file:
-            reader = pypdf.PdfReader(file)
-            text = ""
-
-            # Extract text from each page
-            for page_num in range(len(reader.pages)):
-                page = reader.pages[page_num]
+        text = ""
+        with pdfplumber.open(pdf_path) as pdf:
+            for page in pdf.pages:
                 text += page.extract_text()
-
-            return text
+        return text
     except Exception as e:
         logger.error(f"Error processing {pdf_path}: {e}")
         return ""
@@ -74,7 +59,7 @@ def process_sentence(sentence: str) -> str:
     try:
         sentence = sentence.strip()  # remove leading and trailing spaces
         sentence = remove_punctuations(sentence)  # remove punctuation
-        sentence = underthesea.normalize(sentence)  # Normalize sentence (NFC)
+        sentence = underthesea.text_normalize(sentence)  # Normalize sentence (NFC)
         sentence = sentence.upper()  # convert to uppercase
     except Exception as e:
         logger.error(f"Error processing sentence: {e}")
@@ -119,10 +104,23 @@ def process_pdfs(pdf_dir: str, output_dir: str):
             normalized_sentences = [sent for sent in normalized_sentences if sent]
 
         # Save all sentences to output file with progress bar
-        output_file = os.path.join(output_dir, os.path.basename(pdf_file) + ".txt")
+        output_file = os.path.join(
+            output_dir, os.path.basename(pdf_file).replace("pdf", "txt")
+        )
         with open(output_file, "w", encoding="utf-8") as f:
             for sentence in normalized_sentences:
                 f.write(sentence + "\n")
 
     logger.success("Processing complete.")
     return
+
+
+if __name__ == "__main__":
+    logger.info("Starting PDF text processing...")
+
+    process_pdfs(
+        pdf_dir=os.path.join(constants.TEST_DATA_PATH, "text", "pdf"),
+        output_dir=os.path.join(constants.TEST_DATA_PATH, "text", "sentence"),
+    )
+
+    logger.success("Text processing complete.")

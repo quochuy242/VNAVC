@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import os
+import sys
 from typing import List
 
 import aiofiles
@@ -17,7 +18,7 @@ logger.add(
     level="INFO",
     rotation="10 MB",
     encoding="utf-8",
-    colorize=True,
+    colorize=False,
     diagnose=True,
     enqueue=True,
     format=constants.FORMAT_LOG,
