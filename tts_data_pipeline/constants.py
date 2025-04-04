@@ -1,5 +1,5 @@
 LOG_DIR = "./logs/"
-FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
 
 
 # Crawler saving path
@@ -20,7 +20,7 @@ FETCH_METADATA_LIMIT = 20
 DOWNLOAD_BOOK_LIMIT = 10
 
 # Pre-processing config
-MIN_SAMPLE_RATE = 24000
+MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
 
 # Pre-processing saving path
 TEXT_SENTENCE_DIR = "./data/text/sentences/"
@@ -31,4 +31,4 @@ AUDIO_QUALIFIED_DIR = "./data/audio/qualified/"
 AUDIO_UNQUALIFIED_DIR = "./data/audio/unqualified/"
 METADATA_BOOK_PATH = "./data/metadata/metadata_book.csv"
 METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
-PROCESSED_METADATA_PATH = "./data/metadata/processed/"
+TEST_DATA_PATH = "./data/test/"
