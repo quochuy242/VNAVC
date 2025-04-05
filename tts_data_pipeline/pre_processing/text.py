@@ -2,6 +2,7 @@ import glob
 import os
 import re
 import string
+from typing import List
 
 import pdfplumber
 import underthesea
@@ -121,7 +122,25 @@ def process_sentence(sentence: str) -> str:
     return sentence
 
 
-def process_pdfs(pdf_dir: str, output_dir: str):
+def group_sentences(sentences: List[str], min_word_threshold: int = 20):
+    grouped_sentences = []
+    word_count = 0
+    word_store = []
+
+    for sentence in sentences:
+        words: List[str] = sentence.split()
+        word_count += len(words)
+        word_store.extend(words)
+        if word_count >= min_word_threshold:
+            grouped_sentences.append(" ".join(word_store))
+            word_count = 0
+            word_store = []
+
+    # WARNING: If the last sentence is not long enough, it will be dropped
+    return grouped_sentences
+
+
+def process_pdfs(pdf_dir: str, output_dir: str, min_word_threshold: int = 20):
     """
     Process all PDFs in a directory, extract text, split into sentences,
     normalize, and save to output file.
@@ -149,16 +168,20 @@ def process_pdfs(pdf_dir: str, output_dir: str):
         text = convert_pdf_to_text(pdf_file)
 
         if text:
-            # Use underthesea to split text into Vietnamese sentences
+            # Use underthesea to split book into Vietnamese sentences
             sentences = underthesea.sent_tokenize(text)
 
             # Normalize each sentence
             normalized_sentences = [process_sentence(sent) for sent in sentences]
 
-            # Filter out empty sentences
+            # Filter out empty sentences and group small consecutive sentences
             normalized_sentences = [sent for sent in normalized_sentences if sent]
+            normalized_sentences = group_sentences(
+                normalized_sentences, min_word_threshold
+            )
 
-        # Save all sentences to output file with progress bar
+        # Save all sentences to output file
+        os.makedirs(output_dir, exist_ok=True)
         output_file = os.path.join(
             output_dir, os.path.basename(pdf_file).replace("pdf", "txt")
         )
@@ -175,8 +198,9 @@ if __name__ == "__main__":
     logger.info("Starting PDF text processing...")
 
     process_pdfs(
-        pdf_dir=os.path.join(constants.TEST_DATA_PATH, "text", "pdf"),
-        output_dir=os.path.join(constants.TEST_DATA_PATH, "text", "sentence"),
+        pdf_dir=constants.TEXT_PDF_DIR,
+        output_dir=constants.TEXT_SENTENCE_DIR,
+        min_word_threshold=constants.MIN_WORD_THRESHOLD,
     )
 
     logger.success("Text processing complete.")

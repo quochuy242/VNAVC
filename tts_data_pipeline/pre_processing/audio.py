@@ -70,8 +70,8 @@ def get_sample_rate(mp3_path: str) -> int:
         int: Sample rate in Hz, or None if there was an error.
     """
     try:
-        with contextlib.closing(MP3(mp3_path)) as f:
-            return f.info.sample_rate
+        mp3 = MP3(mp3_path)
+        return mp3.info.sample_rate
     except Exception as e:
         logger.error(f"Error getting sample rate for {mp3_path}: {e}")
         return 0
@@ -134,7 +134,7 @@ def process_audio_files(
     )
 
     # Get all MP3 file paths in the audio directory
-    audiobooks = group_audiobook(mp3_dir)
+    audiobooks = group_audiobook(mp3_dir, unqualified_dir)
     if not audiobooks:
         logger.warning(f"No MP3 files found in {mp3_dir}")
         return
@@ -180,9 +180,9 @@ if __name__ == "__main__":
     logger.info("Test audio processing")
 
     process_audio_files(
-        mp3_dir=os.path.join(constants.TEST_DATA_PATH, "audio", "raw"),
-        qualified_dir=os.path.join(constants.TEST_DATA_PATH, "audio", "qualified"),
-        unqualified_dir=os.path.join(constants.TEST_DATA_PATH, "audio", "unqualified"),
+        mp3_dir=constants.AUDIO_RAW_DIR,
+        qualified_dir=constants.AUDIO_QUALIFIED_DIR,
+        unqualified_dir=constants.AUDIO_UNQUALIFIED_DIR,
     )
 
     logger.success("Audio processing complete")

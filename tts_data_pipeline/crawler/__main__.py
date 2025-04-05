@@ -51,15 +51,22 @@ def parse_args():
         help="Download books (available: all, none, query) (default: none)",
     )
     parser.add_argument(
-        "--name", type=str, help="Download books by name when --download is query"
+        "--name",
+        type=str,
+        help="Download books by name when --download is query",
+        default=None,
     )
     parser.add_argument(
-        "--author", type=str, help="Download books by author when --download is query"
+        "--author",
+        type=str,
+        help="Download books by author when --download is query",
+        default=None,
     )
     parser.add_argument(
         "--narrator",
         type=str,
         help="Download books by narrator when --download is query",
+        default=None,
     )
     return parser.parse_args()
 
@@ -103,7 +110,7 @@ async def main():
     os.makedirs(constants.TEXT_SAVE_PATH, exist_ok=True)
 
     # Get all book's URLs
-    if not os.path.exists(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH):
+    if args.save_urls or not os.path.exists(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH):
         logger.info("Getting all audiobook URLs and names")
         audio_urls = await utils.get_all_audiobook_url()
         logger.info(f"Found {len(audio_urls)} audiobooks")
@@ -113,6 +120,7 @@ async def main():
         )
         async with aiofiles.open(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH, "r") as f:
             audio_urls = (await f.read()).splitlines()
+    
     if args.save_urls:
         logger.info(
             f"Saving all audiobook URLs to {constants.ALL_AUDIOBOOK_URLS_SAVE_PATH} file"
@@ -131,13 +139,18 @@ async def main():
     if args.download.lower() == "all":
         logger.info("Downloading all books")
         valid_audio_urls = await asyncio.to_thread(
-            metadata.get_valid_audio_urls, query="all"
+            metadata.get_valid_audio_urls,
+            query="all",
+            name=None,
+            author=None,
+            narrator=None,
         )
     elif args.download.lower() == "query":
         logger.info("Downloading books by query")
         valid_audio_urls = await asyncio.to_thread(
             metadata.get_valid_audio_urls,
-            query=args.name,
+            query="query",
+            name=args.name,
             author=args.author,
             narrator=args.narrator,
         )
