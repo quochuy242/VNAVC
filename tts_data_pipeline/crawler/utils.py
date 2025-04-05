@@ -22,7 +22,9 @@ async def get_web_content(url: str) -> HTMLParser:
     Returns:
         HTMLParser: Parsed HTML content.
     """
-    async with httpx.AsyncClient(timeout=30) as client:
+    async with httpx.AsyncClient(
+        timeout=30, headers={"User-Agent": constants.USER_AGENTS}
+    ) as client:
         response = await client.get(url)
         response.raise_for_status()
         return HTMLParser(response.text)
@@ -85,10 +87,16 @@ async def get_all_audiobook_url() -> Tuple[List[str]]:
     return book_urls
 
 
-async def fetch_download_audio_url(book_url: str) -> List[str]:
+async def fetch_download_audio_url(
+    book_url: str, remote_connect: bool = True
+) -> List[str]:
     """Fetch all download URLs for a given book using Playwright."""
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = (
+            await p.chromium.connect("ws://0.0.0.0:3000/")
+            if remote_connect
+            else await p.chromium.launch()
+        )
         page = await browser.new_page()
         await page.goto(book_url)
 

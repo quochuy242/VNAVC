@@ -44,10 +44,10 @@ async def get_metadata(
         metadata = {
             "audio_url": audio_url,
             "text_url": text_url,
-            "title": title.text(strip=True) if title else "",
-            "author": author.text(strip=True) if author else "",
-            "duration": duration.text(strip=True) if duration else "",
-            "narrator": narrator.text(strip=True) if narrator else "",
+            "title": title.text(strip=True) if title else "Unknown",
+            "author": author.text(strip=True) if author else "Unknown",
+            "duration": duration.text(strip=True) if duration else "Unknown",
+            "narrator": narrator.text(strip=True) if narrator else "Unknown",
         }
 
         if save_path:
@@ -97,8 +97,6 @@ def convert_metadata_to_csv():
         df["duration_hour"] = df["duration"].apply(convert_duration, unit="hour")
         # Remove the tvshow
         df = df[~df["audio_url"].str.contains("tvshows", na=False)]
-        # Fill NA narrators with "Unknown"
-        df["narrator"].fillna("Unknown", inplace=True)
         return df
 
     metadata_path = Path(constants.METADATA_SAVE_PATH)

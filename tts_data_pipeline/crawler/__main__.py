@@ -1,7 +1,6 @@
 import argparse
 import asyncio
 import os
-import sys
 from typing import List
 
 import aiofiles
@@ -40,6 +39,11 @@ def parse_args():
         help="Force to fetch metadata for each book",
     )
     parser.add_argument(
+        "--process-metadata",
+        action="store_true",
+        help="Process and convert metadata files to a single CSV file",
+    )
+    parser.add_argument(
         "-d",
         "--download",
         type=str,
@@ -60,7 +64,9 @@ def parse_args():
     return parser.parse_args()
 
 
-async def fetch_metadata(text_urls: List[str], audio_urls: List[str]):
+async def fetch_metadata(
+    text_urls: List[str], audio_urls: List[str], process: bool = False
+):
     logger.info("Fetching metadata for each book")
     logger.info(f"Save it to JSON file in {constants.METADATA_SAVE_PATH}")
     fetch_metadata_limit = min(
@@ -81,8 +87,9 @@ async def fetch_metadata(text_urls: List[str], audio_urls: List[str]):
     ):
         await task
 
-    logger.info("Process and convert metadata files to a single CSV file")
-    await asyncio.to_thread(metadata.convert_metadata_to_csv)
+    if process:
+        logger.info("Process and convert metadata files to a single CSV file")
+        await asyncio.to_thread(metadata.convert_metadata_to_csv)
 
 
 async def main():
@@ -98,7 +105,7 @@ async def main():
     # Get all book's URLs
     if not os.path.exists(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH):
         logger.info("Getting all audiobook URLs and names")
-        audio_urls = await utils.audio.get_all_audiobook_url()
+        audio_urls = await utils.get_all_audiobook_url()
         logger.info(f"Found {len(audio_urls)} audiobooks")
     else:
         logger.info(
@@ -118,7 +125,7 @@ async def main():
     # Fetch metadata
     text_urls = [f"{constants.TEXT_BASE_URL}{url.split('/')[-1]}" for url in audio_urls]
     if args.fetch_metadata or not os.path.exists(constants.METADATA_BOOK_PATH):
-        await fetch_metadata(text_urls, audio_urls)
+        await fetch_metadata(text_urls, audio_urls, process=args.process_metadata)
 
     # Download books with limited concurrency
     if args.download.lower() == "all":
