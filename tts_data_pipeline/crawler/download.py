@@ -3,6 +3,19 @@ import asyncio
 import httpx
 from tts_data_pipeline import constants
 from . import utils
+from loguru import logger
+
+logger.remove()
+logger.add(
+    f"{constants.LOG_DIR}/crawler.log",
+    level="INFO",
+    rotation="10 MB",
+    encoding="utf-8",
+    colorize=False,
+    diagnose=True,
+    enqueue=True,
+    format=constants.FORMAT_LOG,
+)
 
 
 async def download_by_cli(url: str, directory: str, filename: str = None):
@@ -51,6 +64,7 @@ async def download_full_book(
         text_save_path (str): The file path to save the downloaded text file.
     """
     name_book = text_url.split("/")[-1].split(".")[0]
+    logger.info(f"Downloading {name_book}")
     try:
         # Each downloading URL of audio is the part of the book. Contrast, the text one is a book
         audio_download_urls = await utils.fetch_download_audio_url(audio_url)

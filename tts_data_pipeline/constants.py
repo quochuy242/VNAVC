@@ -23,6 +23,7 @@ DOWNLOAD_BOOK_LIMIT = 10
 MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
 
 # Pre-processing saving path
+MIN_WORD_THRESHOLD = 20
 TEXT_SENTENCE_DIR = "./data/text/sentences/"
 TEXT_PDF_DIR = "./data/text/pdf/"
 TEXT_TXT_DIR = "./data/text/txt/"
