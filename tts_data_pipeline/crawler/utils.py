@@ -6,6 +6,20 @@ from playwright.async_api import async_playwright
 from selectolax.parser import HTMLParser
 
 from tts_data_pipeline import constants
+from loguru import logger
+from .playwright import ensure_playwright_server_running
+
+logger.remove()
+logger.add(
+    f"{constants.LOG_DIR}/crawler.log",
+    level="INFO",
+    rotation="10 MB",
+    encoding="utf-8",
+    colorize=False,
+    diagnose=True,
+    enqueue=True,
+    format=constants.FORMAT_LOG,
+)
 
 
 async def get_text_download_url(name: str) -> str:
@@ -87,16 +101,11 @@ async def get_all_audiobook_url() -> Tuple[List[str]]:
     return book_urls
 
 
-async def fetch_download_audio_url(
-    book_url: str, remote_connect: bool = True
-) -> List[str]:
+async def fetch_download_audio_url(book_url: str) -> List[str]:
     """Fetch all download URLs for a given book using Playwright."""
+    await ensure_playwright_server_running()  # Ensure Playwright server is running
     async with async_playwright() as p:
-        browser = (
-            await p.chromium.connect("ws://0.0.0.0:3000/")
-            if remote_connect
-            else await p.chromium.launch()
-        )
+        browser = await p.chromium.connect("ws://0.0.0.0:3000/")
         page = await browser.new_page()
         await page.goto(book_url)
 

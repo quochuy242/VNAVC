@@ -1,8 +1,7 @@
 LOG_DIR = "./logs/"
 FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
 
-
-# Crawler saving path
+# Crawler path
 AUDIO_SAVE_PATH = "./data/audio/"
 ALL_AUDIOBOOK_URLS_SAVE_PATH = "./data/all_audiobook_urls.txt"
 TEXT_BOOK_URLS_SAVE_PATH = "./data/text_book_urls.txt"
@@ -22,7 +21,7 @@ DOWNLOAD_BOOK_LIMIT = 10
 # Pre-processing config
 MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
 
-# Pre-processing saving path
+# Pre-processing path
 MIN_WORD_THRESHOLD = 20
 TEXT_SENTENCE_DIR = "./data/text/sentences/"
 TEXT_PDF_DIR = "./data/text/pdf/"
@@ -33,3 +32,9 @@ AUDIO_UNQUALIFIED_DIR = "./data/audio/unqualified/"
 METADATA_BOOK_PATH = "./data/metadata/metadata_book.csv"
 METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
 TEST_DATA_PATH = "./data/test/"
+
+# Align config
+AENEAS_CONFIG = "task_language=vie|is_text_type=plain|os_task_file_format=json"
+
+# Align path
+ALIGNMENT_OUTPUT_DIR = "./data/alignment/"
