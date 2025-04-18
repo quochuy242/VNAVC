@@ -34,7 +34,7 @@ def main():
     text_path = os.path.join(constants.TEXT_SENTENCE_DIR, text_file)
     os.makedirs(constants.ALIGNMENT_OUTPUT_DIR, exist_ok=True)
     output_path = os.path.join(
-      constants.ALIGNMENT_OUTPUT_DIR, audio_file.replace(".wav", ".json")
+      constants.ALIGNMENT_OUTPUT_DIR, audio_file.replace(".wav", ".tsv")
     )
 
     # Check if the audio and text files exist
@@ -52,4 +52,6 @@ def main():
 
 
 if __name__ == "__main__":
+  # TODO: Build again alignment for short audio parts, then, check the result of alignment between the full text and each short audio part
+  # TODO: Remember splitting the text book while aligning completely with the short audio parts
   main()

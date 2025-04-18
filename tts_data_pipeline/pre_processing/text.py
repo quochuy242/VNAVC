@@ -101,10 +101,10 @@ def process_sentence(sentence: str) -> str:
   removing punctuation, normalizing, and converting to uppercase.
 
   Args:
-      sentence (str): Sentence to process
+    sentence (str): Sentence to process
 
   Returns:
-      str: Processed sentence
+    str: Processed sentence
   """
 
   semiotic_norm = ViSemioticNorm()
@@ -147,8 +147,8 @@ def process_pdfs(pdf_dir: str, output_dir: str, min_word_threshold: int = 20):
   normalize, and save to output file.
 
   Args:
-      pdf_dir (str): Directory containing PDF files
-      output_file (str): Path to save the normalized sentences
+    pdf_dir (str): Directory containing PDF files
+    output_file (str): Path to save the normalized sentences
   """
   # Make sure the directory exists
   if not os.path.exists(pdf_dir):
@@ -171,6 +171,8 @@ def process_pdfs(pdf_dir: str, output_dir: str, min_word_threshold: int = 20):
     if text:
       # Use underthesea to split book into Vietnamese sentences
       sentences = underthesea.sent_tokenize(text)
+
+      # TODO: Remove the sentence containing "CHƯƠNG XY", which XY is the chapter number
 
       # Normalize each sentence
       normalized_sentences = [process_sentence(sent) for sent in sentences]

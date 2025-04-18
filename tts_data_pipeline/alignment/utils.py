@@ -43,7 +43,7 @@ def align_audio_text(audio_path: str, text_path: str, output_path: str) -> None:
 
 def check_dependencies():
   """Check if the required dependencies of aeneas are installed."""
-  deps = ["ffmpeg", "ffprobe", "espeak-ng"]
+  deps = ["ffmpeg", "ffprobe", "espeak"]
 
   for dep in deps:
     if not shutil.which(dep):
@@ -65,3 +65,6 @@ def process_json_output(output_path: str) -> None:
 
   for key, value in output.items():
     ...
+
+
+# TODO: Delete the first sentence in each book in both audio and text book based on the alignment result

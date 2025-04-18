@@ -34,7 +34,7 @@ METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
 TEST_DATA_PATH = "./data/test/"
 
 # Align config
-AENEAS_CONFIG = "task_language=vie|is_text_type=plain|os_task_file_format=json"
+AENEAS_CONFIG = "task_language=vie|is_text_type=plain|os_task_file_format=tsv"
 
 # Align path
 ALIGNMENT_OUTPUT_DIR = "./data/alignment/"
