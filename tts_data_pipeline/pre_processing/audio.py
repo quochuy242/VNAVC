@@ -233,7 +233,10 @@ def get_audio_duration(audio_path: str) -> float:
 
 
 def split_audiobook(
-  book_name: str, input_audio_paths: List[str], time_threshold: int = 1800
+  book_name: str,
+  input_audio_paths: List[str],
+  time_threshold: int = 1800,
+  delete_origin: bool = False,
 ) -> List[str]:
   """
   Split an audiobook into parts based on the minute threshold.
@@ -293,17 +296,19 @@ def split_audiobook(
   counter = 1
   for file in glob.glob(osp.dirname(new_audio_dir) + "/*/*.mp3"):
     shutil.move(file, osp.join(new_audio_dir, f"{book_name}_{counter}.mp3"))
+    os.remove(
+      file
+    ) if delete_origin else None  # Delete the original audiobook for saving space
     counter += 1
 
-  # TODO: Delete the original audiobook after splitting for saving space
-
-  return glob.glob(new_audio_dir + "/*.mp3")
+  return glob.glob(new_audio_dir + "/*.mp3"), counter
 
 
 def process_audio_files(
   mp3_dir: str,
   qualified_dir: str,
   unqualified_dir: str,
+  update_metadata: bool = False,
 ):
   """
   Process all MP3 files in a directory:
@@ -322,11 +327,13 @@ def process_audio_files(
   os.makedirs(unqualified_dir, exist_ok=True)
 
   # Read the metadata file for updating sample rate
-  metadata_df = pd.read_csv(constants.METADATA_BOOK_PATH)
-  metadata_df["sample_rate"], metadata_df["qualified"] = (
-    pd.Series([None] * len(metadata_df)),  # A new column for sample rate
-    pd.Series([1] * len(metadata_df)),  # A new column for qualified
-  )
+  if update_metadata:
+    metadata_df = pd.read_csv(constants.METADATA_BOOK_PATH)
+    metadata_df["sample_rate"], metadata_df["qualified"], metadata_df["num_parts"] = (
+      pd.Series([None] * len(metadata_df)),  # A new column for sample rate
+      pd.Series([1] * len(metadata_df)),  # A new column for qualified
+      pd.Series([1] * len(metadata_df)),  # A new column for num_parts
+    )
 
   # Get all MP3 file paths in the audio directory
   audiobooks = group_audiobook(mp3_dir, unqualified_dir)
@@ -353,11 +360,13 @@ def process_audio_files(
       # Move unqualified files to unqualified folder
       for mp3_path in audiobook:
         shutil.move(mp3_path, unqualified_dir)
+
         # Update qualified column for metadata
-        metadata_df.loc[
-          metadata_df["audio_url"].str.contains(mp3_path.split("/")[-1]),
-          "qualified",
-        ] = 0
+        if update_metadata:
+          metadata_df.loc[
+            metadata_df["audio_url"].str.contains(mp3_path.split("/")[-1]),
+            "qualified",
+          ] = 0
     else:
       qualified_count += 1
       logger.info(
@@ -365,7 +374,7 @@ def process_audio_files(
       )
 
       # Split audiobook into parts, default time threshold is 30 minutes
-      split_paths = split_audiobook(audiobook_name, audiobook)
+      split_paths, num_parts = split_audiobook(audiobook_name, audiobook)
 
       # Convert MP3 to WAV
       [
@@ -381,9 +390,17 @@ def process_audio_files(
       ]
 
       # Update sample rate column for metadata
-      metadata_df.loc[
-        metadata_df["audio_url"].str.contains(audiobook_name), "sample_rate"
-      ] = np.mean(sample_rates)
+      if update_metadata:
+        metadata_df.loc[
+          metadata_df["audio_url"].str.contains(audiobook_name), "sample_rate"
+        ] = np.mean(sample_rates)
+        metadata_df.loc[
+          metadata_df["audio_url"].str.contains(audiobook_name), "num_parts"
+        ] = num_parts
+
+  # Save metadata
+  if update_metadata:
+    metadata_df.to_csv(constants.METADATA_BOOK_PATH, index=False)
 
   logger.info(
     f"Processing complete: \n - Total books processed: {len(audiobooks)}\n - Qualified books (≥ {constants.MIN_SAMPLE_RATE} Hz): {qualified_count}\n - Unqualified books (< {constants.MIN_SAMPLE_RATE} Hz): {unqualified_count}"

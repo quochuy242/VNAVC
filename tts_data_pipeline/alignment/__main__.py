@@ -1,57 +1,61 @@
-from .utils import logger, align_audio_text, check_dependencies
+from .utils import logger, align_audio_text
 from tts_data_pipeline import constants
 import os
+import os.path as osp
 
 
 def main():
   logger.info("Starting alignment...")
 
-  # Check the dependencies
-  if not check_dependencies():
-    return
-
   # Get all audio and text files
-  audio_files, text_files = (
-    os.listdir(constants.AUDIO_QUALIFIED_DIR),
-    os.listdir(constants.TEXT_SENTENCE_DIR),
+  audio_dirs, text_dirs = (
+    os.listdir(constants.AUDIO_QUALIFIED_DIR).sort(),
+    os.listdir(constants.TEXT_SENTENCE_DIR).sort(),
   )
 
   # Check if the number of audio and text files match
-  if len(audio_files) != len(text_files):
-    logger.error("Number of audio and text files do not match.")
+  if audio_dirs != text_dirs:
+    logger.error("Audio and text directories do not match.")
     return
 
-  # Sort the audio and text files to get the pairs of files
-  audio_files.sort()
-  text_files.sort()
-
   # Align audio and text
-  for audio_file, text_file in zip(audio_files, text_files):
-    logger.info(f"Aligning {audio_file} with {text_file}")
+  for bookname in audio_dirs:
+    logger.info(f"Aligning {bookname} book")
 
     # Setup path
-    audio_path = os.path.join(constants.AUDIO_QUALIFIED_DIR, audio_file)
-    text_path = os.path.join(constants.TEXT_SENTENCE_DIR, text_file)
-    os.makedirs(constants.ALIGNMENT_OUTPUT_DIR, exist_ok=True)
-    output_path = os.path.join(
-      constants.ALIGNMENT_OUTPUT_DIR, audio_file.replace(".wav", ".tsv")
-    )
+    audio_path = osp.join(constants.AUDIO_QUALIFIED_DIR, bookname)
+    text_path = osp.join(constants.TEXT_SENTENCE_DIR, bookname)
+    os.makedirs(constants.AENEAS_OUTPUT_DIR, exist_ok=True)
 
-    # Check if the audio and text files exist
-    if not os.path.exists(audio_path):
-      logger.error(f"Audio file {audio_path} does not exist.")
-      continue
-    if not os.path.exists(text_path):
-      logger.error(f"Text file {text_path} does not exist.")
-      continue
+    # Align each part of book
+    for audio_part, text_part in zip(os.listdir(audio_path), os.listdir(text_path)):
+      # Check if the number of parts between audio and text is same
+      if audio_part != text_part:
+        logger.error("The number of parts between audio and text do not match")
 
-    # Run the alignment
-    align_audio_text(audio_path, text_path, output_path)
+      audio_part_path = osp.join(
+        audio_path, audio_part
+      )  # e.g. AUDIO_QUALIFIED_DIR/bookX/bookX_1.wav
+      text_part_path = osp.join(
+        text_path, text_part
+      )  # e.g. TEXT_SENTENCE_DIR/bookX/bookX_1.txt
+      output_path = osp.join(
+        constants.AENEAS_OUTPUT_DIR,
+        bookname,
+        audio_part.replace(".wav", ".tsv"),
+      )  # e.g. AENEAS_OUTPUT_DIR/bookX/bookX_1.tsv
+
+      # Align audio and text part
+      align_audio_text(audio_part_path, text_part_path, output_path)
+      logger.success(
+        f"Aligned {audio_part} part of {bookname} book. \n\tOutput: {output_path}"
+      )
 
   logger.success("Alignment completed")
 
 
 if __name__ == "__main__":
-  # TODO: Build again alignment for short audio parts, then, check the result of alignment between the full text and each short audio part
-  # TODO: Remember splitting the text book while aligning completely with the short audio parts
+  # // TODO: Build again alignment for short audio parts, then, check the result of alignment between the full text and each short audio part
+  # TODO: Remove the sentence containing "CHƯƠNG XY", which XY is the chapter number
+
   main()

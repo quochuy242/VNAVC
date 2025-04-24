@@ -8,7 +8,7 @@ from tqdm.asyncio import tqdm
 
 from tts_data_pipeline import constants
 
-from . import download, metadata, utils, playwright
+from . import download, metadata, utils
 from .utils import logger
 
 

@@ -1,9 +1,11 @@
 import glob
 import os
+import os.path as osp
 import re
 import string
 from typing import List
 
+import pandas as pd
 import pdfplumber
 import underthesea
 from loguru import logger
@@ -83,11 +85,15 @@ def convert_pdf_to_text(pdf_path: str):
     text = ""
     with pdfplumber.open(pdf_path) as pdf:
       for page in pdf.pages:
+        text += " "
         text += page.extract_text()
     return text
   except Exception as e:
     logger.error(f"Error processing {pdf_path}: {e}")
     return ""
+
+
+def count_word(text: str) -> int: ...
 
 
 def remove_punctuations(sentence: str):
@@ -141,7 +147,28 @@ def group_sentences(sentences: List[str], min_word_threshold: int = 20):
   return grouped_sentences
 
 
-def process_pdfs(pdf_dir: str, output_dir: str, min_word_threshold: int = 20):
+def split_textbook(sentences: List[str], book_name: str):
+  # Get the number of part of audiobook
+  audiobook_path = osp.join(constants.AUDIO_QUALIFIED_DIR, book_name)
+  if osp.exists(audiobook_path):
+    num_of_part = len(os.listdir(audiobook_path))
+  else:
+    logger.error(f"The {book_name} don't exist")
+
+  num_sentence_each_part = len(sentences) // num_of_part
+  return [
+    sentences[i * num_sentence_each_part : (i + 1) * num_sentence_each_part]
+    for i in range(num_of_part + 1)
+  ], num_of_part
+
+
+def process_pdfs(
+  pdf_dir: str,
+  output_dir: str,
+  min_word_threshold: int = 20,
+  update_metadata: bool = False,
+  save_book: bool = False,
+):
   """
   Process all PDFs in a directory, extract text, split into sentences,
   normalize, and save to output file.
@@ -163,16 +190,27 @@ def process_pdfs(pdf_dir: str, output_dir: str, min_word_threshold: int = 20):
     logger.warning(f"No PDF files found in {pdf_dir}")
     return
 
+  # Read metadata file
+  if update_metadata:
+    metadata_df = pd.read_csv(constants.METADATA_BOOK_PATH)
+    metadata_df["word_count"] = pd.Series(
+      [0] * len(metadata_df)
+    )  # Create a new column for counting word in the text book
+
   # Process each PDF file with progress bar
   for pdf_file in tqdm(pdf_files, desc="Processing PDF files"):
     # Extract text from PDF
     text = convert_pdf_to_text(pdf_file)
+    pdf_filename = osp.splitext(osp.basename(pdf_file))[0]
+
+    if update_metadata:
+      metadata_df.loc[
+        metadata_df["text_url"].str.contains(pdf_filename), "word_count"
+      ] = count_word(text)
 
     if text:
       # Use underthesea to split book into Vietnamese sentences
       sentences = underthesea.sent_tokenize(text)
-
-      # TODO: Remove the sentence containing "CHƯƠNG XY", which XY is the chapter number
 
       # Normalize each sentence
       normalized_sentences = [process_sentence(sent) for sent in sentences]
@@ -182,13 +220,21 @@ def process_pdfs(pdf_dir: str, output_dir: str, min_word_threshold: int = 20):
       normalized_sentences = group_sentences(normalized_sentences, min_word_threshold)
 
     # Save all sentences to output file
-    os.makedirs(output_dir, exist_ok=True)
-    output_file = os.path.join(
-      output_dir, os.path.basename(pdf_file).replace("pdf", "txt")
-    )
-    with open(output_file, "w", encoding="utf-8") as f:
-      for sentence in normalized_sentences:
-        f.write(sentence + "\n")
+    if save_book:
+      os.makedirs(output_dir, exist_ok=True)
+      output_file = os.path.join(output_dir, pdf_filename + ".txt")
+      with open(output_file, "w", encoding="utf-8") as f:
+        for sentence in normalized_sentences:
+          f.write(sentence + "\n")
+
+    # Split the textbook to some text parts
+    sentence_parts, num_of_part = split_textbook(normalized_sentences, pdf_filename)
+    for idx, part in zip(range(1, num_of_part + 1), sentence_parts):
+      output_file = osp.join(output_dir, pdf_filename, pdf_filename + f"_{idx}.txt")
+      os.makedirs(osp.join(output_dir, pdf_filename), exist_ok=True)
+      with open(output_file, "w", encoding="utf-8") as f:
+        for sentence in part:
+          f.write(sentence + "\n")
 
   logger.success("Processing complete.")
   return
@@ -197,6 +243,7 @@ def process_pdfs(pdf_dir: str, output_dir: str, min_word_threshold: int = 20):
 if __name__ == "__main__":
   logger.info("Starting PDF text processing...")
 
+  # TODO: Add more information to metadata
   process_pdfs(
     pdf_dir=constants.TEXT_PDF_DIR,
     output_dir=constants.TEXT_SENTENCE_DIR,
