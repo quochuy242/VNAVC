@@ -3,7 +3,7 @@ import os
 import os.path as osp
 import re
 import string
-from typing import List
+from typing import List, Optional
 
 import pandas as pd
 import pdfplumber
@@ -80,7 +80,16 @@ class ViSemioticNorm:
     return text
 
 
-def convert_pdf_to_text(pdf_path: str):
+def convert_pdf_to_text(pdf_path: str) -> Optional[str]:
+  """
+  Convert a PDF file to text using pdfplumber
+
+  Args:
+      pdf_path (str): Path to the PDF file
+
+  Returns:
+      str | None: Text extracted from the PDF
+  """
   try:
     text = ""
     with pdfplumber.open(pdf_path) as pdf:
@@ -90,10 +99,22 @@ def convert_pdf_to_text(pdf_path: str):
     return text
   except Exception as e:
     logger.error(f"Error processing {pdf_path}: {e}")
-    return ""
+    return None
 
 
-def count_word(text: str) -> int: ...
+def count_word(text: str) -> int:
+  """
+  Count the number of words in a enormous string
+  """
+  in_word = False
+  count = 0
+  for char in text:
+    if char.isspace():
+      in_word = False
+    elif not in_word:
+      count += 1
+      in_word = True
+  return count
 
 
 def remove_punctuations(sentence: str):

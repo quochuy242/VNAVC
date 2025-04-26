@@ -235,35 +235,37 @@ def get_audio_duration(audio_path: str) -> float:
 def split_audiobook(
   book_name: str,
   input_audio_paths: List[str],
-  time_threshold: int = 1800,
-  delete_origin: bool = False,
+  time_threshold: int = 1800,  # 30 minutes
+  convert_to_wav: bool = True,
 ) -> List[str]:
   """
   Split an audiobook into parts based on the minute threshold.
 
   Args:
     book_name (str): Name of the audiobook.
-    audio_path (List[str]): Path to all audio parts of the audiobook.
+    input_audio_paths (List[str]): Path to all audio parts of the audiobook.
     time_threshold (int): The time threshold (in seconds) for splitting the audiobook.
 
   Returns:
       List[str]: List of paths to the split audio files.
   """
+  # Check if ffmpeg is installed
   if not check_ffmpeg():
     return []
 
   # Split each audiobook's part
-  audio_names = [
+  audio_name_parts = [
     osp.splitext(osp.basename(audio_path))[0] for audio_path in input_audio_paths
   ]
-  audio_dirs = [
-    osp.join(osp.dirname(audio_path), audio_name)
-    for audio_path, audio_name in zip(input_audio_paths, audio_names)
-  ]
-  for input_audio_path, audio_name, audio_dir in zip(
-    input_audio_paths, audio_names, audio_dirs
+  # Temporary split directory
+  split_dirs = [
+    osp.join(constants.AUDIO_QUALIFIED_DIR, book_name, audio_part)
+    for audio_part in audio_name_parts
+  ]  # e.g. constants.AUDIO_QUALIFIED_DIR/bookX/bookX_1, constants.AUDIO_QUALIFIED_DIR/bookX/bookX_2, ...
+  for input_audio_path, audio_part, split_dir in zip(
+    input_audio_paths, audio_name_parts, split_dirs
   ):
-    os.makedirs(audio_dir, exist_ok=True)
+    os.makedirs(split_dir, exist_ok=True)
     try:
       cmd = [
         "ffmpeg",
@@ -276,38 +278,40 @@ def split_audiobook(
         "-c",
         "copy",
         osp.join(
-          audio_dir, f"{audio_name}_%03d.mp3"
+          split_dir, f"{audio_part}_%03d.mp3"
         ),  # e.g. abc_1_001.mp3, abc_1_002.mp3, etc.
       ]
       subprocess.run(
         cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
       )
       logger.info(
-        f"Successfully split {input_audio_path} into {time_threshold} seconds, total {len(os.listdir(audio_dir))} files."
+        f"Successfully split {input_audio_path} into {time_threshold} seconds, total {len(os.listdir(split_dir))} files."
       )
     except Exception as e:
       logger.error(f"Error splitting {input_audio_path}: {e}")
       return []
 
   # Remark all split files
-  new_audio_dir = osp.join(osp.dirname(input_audio_paths[0]), book_name)
-  os.makedirs(new_audio_dir, exist_ok=True)
+  new_audio_dir = osp.join(constants.AUDIO_QUALIFIED_DIR, book_name)
 
   counter = 1
-  for file in glob.glob(osp.dirname(new_audio_dir) + "/*/*.mp3"):
-    shutil.move(file, osp.join(new_audio_dir, f"{book_name}_{counter}.mp3"))
-    os.remove(
-      file
-    ) if delete_origin else None  # Delete the original audiobook for saving space
+  for file in glob.glob(new_audio_dir + "/*/*.mp3"):
+    # If convert_to_wav is True, convert mp3 to wav, else save splitted mp3
+    if convert_to_wav:
+      convert_mp3_to_wav(file, osp.join(new_audio_dir, f"{book_name}_{counter}.wav"))
+      os.remove(file)  # Remove mp3 file after converting to wav
+    else:
+      shutil.move(file, osp.join(new_audio_dir, f"{book_name}_{counter}.mp3"))
     counter += 1
+
+  # Remove the temporary directories
+  for audio_dir in split_dirs:
+    shutil.rmtree(audio_dir)
 
   return glob.glob(new_audio_dir + "/*.mp3"), counter
 
 
 def process_audio_files(
-  mp3_dir: str,
-  qualified_dir: str,
-  unqualified_dir: str,
   update_metadata: bool = False,
 ):
   """
@@ -316,15 +320,10 @@ def process_audio_files(
   2. Convert them to WAV format
   3. Check their sample rate
   4. Move those with sample rates below the threshold to unqualified folder
-
-  Args:
-      mp3_dir (str): Directory containing MP3 files
-      qualified_dir (str): Directory to save converted WAV files
-      unqualified_dir (str): Directory to move unqualified files
   """
   # Create output directories if they don't exist
-  os.makedirs(qualified_dir, exist_ok=True)
-  os.makedirs(unqualified_dir, exist_ok=True)
+  os.makedirs(constants.AUDIO_QUALIFIED_DIR, exist_ok=True)
+  os.makedirs(constants.AUDIO_UNQUALIFIED_DIR, exist_ok=True)
 
   # Read the metadata file for updating sample rate
   if update_metadata:
@@ -336,19 +335,24 @@ def process_audio_files(
     )
 
   # Get all MP3 file paths in the audio directory
-  audiobooks = group_audiobook(mp3_dir, unqualified_dir)
+  audiobooks = group_audiobook(
+    constants.AUDIO_RAW_DIR, unqualified_dir=constants.AUDIO_UNQUALIFIED_DIR
+  )
+
+  # Check no MP3 files
   if not audiobooks:
-    logger.warning(f"No MP3 files found in {mp3_dir}")
+    logger.warning(f"No MP3 files found in {constants.AUDIO_RAW_DIR}")
     return
 
   # Process each MP3 file
   qualified_count = 0
   unqualified_count = 0
-
   for audiobook in tqdm(audiobooks, desc="Processing audio files"):
     # Get sample rates for each MP3 file
     sample_rates = [get_sample_rate(mp3_path) for mp3_path in audiobook]
     min_sample_rate = min(sample_rates)
+
+    # Get audiobook name
     audiobook_name = osp.basename(audiobook[0]).split("_")[0]
 
     # Check sample rates to determine the quality's book
@@ -359,7 +363,7 @@ def process_audio_files(
       )
       # Move unqualified files to unqualified folder
       for mp3_path in audiobook:
-        shutil.move(mp3_path, unqualified_dir)
+        shutil.move(mp3_path, constants.AUDIO_UNQUALIFIED_DIR)
 
         # Update qualified column for metadata
         if update_metadata:
@@ -374,20 +378,9 @@ def process_audio_files(
       )
 
       # Split audiobook into parts, default time threshold is 30 minutes
-      split_paths, num_parts = split_audiobook(audiobook_name, audiobook)
-
-      # Convert MP3 to WAV
-      [
-        convert_mp3_to_wav(
-          mp3_path,
-          osp.join(
-            qualified_dir,
-            audiobook_name,
-            osp.basename(mp3_path).replace(".mp3", ".wav"),
-          ),
-        )
-        for mp3_path in split_paths
-      ]
+      split_paths, num_parts = split_audiobook(
+        audiobook_name, audiobook, convert_to_wav=True
+      )
 
       # Update sample rate column for metadata
       if update_metadata:
@@ -407,13 +400,11 @@ def process_audio_files(
   )
 
 
+def delete_old_processed_audio():
+  shutil.rmtree(constants.AUDIO_QUALIFIED_DIR)
+  shutil.rmtree(constants.AUDIO_UNQUALIFIED_DIR)
+
+
 if __name__ == "__main__":
-  logger.info("Test audio processing")
-
-  process_audio_files(
-    mp3_dir=constants.AUDIO_RAW_DIR,
-    qualified_dir=constants.AUDIO_QUALIFIED_DIR,
-    unqualified_dir=constants.AUDIO_UNQUALIFIED_DIR,
-  )
-
+  process_audio_files(update_metadata=True)
   logger.success("Audio processing complete")
