@@ -6,12 +6,12 @@ from tqdm import tqdm
 
 from tts_data_pipeline import constants
 
-from .utils import logger, check_dependencies, book_alignment
+from tts_data_pipeline.alignment.utils import logger, check_dependencies, book_alignment
 
 
 def main():
   """
-  main -> check_dependencies -> process_book_alignment -> align_audio_text -> process_alignment_output -> split_audio -> split_text
+  main -> check_dependencies -> book_alignment -> align_audio_text -> process_alignment_output -> split_audio -> split_text
   """
   logger.info("Starting alignment...")
 

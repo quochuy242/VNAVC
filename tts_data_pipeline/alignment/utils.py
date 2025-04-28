@@ -1,7 +1,6 @@
 import os
 import os.path as osp
 import shutil
-import subprocess
 
 import numpy as np
 import pandas as pd
@@ -9,8 +8,10 @@ from aeneas.executetask import ExecuteTask
 from aeneas.task import Task
 from loguru import logger
 
-from .split import split_audio, split_text
+from tts_data_pipeline.alignment.split import split_audio, split_text
 from tts_data_pipeline import constants
+
+from dataclasses import dataclass
 
 # Configure logger
 logger.remove()
@@ -26,6 +27,13 @@ logger.add(
 )
 
 
+class BookInfo(dataclass):
+  bookname: str
+  audio_path: str
+  text_path: str
+  narrator_id: int
+
+
 def check_dependencies():
   """Check if the required dependencies of aeneas are installed."""
   deps = ["ffmpeg", "ffprobe", "espeak"]
@@ -37,13 +45,16 @@ def check_dependencies():
   return True
 
 
-def process_alignment_output(alignment_path: str, text_path: str) -> None:
+def process_alignment_output(
+  alignment_path: str, text_path: str, overwrite: bool = False
+) -> None:
   """
   Process the alignment output: remove outliers and update both alignment and text files.
 
   Args:
       alignment_path (str): Path to output file from aeneas
       text_path (str): Path to the text file
+      overwrite (bool, optional): If True, overwrite the output files. Defaults to False.
   """
   # Load the alignment data
   align_df = pd.read_csv(alignment_path, sep="\t", names=["start", "end", "id"])
@@ -65,11 +76,11 @@ def process_alignment_output(alignment_path: str, text_path: str) -> None:
   with open(text_path, "r", encoding="utf-8") as f:
     lines = f.read().splitlines()
 
-  # Remove chapter headers (e.g., "CHƯƠNG XY")
-  chapter_indices = [
-    i for i, line in enumerate(lines) if line.strip().startswith("CHƯƠNG")
-  ]
-  drop_idxs.extend(chapter_indices)
+  # // Remove chapter headers (e.g., "CHƯƠNG XY")
+  # // chapter_indices = [
+  # //   i for i, line in enumerate(lines) if line.strip().startswith("CHƯƠNG")
+  # // ]
+  # // drop_idxs.extend(chapter_indices)
 
   # Update the alignment output and the text source
   drop_idxs = set(drop_idxs)
@@ -82,45 +93,58 @@ def process_alignment_output(alignment_path: str, text_path: str) -> None:
   align_df_filtered.to_csv(alignment_path, sep="\t", header=False, index=False)
 
   # Write updated text
-  with open(text_path, "w", encoding="utf-8") as f:
-    f.write("\n".join(lines_filtered))
+  if overwrite:
+    with open(text_path, "w", encoding="utf-8") as f:
+      f.write("\n".join(lines_filtered))
+  else:
+    new_text_path = text_path.replace("sentence", "filtered_sentence")
+    with open(new_text_path, "w", encoding="utf-8") as f:
+      f.write("\n".join(lines_filtered))
 
 
-def book_alignment(book_info):
-  def align_audio_text(audio_path: str, text_path: str, output_path: str) -> bool:
-    """
-    Align a single audio and text file using Aeneas and save the output syncmap.
+def align_audio_text(
+  audio_path: str, text_path: str, output_path: str, speaker_id: int
+) -> bool:
+  """
+  Align a single audio and text file using Aeneas and save the output syncmap.
 
-    Args:
-        audio_path (str): Path to the audio file.
-        text_path (str): Path to the text file.
-        output_path (str): Path to save the syncmap (TSV format).
+  Args:
+      audio_path (str): Path to the audio file.
+      text_path (str): Path to the text file.
+      output_path (str): Path to save the syncmap (TSV format).
 
-    Returns:
-        bool: True if alignment was successful, False otherwise.
-    """
-    # Check dependencies only once at the beginning of the program
-    try:
-      task = Task(config_string=constants.AENEAS_CONFIG)
-      task.audio_file_path_absolute = os.path.abspath(audio_path)
-      task.text_file_path_absolute = os.path.abspath(text_path)
-      task.sync_map_file_path_absolute = os.path.abspath(output_path)
+  Returns:
+      bool: True if alignment was successful, False otherwise.
+  """
+  # Check dependencies only once at the beginning of the program
+  try:
+    task = Task(config_string=constants.AENEAS_CONFIG)
+    task.audio_file_path_absolute = os.path.abspath(audio_path)
+    task.text_file_path_absolute = os.path.abspath(text_path)
+    task.sync_map_file_path_absolute = os.path.abspath(output_path)
 
-      ExecuteTask(task).execute()
-      task.output_sync_map_file()
+    ExecuteTask(task).execute()
+    task.output_sync_map_file()
 
-      # Process the alignment output and split the files
-      process_alignment_output(output_path, text_path)
-      split_audio(output_path, audio_path)
-      split_text(output_path, text_path)
+    # Process the alignment output and split the files
+    process_alignment_output(output_path, text_path)
+    split_audio(output_path, audio_path, speaker_id)
+    split_text(output_path, text_path, speaker_id)
 
-      return True
-    except Exception as e:
-      logger.error(f"Aeneas failed for {audio_path}: {e}")
-      return False
+    return True
+  except Exception as e:
+    logger.error(f"Aeneas failed for {audio_path}: {e}")
+    return False
 
+
+def book_alignment(book_info: BookInfo) -> bool:
   """Process alignment for a single book with multiple parts"""
-  bookname, audio_path, text_path = book_info
+  bookname, audio_path, text_path, speaker_id = (
+    book_info.bookname,
+    book_info.audio_path,
+    book_info.text_path,
+    book_info.narrator_id,
+  )
 
   os.makedirs(osp.join(constants.AENEAS_OUTPUT_DIR, bookname), exist_ok=True)
   audio_parts = sorted(os.listdir(audio_path))
@@ -142,7 +166,7 @@ def book_alignment(book_info):
       audio_part.replace(".wav", ".tsv"),
     )
 
-    if align_audio_text(audio_part_path, text_part_path, output_path):
+    if align_audio_text(audio_part_path, text_part_path, output_path, speaker_id):
       success_count += 1
 
   logger.success(

@@ -8,8 +8,8 @@ from tqdm.asyncio import tqdm
 
 from tts_data_pipeline import constants
 
-from . import download, metadata, utils
-from .utils import logger
+from tts_data_pipeline.crawler import download, metadata, utils
+from tts_data_pipeline.crawler.utils import logger
 
 
 def parse_args():

@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import random as randomlib
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -8,9 +9,7 @@ import httpx
 import pandas as pd
 
 from tts_data_pipeline import constants
-
-from . import utils
-import random as randomlib
+from tts_data_pipeline.crawler import utils
 
 
 async def get_metadata(

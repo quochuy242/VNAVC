@@ -2,12 +2,12 @@ import asyncio
 from typing import List, Tuple
 
 import httpx
+from loguru import logger
 from playwright.async_api import async_playwright
 from selectolax.parser import HTMLParser
 
 from tts_data_pipeline import constants
-from loguru import logger
-from .playwright import ensure_playwright_server_running
+from tts_data_pipeline.crawler.playwright_server import ensure_playwright_server_running
 
 logger.remove()
 logger.add(

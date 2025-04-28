@@ -30,7 +30,7 @@ This script provides an asynchronous pipeline to download audiobooks, fetch meta
 Run the script with various options to control the workflow:
 
 ```bash
-$ python3 -m tts_data_pipeline.crawler --help
+$ python3 tts_data_pipeline/crawler/main.py --help
 usage: __main__.py [-h] [-s] [-f] [--process-metadata] [-d DOWNLOAD] [--name NAME] [--author AUTHOR] [--narrator NARRATOR]
 
 Audiobook Download Pipeline

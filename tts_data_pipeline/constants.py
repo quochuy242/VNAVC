@@ -37,6 +37,6 @@ TEST_DATA_PATH = "./data/test/"
 AENEAS_CONFIG = "task_language=vie|is_text_type=plain|os_task_file_format=tsv|is_txt_unparsed_id_regex=[0-9]+|is_text_unparsed_id_sort=numeric"
 
 # Align path
-AENEAS_OUTPUT_DIR = "./data/alignment/aeneas_output"
+AENEAS_OUTPUT_DIR = "./data/alignment/"
 DATASET_DIR = "./dataset/"
-STANDARD_SAMPLE_RATE = 24000
+STANDARD_SAMPLE_RATE = None  # 24000

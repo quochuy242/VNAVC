@@ -1,7 +1,7 @@
 import aiohttp
 import subprocess
 import asyncio
-from .utils import logger
+from tts_data_pipeline.crawler.utils import logger
 
 
 async def check_playwright_server():
