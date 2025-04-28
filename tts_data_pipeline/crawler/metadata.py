@@ -7,9 +7,11 @@ from typing import Dict, List, Optional
 
 import httpx
 import pandas as pd
+from tqdm.asyncio import tqdm
 
 from tts_data_pipeline import constants
 from tts_data_pipeline.crawler import utils
+from tts_data_pipeline.crawler.utils import logger
 
 
 async def get_metadata(
@@ -60,6 +62,26 @@ async def get_metadata(
     return metadata
 
 
+async def fetch_metadata(text_urls: List[str], audio_urls: List[str]):
+  logger.info("Fetching metadata for each book")
+  logger.info(f"Save it to JSON file in {constants.METADATA_SAVE_PATH}")
+  fetch_metadata_limit = min(
+    constants.FETCH_METADATA_LIMIT, len(text_urls)
+  )  # Use a semaphore to limit concurrency for metadata fetching
+  semaphore = asyncio.Semaphore(fetch_metadata_limit)
+
+  metadata_tasks = [
+    get_metadata(text_url, audio_url, semaphore, constants.METADATA_SAVE_PATH)
+    for text_url, audio_url in zip(text_urls, audio_urls)
+  ]
+  for task in tqdm(
+    asyncio.as_completed(metadata_tasks),
+    total=len(metadata_tasks),
+    desc="Fetching metadata",
+  ):
+    await task
+
+
 def convert_duration(time_str: str, unit: str = "second") -> float | None:
   """
   Convert a time string in the format "HH:MM:SS" or "MM:SS" to the specified unit (seconds, minutes, or hours).
@@ -94,6 +116,13 @@ def convert_metadata_to_csv():
     df["duration_hour"] = df["duration"].apply(convert_duration, unit="hour")
     # Remove the tvshow
     df = df[~df["audio_url"].str.contains("tvshows", na=False)]
+    # Special cases
+    df.loc[217, "duration"] = None  # Dang cap nhat
+    df.loc[536, "duration"] = "4:05:10"  # 4:05;10
+    df.loc[716, "duration"] = "8:14:52"  # 8:14::52
+    df.loc[1046, "duration"] = "2:01:40"  # 2:01;40
+    df.loc[1173, "duration"] = "25:21:20"  # 25:21:20:
+    df.loc[1197, "duration"] = "13:23:03"  # 13;23;03
     return df
 
   metadata_path = Path(constants.METADATA_SAVE_PATH)

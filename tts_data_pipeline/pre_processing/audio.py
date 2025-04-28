@@ -330,8 +330,8 @@ def process_audio_files(
     metadata_df = pd.read_csv(constants.METADATA_BOOK_PATH)
     metadata_df["sample_rate"], metadata_df["qualified"], metadata_df["num_parts"] = (
       pd.Series([None] * len(metadata_df)),  # A new column for sample rate
-      pd.Series([1] * len(metadata_df)),  # A new column for qualified
-      pd.Series([1] * len(metadata_df)),  # A new column for num_parts
+      pd.Series([None] * len(metadata_df)),  # A new column for qualified
+      pd.Series([None] * len(metadata_df)),  # A new column for num_parts
     )
 
   # Get all MP3 file paths in the audio directory
@@ -390,6 +390,9 @@ def process_audio_files(
         metadata_df.loc[
           metadata_df["audio_url"].str.contains(audiobook_name), "num_parts"
         ] = num_parts
+        metadata_df.loc[
+          metadata_df["audio_url"].str.contains(audiobook_name), "qualified"
+        ] = 1
 
   # Save metadata
   if update_metadata:
