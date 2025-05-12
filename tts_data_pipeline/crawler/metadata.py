@@ -57,7 +57,7 @@ async def get_metadata(
       with open(save_path, "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=4, ensure_ascii=False)
     else:
-      print("Don't save any book's metadata")
+      logger.info("Don't save any book's metadata")
 
     return metadata
 
@@ -112,17 +112,19 @@ def convert_metadata_to_csv():
   """
 
   def process_df(df: pd.DataFrame) -> pd.DataFrame:
+    # Remove the tvshow
+    df = df[~df["audio_url"].str.contains("tvshows", na=False)].copy()
+    # Special cases
+    df.at[217, "duration"] = None  # Dang cap nhat
+    df.at[546, "duration"] = "4:05:10"  # 4:05;10
+    df.at[716, "duration"] = "8:14:52"  # 8:14::52
+    df.at[1046, "duration"] = "2:01:40"  # 2:01;40
+    df.at[1173, "duration"] = "25:21:20"  # 25:21:20:
+    df.at[1197, "duration"] = "13:23:03"  # 13;23;03
     # Convert duration to hours
     df["duration_hour"] = df["duration"].apply(convert_duration, unit="hour")
-    # Remove the tvshow
-    df = df[~df["audio_url"].str.contains("tvshows", na=False)]
-    # Special cases
-    df.loc[217, "duration"] = None  # Dang cap nhat
-    df.loc[536, "duration"] = "4:05:10"  # 4:05;10
-    df.loc[716, "duration"] = "8:14:52"  # 8:14::52
-    df.loc[1046, "duration"] = "2:01:40"  # 2:01;40
-    df.loc[1173, "duration"] = "25:21:20"  # 25:21:20:
-    df.loc[1197, "duration"] = "13:23:03"  # 13;23;03
+    df.to_csv(constants.METADATA_BOOK_PATH, index=False)
+    logger.info(f"Metadata saved to {constants.METADATA_BOOK_PATH}")
     return df
 
   metadata_path = Path(constants.METADATA_SAVE_PATH)
@@ -140,21 +142,15 @@ def convert_metadata_to_csv():
         data = json.load(f)
         all_metadata.append(data)
       except json.JSONDecodeError:
-        print(f"Error parsing JSON file: {json_file}")
+        logger.info(f"Error parsing JSON file: {json_file}")
 
   # Convert to DataFrame
   if all_metadata:
     df = pd.DataFrame(all_metadata)
     df = process_df(df)
-
-    # Save the combined metadata as CSV
-    df.to_csv(constants.METADATA_BOOK_PATH, index=False)
-
-    print(
-      f"Metadata processing complete. {len(all_metadata)} files processed. Saved to {constants.METADATA_BOOK_PATH}"
-    )
+    logger.info(f"Metadata processing complete. {len(all_metadata)} files processed")
   else:
-    print("No metadata files were processed.")
+    logger.info("No metadata files were processed.")
 
 
 def get_valid_audio_urls(

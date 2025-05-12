@@ -17,6 +17,9 @@ help:
 	@echo "  install: Install dependencies"
 	@echo "  clean: Clean virtual environment"
 	@echo "  freeze: Update requirements.txt file"
+	@echo "  download_book_all: Download all books"
+	@echo "  fetch_metadata: Fetch metadata for each book"
+	@echo "  create_metadata_csv: Create metadata CSV file"
 
 venv:
 	@echo "Creating virtual environment..."

@@ -27,8 +27,10 @@ logger.add(
 )
 
 
-class BookInfo(dataclass):
-  bookname: str
+@dataclass(frozen=True, slots=True)
+class BookInfo:
+  book_name: str
+  book_id: int
   audio_path: str
   text_path: str
   narrator_id: int
@@ -45,8 +47,9 @@ def check_dependencies():
   return True
 
 
+# TODO: Remove the feature which removes the sentence based on the outliers of the alignment output
 def process_alignment_output(
-  alignment_path: str, text_path: str, overwrite: bool = False
+  alignment_path: str, book_info: BookInfo, overwrite: bool = False
 ) -> None:
   """
   Process the alignment output: remove outliers and update both alignment and text files.
@@ -73,14 +76,8 @@ def process_alignment_output(
     logger.info(f"Found {len(outlier_idxs)} outliers in alignment")
 
   # Load the text source
-  with open(text_path, "r", encoding="utf-8") as f:
+  with open(book_info.text_path, "r", encoding="utf-8") as f:
     lines = f.read().splitlines()
-
-  # // Remove chapter headers (e.g., "CHƯƠNG XY")
-  # // chapter_indices = [
-  # //   i for i, line in enumerate(lines) if line.strip().startswith("CHƯƠNG")
-  # // ]
-  # // drop_idxs.extend(chapter_indices)
 
   # Update the alignment output and the text source
   drop_idxs = set(drop_idxs)
@@ -94,17 +91,15 @@ def process_alignment_output(
 
   # Write updated text
   if overwrite:
-    with open(text_path, "w", encoding="utf-8") as f:
+    with open(book_info.text_path, "w", encoding="utf-8") as f:
       f.write("\n".join(lines_filtered))
   else:
-    new_text_path = text_path.replace("sentence", "filtered_sentence")
+    new_text_path = book_info.text_path.replace("sentence", "filtered_sentence")
     with open(new_text_path, "w", encoding="utf-8") as f:
       f.write("\n".join(lines_filtered))
 
 
-def align_audio_text(
-  audio_path: str, text_path: str, output_path: str, speaker_id: int
-) -> bool:
+def book_alignment(book_info: BookInfo) -> bool:
   """
   Align a single audio and text file using Aeneas and save the output syncmap.
 
@@ -117,59 +112,30 @@ def align_audio_text(
       bool: True if alignment was successful, False otherwise.
   """
   # Check dependencies only once at the beginning of the program
+  os.makedirs(constants.AENEAS_OUTPUT_DIR, exist_ok=True)
+
+  output_path = osp.join(
+    constants.AENEAS_OUTPUT_DIR,
+    book_info.bookname,
+    book_info.audio_path.replace(".wav", ".tsv"),
+  )
+
   try:
     task = Task(config_string=constants.AENEAS_CONFIG)
-    task.audio_file_path_absolute = os.path.abspath(audio_path)
-    task.text_file_path_absolute = os.path.abspath(text_path)
-    task.sync_map_file_path_absolute = os.path.abspath(output_path)
+    task.audio_file_path_absolute = osp.abspath(book_info.audio_path)
+    task.text_file_path_absolute = osp.abspath(book_info.text_path)
+    task.sync_map_file_path_absolute = osp.abspath(output_path)
 
     ExecuteTask(task).execute()
     task.output_sync_map_file()
 
     # Process the alignment output and split the files
-    process_alignment_output(output_path, text_path)
-    split_audio(output_path, audio_path, speaker_id)
-    split_text(output_path, text_path, speaker_id)
+    process_alignment_output(output_path, book_info)
+    split_audio(output_path, book_info)
+    split_text(output_path, book_info)
 
+    logger.success(f"Book {book_info.bookname} aligned successfully")
     return True
   except Exception as e:
-    logger.error(f"Aeneas failed for {audio_path}: {e}")
+    logger.error(f"Aeneas failed for {book_info.audio_path}: {e}")
     return False
-
-
-def book_alignment(book_info: BookInfo) -> bool:
-  """Process alignment for a single book with multiple parts"""
-  bookname, audio_path, text_path, speaker_id = (
-    book_info.bookname,
-    book_info.audio_path,
-    book_info.text_path,
-    book_info.narrator_id,
-  )
-
-  os.makedirs(osp.join(constants.AENEAS_OUTPUT_DIR, bookname), exist_ok=True)
-  audio_parts = sorted(os.listdir(audio_path))
-  text_parts = sorted(os.listdir(text_path))
-
-  if len(audio_parts) != len(text_parts):
-    logger.error(
-      f"For book {bookname}: The length of audio and text parts do not match ({len(audio_parts)=} != {len(text_parts)=})"
-    )
-    return False
-
-  success_count = 0
-  for audio_part, text_part in zip(audio_parts, text_parts):
-    audio_part_path = osp.join(audio_path, audio_part)
-    text_part_path = osp.join(text_path, text_part)
-    output_path = osp.join(
-      constants.AENEAS_OUTPUT_DIR,
-      bookname,
-      audio_part.replace(".wav", ".tsv"),
-    )
-
-    if align_audio_text(audio_part_path, text_part_path, output_path, speaker_id):
-      success_count += 1
-
-  logger.success(
-    f"Book {bookname}: {success_count}/{len(audio_parts)} parts aligned successfully"
-  )
-  return success_count == len(audio_parts)

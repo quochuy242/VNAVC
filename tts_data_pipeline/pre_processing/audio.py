@@ -35,6 +35,11 @@ def check_ffmpeg():
   return True
 
 
+def delete_old_processed_audio():
+  shutil.rmtree(constants.AUDIO_QUALIFIED_DIR)
+  shutil.rmtree(constants.AUDIO_UNQUALIFIED_DIR)
+
+
 def convert_mp3_to_wav(mp3_path: str, wav_path: str) -> bool:
   """
   Convert an MP3 file to WAV format using ffmpeg.
@@ -139,7 +144,6 @@ def group_audiobook(mp3_dir: str, unqualified_dir: str) -> List[List[str]]:
   return [sorted(files) for files in grouped.values()]
 
 
-# NOTE: Not used
 def combine_wav_files(output_path: str, input_paths: List[str]):
   """
   Combine multiple WAV files into a single WAV file using ffmpeg concat demuxer.
@@ -232,6 +236,7 @@ def get_audio_duration(audio_path: str) -> float:
     return 0
 
 
+# CAUTION: Not used
 def split_audiobook(
   book_name: str,
   input_audio_paths: List[str],
@@ -311,103 +316,67 @@ def split_audiobook(
   return glob.glob(new_audio_dir + "/*.mp3"), counter
 
 
-def process_audio_files(
-  update_metadata: bool = False,
-):
+def audio_processing(mp3_paths: List[str], update_metadata: bool = True):
   """
-  Process all MP3 files in a directory:
-  1. Group all parts of an audiobook together
-  2. Convert them to WAV format
-  3. Check their sample rate
-  4. Move those with sample rates below the threshold to unqualified folder
+  Process a single audio file. It contains converting MP3 to WAV and checking sample rate.
+
+  Args:
+      update_metadata (bool, optional): Whether to update metadata file. Defaults to False.
   """
-  # Create output directories if they don't exist
-  os.makedirs(constants.AUDIO_QUALIFIED_DIR, exist_ok=True)
-  os.makedirs(constants.AUDIO_UNQUALIFIED_DIR, exist_ok=True)
 
   # Read the metadata file for updating sample rate
   if update_metadata:
     metadata_df = pd.read_csv(constants.METADATA_BOOK_PATH)
-    metadata_df["sample_rate"], metadata_df["qualified"], metadata_df["num_parts"] = (
-      pd.Series([None] * len(metadata_df)),  # A new column for sample rate
-      pd.Series([None] * len(metadata_df)),  # A new column for qualified
-      pd.Series([None] * len(metadata_df)),  # A new column for num_parts
+
+  # Get sample rates for each MP3 file
+  sample_rates = [get_sample_rate(mp3_path) for mp3_path in mp3_paths]
+  min_sample_rate = min(sample_rates)
+
+  # Get audiobook name
+  audiobook_name = osp.basename(mp3_paths[0]).split("_")[0]
+
+  # Check sample rates to determine the quality's book
+  if min_sample_rate < constants.MIN_SAMPLE_RATE:
+    logger.warning(
+      f"Unqualified book: {audiobook_name}, minimum sample rates: {min_sample_rate}"
     )
+    # Move unqualified files to unqualified folder
+    for mp3_path in mp3_paths:
+      shutil.move(mp3_path, constants.AUDIO_UNQUALIFIED_DIR)
 
-  # Get all MP3 file paths in the audio directory
-  audiobooks = group_audiobook(
-    constants.AUDIO_RAW_DIR, unqualified_dir=constants.AUDIO_UNQUALIFIED_DIR
-  )
-
-  # Check no MP3 files
-  if not audiobooks:
-    logger.warning(f"No MP3 files found in {constants.AUDIO_RAW_DIR}")
-    return
-
-  # Process each MP3 file
-  qualified_count = 0
-  unqualified_count = 0
-  for audiobook in tqdm(audiobooks, desc="Processing audio files"):
-    # Get sample rates for each MP3 file
-    sample_rates = [get_sample_rate(mp3_path) for mp3_path in audiobook]
-    min_sample_rate = min(sample_rates)
-
-    # Get audiobook name
-    audiobook_name = osp.basename(audiobook[0]).split("_")[0]
-
-    # Check sample rates to determine the quality's book
-    if min_sample_rate < constants.MIN_SAMPLE_RATE:
-      unqualified_count += 1
-      logger.warning(
-        f"Unqualified book: {audiobook_name}, minimum sample rates: {min_sample_rate}"
-      )
-      # Move unqualified files to unqualified folder
-      for mp3_path in audiobook:
-        shutil.move(mp3_path, constants.AUDIO_UNQUALIFIED_DIR)
-
-        # Update qualified column for metadata
-        if update_metadata:
-          metadata_df.loc[
-            metadata_df["audio_url"].str.contains(mp3_path.split("/")[-1]),
-            "qualified",
-          ] = 0
-    else:
-      qualified_count += 1
-      logger.info(
-        f"Qualified book: {audiobook_name}, minimum sample rate: {min_sample_rate}"
-      )
-
-      # Split audiobook into parts, default time threshold is 30 minutes
-      split_paths, num_parts = split_audiobook(
-        audiobook_name, audiobook, convert_to_wav=True
-      )
-
-      # Update sample rate column for metadata
+      # Update qualified column for metadata
       if update_metadata:
         metadata_df.loc[
-          metadata_df["audio_url"].str.contains(audiobook_name), "sample_rate"
-        ] = np.mean(sample_rates)
-        metadata_df.loc[
-          metadata_df["audio_url"].str.contains(audiobook_name), "num_parts"
-        ] = num_parts
-        metadata_df.loc[
-          metadata_df["audio_url"].str.contains(audiobook_name), "qualified"
-        ] = 1
+          metadata_df["audio_url"].str.contains(mp3_path.split("/")[-1]),
+          "qualified",
+        ] = 0
+  else:
+    logger.info(
+      f"Qualified book: {audiobook_name}, minimum sample rate: {min_sample_rate}"
+    )
+
+    # Convert to WAV format and combine into a single WAV file
+    wav_paths = [mp3_path.replace(".mp3", ".wav") for mp3_path in mp3_paths]
+    [
+      convert_mp3_to_wav(mp3_path, wav_path)
+      for mp3_path, wav_path in zip(mp3_paths, wav_paths)
+    ]
+    combine_wav_files(
+      output_path=osp.join(constants.AUDIO_QUALIFIED_DIR, f"{audiobook_name}.wav"),
+      input_paths=wav_paths,
+    )
+
+    # Update sample rate column for metadata
+    if update_metadata:
+      metadata_df.loc[
+        metadata_df["audio_url"].str.contains(audiobook_name), "sample_rate"
+      ] = np.mean(sample_rates)
+      metadata_df.loc[
+        metadata_df["audio_url"].str.contains(audiobook_name), "qualified"
+      ] = 1
 
   # Save metadata
   if update_metadata:
     metadata_df.to_csv(constants.METADATA_BOOK_PATH, index=False)
 
-  logger.info(
-    f"Processing complete: \n - Total books processed: {len(audiobooks)}\n - Qualified books (≥ {constants.MIN_SAMPLE_RATE} Hz): {qualified_count}\n - Unqualified books (< {constants.MIN_SAMPLE_RATE} Hz): {unqualified_count}"
-  )
-
-
-def delete_old_processed_audio():
-  shutil.rmtree(constants.AUDIO_QUALIFIED_DIR)
-  shutil.rmtree(constants.AUDIO_UNQUALIFIED_DIR)
-
-
-if __name__ == "__main__":
-  process_audio_files(update_metadata=True)
-  logger.success("Audio processing complete")
+  return

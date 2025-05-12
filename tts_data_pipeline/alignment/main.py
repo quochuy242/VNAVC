@@ -6,12 +6,17 @@ from tqdm import tqdm
 
 from tts_data_pipeline import constants
 
-from tts_data_pipeline.alignment.utils import logger, check_dependencies, book_alignment
+from tts_data_pipeline.alignment.utils import (
+  logger,
+  check_dependencies,
+  book_alignment,
+  BookInfo,
+)
 
 
 def main():
   """
-  main -> check_dependencies -> book_alignment -> align_audio_text -> process_alignment_output -> split_audio -> split_text
+  main -> check_dependencies -> book_alignment -> process_alignment_output -> split_audio -> split_text
   """
   logger.info("Starting alignment...")
 
@@ -21,20 +26,29 @@ def main():
     return
 
   # Get all audio and text directories
-  audio_dirs = sorted(os.listdir(constants.AUDIO_QUALIFIED_DIR))
-  text_dirs = sorted(os.listdir(constants.TEXT_SENTENCE_DIR))
+  audio_files = sorted(os.listdir(constants.AUDIO_QUALIFIED_DIR))
+  text_files = sorted(os.listdir(constants.TEXT_SENTENCE_DIR))
 
   # Check if the number of audio and text files match
-  if audio_dirs != text_dirs:
+  if audio_files != text_files:
     logger.error("Audio and text directories do not match.")
     return
 
   # Prepare book processing tasks
   books = []
-  for bookname in audio_dirs:
-    audio_path = osp.join(constants.AUDIO_QUALIFIED_DIR, bookname)
-    text_path = osp.join(constants.TEXT_SENTENCE_DIR, bookname)
-    books.append((bookname, audio_path, text_path))
+  for file in audio_files:
+    book_name = file.split("_")[0]
+    audio_path = osp.join(constants.AUDIO_QUALIFIED_DIR, file)
+    text_path = osp.join(constants.TEXT_SENTENCE_DIR, file)
+    books.append(
+      BookInfo(
+        book_name=book_name,
+        audio_path=audio_path,
+        text_path=text_path,
+        book_id=None,
+        narrator_id=None,
+      )  # TODO: Modify narrator_id and book_id
+    )
 
   # Process books in parallel
   with concurrent.futures.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:

@@ -183,92 +183,66 @@ def split_textbook(sentences: List[str], book_name: str):
   ], num_of_part
 
 
-def process_pdfs(
-  pdf_dir: str,
-  output_dir: str,
-  min_word_threshold: int = 20,
+def text_processing(
+  pdf_path: str,
+  min_word_threshold: int,
   update_metadata: bool = False,
-  save_book: bool = False,
+  save_book: bool = True,
 ):
   """
-  Process all PDFs in a directory, extract text, split into sentences,
-  normalize, and save to output file.
+  Process a single PDF file containing extracting text, splitting into sentences,
+  normalizing, and saving to output file.
 
   Args:
-    pdf_dir (str): Directory containing PDF files
-    output_file (str): Path to save the normalized sentences
+    pdf_path (str): Directory containing PDF files
+    min_word_threshold (int): Minimum number of words in a sentence
+    update_metadata (bool): Whether to update metadata file
+    save_book (bool): Whether to save book file
   """
-  # Make sure the directory exists
-  if not os.path.exists(pdf_dir):
-    logger.warning(f"Directory {pdf_dir} does not exist")
-    return
-
-  # Get all PDF files in the directory
-  pdf_files = glob.glob(os.path.join(pdf_dir, "*.pdf"))
-
-  # Check if any PDF files were found
-  if not pdf_files:
-    logger.warning(f"No PDF files found in {pdf_dir}")
-    return
 
   # Read metadata file
   if update_metadata:
     metadata_df = pd.read_csv(constants.METADATA_BOOK_PATH)
-    metadata_df["word_count"] = pd.Series(
-      [0] * len(metadata_df)
-    )  # Create a new column for counting word in the text book
+    # Create a new column for counting word in the text book
+    metadata_df["word_count"], metadata_df["num_sentences"] = (
+      pd.Series([0] * len(metadata_df)),
+      pd.Series([0] * len(metadata_df)),
+    )
 
-  # Process each PDF file with progress bar
-  for pdf_file in tqdm(pdf_files, desc="Processing PDF files"):
-    # Extract text from PDF
-    text = convert_pdf_to_text(pdf_file)
-    pdf_filename = osp.splitext(osp.basename(pdf_file))[0]
+  # Extract text from PDF
+  text = convert_pdf_to_text(pdf_path)
+  pdf_filename = osp.splitext(osp.basename(pdf_path))[0]
 
-    if update_metadata:
-      metadata_df.loc[
-        metadata_df["text_url"].str.contains(pdf_filename), "word_count"
-      ] = count_word(text)
+  if text:
+    # Use underthesea to split book into Vietnamese sentences
+    sentences = underthesea.sent_tokenize(text)
 
-    if text:
-      # Use underthesea to split book into Vietnamese sentences
-      sentences = underthesea.sent_tokenize(text)
+    # Normalize each sentence
+    normalized_sentences = [process_sentence(sent) for sent in sentences]
 
-      # Normalize each sentence
-      normalized_sentences = [process_sentence(sent) for sent in sentences]
+    # Filter out empty sentences and group small consecutive sentences
+    normalized_sentences = [sent for sent in normalized_sentences if sent]
+    normalized_sentences = group_sentences(normalized_sentences, min_word_threshold)
 
-      # Filter out empty sentences and group small consecutive sentences
-      normalized_sentences = [sent for sent in normalized_sentences if sent]
-      normalized_sentences = group_sentences(normalized_sentences, min_word_threshold)
+  # Save all sentences to output file
+  output_path = osp.join(constants.TEXT_QUALIFIED_DIR, pdf_filename + ".txt")
+  if save_book:
+    os.makedirs(osp.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+      for sentence in normalized_sentences:
+        f.write(sentence + "\n")
 
-    # Save all sentences to output file
-    if save_book:
-      os.makedirs(output_dir, exist_ok=True)
-      output_file = os.path.join(output_dir, pdf_filename + ".txt")
-      with open(output_file, "w", encoding="utf-8") as f:
-        for sentence in normalized_sentences:
-          f.write(sentence + "\n")
+  if update_metadata:
+    # Update word count
+    metadata_df.loc[
+      metadata_df["text_url"].str.contains(pdf_filename), "word_count"
+    ] = count_word(text)
 
-    # Split the textbook to some text parts
-    sentence_parts, num_of_part = split_textbook(normalized_sentences, pdf_filename)
-    for idx, part in zip(range(1, num_of_part + 1), sentence_parts):
-      output_file = osp.join(output_dir, pdf_filename, pdf_filename + f"_{idx}.txt")
-      os.makedirs(osp.join(output_dir, pdf_filename), exist_ok=True)
-      with open(output_file, "w", encoding="utf-8") as f:
-        for sentence in part:
-          f.write(sentence + "\n")
+    # Update number of sentences
+    metadata_df.loc[
+      metadata_df["text_url"].str.contains(pdf_filename), "num_sentences"
+    ] = len(normalized_sentences)
 
-  logger.success("Processing complete.")
+    # Save metadata
+    metadata_df.to_csv(constants.METADATA_BOOK_PATH, index=False)
   return
-
-
-if __name__ == "__main__":
-  logger.info("Starting PDF text processing...")
-
-  # TODO: Add more information to metadata
-  process_pdfs(
-    pdf_dir=constants.TEXT_PDF_DIR,
-    output_dir=constants.TEXT_SENTENCE_DIR,
-    min_word_threshold=constants.MIN_WORD_THRESHOLD,
-  )
-
-  logger.success("Text processing complete.")

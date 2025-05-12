@@ -1,7 +1,7 @@
 import argparse
 import asyncio
 import os
-from typing import List
+import os.path as osp
 
 import aiofiles
 from tqdm.asyncio import tqdm
@@ -70,7 +70,7 @@ async def main():
   os.makedirs(constants.TEXT_SAVE_PATH, exist_ok=True)
 
   # Get all book's URLs
-  if args.save_urls or not os.path.exists(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH):
+  if args.save_urls or not osp.exists(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH):
     logger.info("Getting all audiobook URLs and names")
     audio_urls = await utils.get_all_audiobook_url()
     logger.info(f"Found {len(audio_urls)} audiobooks")
@@ -92,10 +92,10 @@ async def main():
 
   # Fetch metadata
   text_urls = [f"{constants.TEXT_BASE_URL}{url.split('/')[-1]}" for url in audio_urls]
-  if args.fetch_metadata or not os.path.exists(constants.METADATA_BOOK_PATH):
+  if args.fetch_metadata:
     await metadata.fetch_metadata(text_urls, audio_urls)
 
-  # Process metadata
+  # Create metadata CSV
   if args.create_metadata_csv:
     logger.info("Process and convert metadata files to a single CSV file")
     await asyncio.to_thread(metadata.convert_metadata_to_csv)
