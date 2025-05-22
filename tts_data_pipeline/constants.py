@@ -23,7 +23,7 @@ MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
 
 # Pre-processing path
 MIN_WORD_THRESHOLD = 20
-TEXT_SENTENCE_DIR = "./data/text/sentences/"
+TEXT_SENTENCE_DIR = "./data/text/sentence/"
 TEXT_PDF_DIR = "./data/text/pdf/"
 TEXT_TXT_DIR = "./data/text/txt/"
 AUDIO_RAW_DIR = "./data/audio/raw/"
@@ -34,7 +34,10 @@ METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
 TEST_DATA_PATH = "./data/test/"
 
 # Align config
-AENEAS_CONFIG = "task_language=vie|is_text_type=plain|os_task_file_format=tsv"
+AENEAS_OUTPUT_EXT = "tsv"
+AENEAS_CONFIG = f"task_language=vie|is_text_type=plain|os_task_file_format={AENEAS_OUTPUT_EXT}|is_txt_unparsed_id_regex=[0-9]+|is_text_unparsed_id_sort=numeric"
 
 # Align path
-ALIGNMENT_OUTPUT_DIR = "./data/alignment/"
+AENEAS_OUTPUT_DIR = "./data/alignment/"
+DATASET_DIR = "./dataset/"
+STANDARD_SAMPLE_RATE = 24000

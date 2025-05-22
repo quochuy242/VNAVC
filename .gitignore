@@ -172,7 +172,10 @@ cython_debug/
 
 # Data
 data/
+dataset/
 
-# Notebook and tmp folder
+# Tmp folder
 tmp/
-notebook/
+
+# Log 
+logs/

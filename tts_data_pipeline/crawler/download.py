@@ -2,8 +2,8 @@ import os
 import asyncio
 import httpx
 from tts_data_pipeline import constants
-from . import utils
-from .utils import logger
+from tts_data_pipeline.crawler import utils
+from tts_data_pipeline.crawler.utils import logger
 
 
 async def download_by_cli(url: str, directory: str, filename: str = None):
