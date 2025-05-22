@@ -93,7 +93,7 @@ async def main():
   # Fetch metadata
   text_urls = [f"{constants.TEXT_BASE_URL}{url.split('/')[-1]}" for url in audio_urls]
   if args.fetch_metadata:
-    await metadata.fetch_metadata(text_urls, audio_urls)
+    await metadata.fetch_book_metadata(text_urls, audio_urls)
 
   # Create metadata CSV
   if args.create_metadata_csv:
@@ -104,7 +104,7 @@ async def main():
   if args.download.lower() == "all":
     logger.info("Downloading all books")
     valid_audio_urls = await asyncio.to_thread(
-      metadata.get_valid_audio_urls,
+      utils.get_valid_audio_urls,
       query="all",
       name=None,
       author=None,
@@ -113,7 +113,7 @@ async def main():
   elif args.download.lower() == "query":
     logger.info("Downloading books by query")
     valid_audio_urls = await asyncio.to_thread(
-      metadata.get_valid_audio_urls,
+      utils.get_valid_audio_urls,
       query="query",
       name=args.name,
       author=args.author,
@@ -150,6 +150,15 @@ async def main():
   ):
     await task
   logger.success("Download complete!")
+
+  # Group audiobook task
+  try:
+    await asyncio.to_thread(
+      utils.group_audiobook, constants.AUDIO_RAW_DIR, constants.AUDIO_UNQUALIFIED_DIR
+    )
+    logger.success("Grouping audiobooks")
+  except Exception as e:
+    logger.error(f"Error grouping audiobooks: {e}")
 
 
 if __name__ == "__main__":

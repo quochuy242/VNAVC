@@ -1,7 +1,13 @@
 import asyncio
-from typing import List, Tuple
+import os
+import os.path as osp
+import random as randomlib
+import shutil
+from collections import defaultdict
+from typing import List, Optional
 
 import httpx
+import pandas as pd
 from loguru import logger
 from playwright.async_api import async_playwright
 from selectolax.parser import HTMLParser
@@ -20,6 +26,74 @@ logger.add(
   enqueue=True,
   format=constants.FORMAT_LOG,
 )
+
+
+def get_valid_audio_urls(
+  query: Optional[str],
+  name: Optional[str],
+  author: Optional[str],
+  narrator: Optional[str],
+  random: int = 0,
+) -> List[str]:
+  """
+  Get a list of valid audio URLs from the metadata CSV file.
+  """
+  df = pd.read_csv(constants.METADATA_BOOK_PATH)
+
+  if random > 0:
+    return randomlib.sample(df["audio_url"].tolist(), random)
+
+  if query == "all":
+    return df["audio_url"].tolist()
+  else:
+    mask = pd.Series([True] * len(df))
+    if name:
+      mask &= df["title"].str.contains(name, na=False)
+    if author:
+      mask &= df["author"].str.contains(author, na=False)
+    if narrator:
+      mask &= df["narrator"].str.contains(narrator, na=False)
+    return df[mask]["audio_url"].tolist()
+
+
+def group_audiobook(
+  mp3_dir: str, unqualified_dir: str, return_group: bool = False
+) -> List[List[str]]:
+  """Efficiently group all parts of audiobooks based on file name prefix.
+
+  Args:
+      mp3_dir (str): Path to directory containing mp3 files.
+      unqualified_dir (str): Directory to move unqualified files
+
+  Returns:
+      List[List[str]]: List of lists, where each sublist contains mp3 file paths of the same audiobook.
+  """
+  groups = defaultdict(list)
+
+  for mp3_file in os.listdir(mp3_dir):
+    # If the file is a directory, skip it
+    if osp.isdir(osp.join(mp3_dir, mp3_file)):
+      continue
+
+    file_path = osp.join(mp3_dir, mp3_file)
+
+    # If the file is not an MP3 file, move it to unqualified folder
+    if not mp3_file.endswith(".mp3"):
+      logger.warning(
+        f"File {mp3_file} is not an MP3 file, move it to {unqualified_dir}"
+      )
+      shutil.move(file_path, unqualified_dir)
+      continue
+
+    book_name = mp3_file.split("_")[0]
+    output_dir = osp.join(mp3_dir, book_name)
+    os.makedirs(output_dir, exist_ok=True)
+    shutil.move(file_path, output_dir)
+
+    if return_group:
+      groups[book_name].append(osp.join(output_dir, mp3_file))
+
+  return list(groups.values()) if return_group else []
 
 
 async def get_text_download_url(name: str) -> str:
@@ -62,7 +136,7 @@ async def get_num_page(url: str) -> int:
   return num_page
 
 
-async def get_all_audiobook_url() -> Tuple[List[str]]:
+async def get_all_audiobook_url() -> List[str]:
   """
   Asynchronously fetch all audiobook URLs from different categories.
 
@@ -98,6 +172,8 @@ async def get_all_audiobook_url() -> Tuple[List[str]]:
     for node in parser.css("div.poster a")
   ]
 
+  # Remove None values
+  book_urls = [url for url in book_urls if url is not None]
   return book_urls
 
 

@@ -7,8 +7,7 @@ VENV := .venv
 PYTHON := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 CRAWLER := tts_data_pipeline/crawler/main.py
-TEXT_PROCESSING := tts_data_pipeline/pre_processing/text.py
-AUDIO_PROCESSING := tts_data_pipeline/pre_processing/audio.py
+PRE_PROCESSING := tts_data_pipeline/pre_processing/main.py
 ALIGNMENT := tts_data_pipeline/alignment/main.py
 
 help: 
@@ -54,4 +53,9 @@ fetch_metadata:
 create_metadata_csv:
 	@echo "Create metadata CSV file..."
 	@$(PYTHON) $(CRAWLER) --create-metadata-csv
+	@echo "Done"
+
+pre_processing_all:
+	@echo "Pre-processing all books..."
+	@$(PYTHON) $(PRE_PROCESSING) -t "all"
 	@echo "Done"

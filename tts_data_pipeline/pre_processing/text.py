@@ -15,7 +15,7 @@ from tts_data_pipeline import constants
 
 logger.remove()
 logger.add(
-  f"{constants.LOG_DIR}/text_processing.log",
+  f"{constants.LOG_DIR}/pre_processing.log",
   level="INFO",
   rotation="10 MB",
   encoding="utf-8",
@@ -144,7 +144,7 @@ def process_sentence(sentence: str) -> str:
     sentence = remove_punctuations(sentence)  # remove punctuation
     sentence = underthesea.text_normalize(sentence)  # Normalize sentence (NFC)
     sentence = semiotic_norm.normalize_all(sentence)
-    sentence = sentence.upper()  # convert to uppercase
+    sentence = sentence.lower()  # convert to lowercase
   except Exception as e:
     logger.error(f"Error processing sentence: {e}")
   return sentence
@@ -168,12 +168,14 @@ def group_sentences(sentences: List[str], min_word_threshold: int = 20):
   return grouped_sentences
 
 
+# CAUTION: Not used
 def split_textbook(sentences: List[str], book_name: str):
   # Get the number of part of audiobook
   audiobook_path = osp.join(constants.AUDIO_QUALIFIED_DIR, book_name)
   if osp.exists(audiobook_path):
     num_of_part = len(os.listdir(audiobook_path))
   else:
+    num_of_part = 1
     logger.error(f"The {book_name} don't exist")
 
   num_sentence_each_part = len(sentences) // num_of_part
@@ -188,6 +190,7 @@ def text_processing(
   min_word_threshold: int,
   update_metadata: bool = False,
   save_book: bool = True,
+  remove_original_files: bool = True,
 ):
   """
   Process a single PDF file containing extracting text, splitting into sentences,
@@ -201,13 +204,9 @@ def text_processing(
   """
 
   # Read metadata file
-  if update_metadata:
-    metadata_df = pd.read_csv(constants.METADATA_BOOK_PATH)
-    # Create a new column for counting word in the text book
-    metadata_df["word_count"], metadata_df["num_sentences"] = (
-      pd.Series([0] * len(metadata_df)),
-      pd.Series([0] * len(metadata_df)),
-    )
+  metadata_df = (
+    pd.read_csv(constants.METADATA_BOOK_PATH) if update_metadata else pd.DataFrame()
+  )
 
   # Extract text from PDF
   text = convert_pdf_to_text(pdf_path)
@@ -224,25 +223,30 @@ def text_processing(
     normalized_sentences = [sent for sent in normalized_sentences if sent]
     normalized_sentences = group_sentences(normalized_sentences, min_word_threshold)
 
-  # Save all sentences to output file
-  output_path = osp.join(constants.TEXT_QUALIFIED_DIR, pdf_filename + ".txt")
-  if save_book:
-    os.makedirs(osp.dirname(output_path), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
-      for sentence in normalized_sentences:
-        f.write(sentence + "\n")
+    # Save all sentences to output file
+    output_path = osp.join(constants.TEXT_SENTENCE_DIR, pdf_filename + ".txt")
+    if save_book:
+      os.makedirs(osp.dirname(output_path), exist_ok=True)
+      with open(output_path, "w", encoding="utf-8") as f:
+        for sentence in normalized_sentences:
+          f.write(sentence + "\n")
 
-  if update_metadata:
-    # Update word count
-    metadata_df.loc[
-      metadata_df["text_url"].str.contains(pdf_filename), "word_count"
-    ] = count_word(text)
+    if update_metadata:
+      # Update word count
+      metadata_df.loc[
+        metadata_df["text_url"].str.contains(pdf_filename), "word_count"
+      ] = count_word(text)
 
-    # Update number of sentences
-    metadata_df.loc[
-      metadata_df["text_url"].str.contains(pdf_filename), "num_sentences"
-    ] = len(normalized_sentences)
+      # Update number of sentences
+      metadata_df.loc[
+        metadata_df["text_url"].str.contains(pdf_filename), "num_sentences"
+      ] = len(normalized_sentences)
 
-    # Save metadata
-    metadata_df.to_csv(constants.METADATA_BOOK_PATH, index=False)
-  return
+      # Save metadata
+      metadata_df.to_csv(constants.METADATA_BOOK_PATH, index=False)
+
+    # Remove original file
+    if remove_original_files:
+      os.remove(pdf_path)
+
+  return pdf_filename

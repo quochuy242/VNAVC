@@ -20,6 +20,8 @@ async def start_playwright_server():
   cmd = [
     "docker",
     "run",
+    "--name",
+    "playwright-server",
     "-p",
     "3000:3000",
     "--rm",
@@ -34,8 +36,8 @@ async def start_playwright_server():
     "-c",
     "npx -y playwright@1.51.0 run-server --port 3000 --host 0.0.0.0",
   ]
-  subprocess.run(cmd)
-  await asyncio.sleep(2)  # Wait for the server to start
+  subprocess.run(cmd, check=True)
+  await asyncio.sleep(5)  # Wait for the server to start
 
 
 async def ensure_playwright_server_running():
