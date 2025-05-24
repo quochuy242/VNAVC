@@ -59,7 +59,9 @@ async def download_full_book(
 
     # Download audio
     tasks = [
-      download_by_cli(url, audio_save_path, filename=f"{name_book}_{idx}")
+      download_by_cli(
+        url, os.path.join(audio_save_path, name_book), filename=f"{name_book}_{idx}"
+      )
       for idx, url in enumerate(audio_download_urls, start=1)
     ]
 

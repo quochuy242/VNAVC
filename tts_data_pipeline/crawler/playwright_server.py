@@ -16,7 +16,6 @@ async def check_playwright_server():
 
 
 async def start_playwright_server():
-  # You may want to customize the command if needed
   cmd = [
     "docker",
     "run",

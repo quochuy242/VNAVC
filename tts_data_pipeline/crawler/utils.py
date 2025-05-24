@@ -48,7 +48,7 @@ def get_valid_audio_urls(
   else:
     mask = pd.Series([True] * len(df))
     if name:
-      mask &= df["title"].str.contains(name, na=False)
+      mask &= df["name"].str.contains(name, na=False)
     if author:
       mask &= df["author"].str.contains(author, na=False)
     if narrator:
