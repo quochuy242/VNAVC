@@ -47,6 +47,10 @@ def split_audio(book: Book, max_workers: int = 8) -> None:
     output_dir = Path(constants.DATASET_DIR) / (
       str(book.narrator.id) if book.narrator.id else book.narrator.name
     )
+  elif isinstance(book.narrator, list):
+    output_dir = Path(constants.DATASET_DIR) / (
+      str(book.narrator[0].id) if book.narrator[0].id else book.narrator[0].name
+    )
   else:
     output_dir = Path(constants.DATASET_DIR) / "Unknown"
   os.makedirs(output_dir, exist_ok=True)
@@ -92,6 +96,10 @@ def split_text(book: Book, max_workers: int = 8) -> None:
     output_dir = Path(constants.DATASET_DIR) / (
       str(book.narrator.id) if book.narrator.id else book.narrator.name
     )
+  elif isinstance(book.narrator, list):
+    output_dir = Path(constants.DATASET_DIR) / (
+      str(book.narrator[0].id) if book.narrator[0].id else book.narrator[0].name
+    )
   else:
     output_dir = Path(constants.DATASET_DIR) / "Unknown"
   os.makedirs(output_dir, exist_ok=True)
@@ -109,11 +117,12 @@ def split_text(book: Book, max_workers: int = 8) -> None:
 
   def process_text_segment(row):
     output_file = output_dir / f"{book.id}_{row['id']}.txt"
+    text_row_id = int(row["id"][1:]) - 1  # ex: id = f0001 -> 0
     try:
       with open(output_file, "w", encoding="utf-8") as f_out:
-        f_out.write(lines[row["id"]])
+        f_out.write(lines[text_row_id])
     except IndexError:
-      logger.warning(f"Line index {row['id']} out of range for {book.text_path}")
+      logger.warning(f"Line index {text_row_id} out of range for {book.text_path}")
 
   with ThreadPoolExecutor(max_workers=max_workers) as executor:
     list(
@@ -176,12 +185,12 @@ def book_alignment(book: Book, split: bool, remove_first: bool, jobs: int) -> bo
 
   output_path = (
     str(Path(constants.AENEAS_OUTPUT_DIR) / book.name / f"{book.name}.tsv")
-    if book.audio_path is not None
-    else None
+    if not book.alignment_path
+    else book.alignment_path
   )
 
   try:
-    if book.alignment_path is not None:
+    if book.alignment_path is None:
       task = Task(config_string=constants.AENEAS_CONFIG)
       task.audio_file_path_absolute = (
         osp.abspath(book.audio_path) if book.audio_path is not None else None

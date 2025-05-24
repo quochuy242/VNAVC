@@ -47,6 +47,7 @@ def parse_args():
     "--force",
     action="store_true",
     help="Force to align audio and text although their alignment data exists (default: False)",
+    default=False,
   )
 
   return parser.parse_args()
@@ -140,17 +141,20 @@ def main():
     return
 
   alignment_path = find_alignment_output(book)
+  print(alignment_path)
   if alignment_path and not args.force:
-    logger.info(f"Alignment file exists: {alignment_path}")
     book.update_paths(alignment_path=alignment_path)
 
   # Run alignment
   jobs = os.cpu_count() if args.jobs == -1 else args.jobs
   try:
     with ThreadPoolExecutor(max_workers=jobs) as executor:
-      executor.submit(book_alignment, book, args.split, remove_first=True)
+      future = executor.submit(
+        book_alignment, book, args.split, remove_first=True, jobs=jobs
+      )
+      future.result()
   except Exception as e:
-    logger.error(f"Error processing {audio_path}: {e}")
+    logger.error(f"Error alignment {audio_path=}, {text_path=}: {e}")
 
 
 if __name__ == "__main__":

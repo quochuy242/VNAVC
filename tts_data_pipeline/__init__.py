@@ -84,7 +84,7 @@ class Narrator:
     speed: Optional[str] = None,
     pitch: Optional[str] = None,
   ):
-    self.id = id or self.generate_id()
+    self.id = id if id else self.generate_id()
     self.name = name
     self.dialect = dialect
     self.gender = gender
@@ -214,15 +214,15 @@ class Book:
       text_url (str, optional): URL to online text.
       audio_url (str, optional): URL to online audio.
     """
-    
-    duration_hour = convert_duration(duration, unit="hour") if isinstance(duration, str) else duration
 
-    self.id = id or self.generate_id()
+    self.id = id if id else self.generate_id()
     self.name = normalize_name(name)
     self.text_path = text_path
     self.audio_path = audio_path
     self.narrator = narrator
-    self.duration = duration_hour
+    self.duration = (
+      convert_duration(duration, unit="hour") if isinstance(duration, str) else duration
+    )
     self.author = author
     self.text_url = text_url
     self.audio_url = audio_url
@@ -244,11 +244,12 @@ class Book:
 
     narrators_data = data.get("narrator", [])
     if isinstance(narrators_data, dict):
-      narrators = [Narrator(**narrators_data)]
+      narrators = Narrator(**narrators_data)
     else:
       narrators = [Narrator(**n) for n in narrators_data]
 
     return cls(
+      id=data.get("id"),
       name=data.get("name"),
       text_url=data.get("text_url"),
       audio_url=data.get("audio_url"),
@@ -286,13 +287,13 @@ class Book:
   def __repr__(self):
     return (
       f"Book("
-      f"id={self.id}, "
-      f"name={self.name}, "
-      f"author={self.author}, "
-      f"narrator={self.narrator}, "
-      f"duration={self.duration}, "
-      f"text_url={self.text_url}, "
-      f"audio_url={self.audio_url}"
+      f"\n\tid={self.id}, "
+      f"\n\tname={self.name}, "
+      f"\n\tauthor={self.author}, "
+      f"\n\tnarrator={self.narrator}, "
+      f"\n\tduration={self.duration}, "
+      f"\n\ttext_url={self.text_url}, "
+      f"\n\taudio_url={self.audio_url}"
       f")"
     )
 
@@ -310,17 +311,17 @@ class Book:
     return secrets.token_hex(length // 2)
 
   def update_paths(
-    self, 
-    text_path: Optional[Union[str, Path]] = None, 
-    audio_path: Optional[Union[str, Path]] = None, 
+    self,
+    text_path: Optional[Union[str, Path]] = None,
+    audio_path: Optional[Union[str, Path]] = None,
     alignment_path: Optional[Union[str, Path]] = None,
   ):
     """
     Update the local file paths for the book.
 
     Args:
-      text_path (str | Path): Local path to the text file.
-      audio_path (str | Path): Local path to the audio file.
+      text_path (str | Path | None): Local path to the text file.
+      audio_path (str | Path | None): Local path to the audio file.
     """
     if text_path is not None:
       self.text_path = text_path
