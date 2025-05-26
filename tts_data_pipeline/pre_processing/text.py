@@ -1,4 +1,3 @@
-import glob
 import os
 import os.path as osp
 import re
@@ -9,7 +8,6 @@ import pandas as pd
 import pdfplumber
 import underthesea
 from loguru import logger
-from tqdm import tqdm
 
 from tts_data_pipeline import constants
 
@@ -98,7 +96,7 @@ def convert_pdf_to_text(pdf_path: str) -> Optional[str]:
         text += page.extract_text()
     return text
   except Exception as e:
-    logger.error(f"Error processing {pdf_path}: {e}")
+    logger.exception(f"Error processing {pdf_path}: {e}")
     return None
 
 
@@ -146,7 +144,7 @@ def process_sentence(sentence: str) -> str:
     sentence = semiotic_norm.normalize_all(sentence)
     sentence = sentence.lower()  # convert to lowercase
   except Exception as e:
-    logger.error(f"Error processing sentence: {e}")
+    logger.exception(f"Error processing sentence: {e}")
   return sentence
 
 

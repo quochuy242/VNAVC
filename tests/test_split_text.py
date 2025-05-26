@@ -7,7 +7,7 @@ def main():
   print(book.narrator.id)
   book.update_paths(
     text_path="./data/text/sentence/mat-biec.txt",
-    alignment_path="./data/alignment/mat-biec/mat-biec.tsv",
+    alignment_path="./data/alignment/mat-biec/output.tsv",
   )
   split_text(book, max_workers=4)
 

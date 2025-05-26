@@ -24,7 +24,7 @@ def process_text_file(pdf_path: str, **kwargs):
     pdf_filename = text_processing(pdf_path, **kwargs)
     text_logger.success(f"Processing {pdf_filename} pdf file completed")
   except Exception as e:
-    text_logger.error(f"Error processing {pdf_path}: {e}")
+    text_logger.exception(f"Error processing {pdf_path}: {e}")
 
 
 def process_audio_file(audio_paths: List[str], **kwargs):
@@ -36,7 +36,7 @@ def process_audio_file(audio_paths: List[str], **kwargs):
     audiobook_name = audio_processing(audio_paths, **kwargs)
     audio_logger.success(f"Audiobook {audiobook_name} processing completed")
   except Exception as e:
-    audio_logger.error(f"Error processing {audio_paths[0]}: {e}")
+    audio_logger.exception(f"Error processing {audio_paths[0]}: {e}")
 
 
 def main():

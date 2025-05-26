@@ -110,12 +110,12 @@ def validate_files(audio_path: Path, text_path: Path) -> bool:
 
 
 def find_alignment_output(book: Book):
-  alignment_path = Path(constants.AENEAS_OUTPUT_DIR) / book.name / f"{book.name}.tsv"
+  alignment_path = Path(constants.AENEAS_OUTPUT_DIR) / book.name / "output.tsv"
 
   if alignment_path.exists():
     return alignment_path
   else:
-    logger.info(f"Alignment file not found: {alignment_path}")
+    logger.error(f"Alignment file not found: {alignment_path}")
     return None
 
 
@@ -135,13 +135,12 @@ def main():
   json_path = find_json(audio_path)
   if json_path:
     book = Book.from_json(json_path)
-    book.update_paths(text_path, audio_path)
+    book.update_paths(text_path=text_path, audio_path=audio_path)
   else:
     logger.error(f"Not able to setup book. {audio_path=}, {text_path=}")
     return
 
   alignment_path = find_alignment_output(book)
-  print(alignment_path)
   if alignment_path and not args.force:
     book.update_paths(alignment_path=alignment_path)
 
@@ -154,7 +153,7 @@ def main():
       )
       future.result()
   except Exception as e:
-    logger.error(f"Error alignment {audio_path=}, {text_path=}: {e}")
+    logger.exception(f"Error alignment {audio_path=}, {text_path=}: {e}")
 
 
 if __name__ == "__main__":

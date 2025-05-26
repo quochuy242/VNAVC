@@ -158,7 +158,7 @@ async def main():
     )
     logger.success("Grouping audiobooks")
   except Exception as e:
-    logger.error(f"Error grouping audiobooks: {e}")
+    logger.exception(f"Error grouping audiobooks: {e}")
 
 
 if __name__ == "__main__":
