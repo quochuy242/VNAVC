@@ -1,8 +1,7 @@
 LOG_DIR = "./logs/"
-FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
 
-
-# Crawler saving path
+# Crawler path
 AUDIO_SAVE_PATH = "./data/audio/"
 ALL_AUDIOBOOK_URLS_SAVE_PATH = "./data/all_audiobook_urls.txt"
 TEXT_BOOK_URLS_SAVE_PATH = "./data/text_book_urls.txt"
@@ -20,10 +19,11 @@ FETCH_METADATA_LIMIT = 20
 DOWNLOAD_BOOK_LIMIT = 10
 
 # Pre-processing config
-MIN_SAMPLE_RATE = 24000
+MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
 
-# Pre-processing saving path
-TEXT_SENTENCE_DIR = "./data/text/sentences/"
+# Pre-processing path
+MIN_WORD_THRESHOLD = 20
+TEXT_SENTENCE_DIR = "./data/text/sentence/"
 TEXT_PDF_DIR = "./data/text/pdf/"
 TEXT_TXT_DIR = "./data/text/txt/"
 AUDIO_RAW_DIR = "./data/audio/raw/"
@@ -31,4 +31,13 @@ AUDIO_QUALIFIED_DIR = "./data/audio/qualified/"
 AUDIO_UNQUALIFIED_DIR = "./data/audio/unqualified/"
 METADATA_BOOK_PATH = "./data/metadata/metadata_book.csv"
 METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
-PROCESSED_METADATA_PATH = "./data/metadata/processed/"
+TEST_DATA_PATH = "./data/test/"
+
+# Align config
+AENEAS_OUTPUT_EXT = "tsv"
+AENEAS_CONFIG = f"task_language=vie|is_text_type=plain|os_task_file_format={AENEAS_OUTPUT_EXT}|is_txt_unparsed_id_regex=[0-9]+|is_text_unparsed_id_sort=numeric"
+
+# Align path
+AENEAS_OUTPUT_DIR = "./data/alignment/"
+DATASET_DIR = "./dataset/"
+STANDARD_SAMPLE_RATE = 24000
