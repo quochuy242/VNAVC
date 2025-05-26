@@ -10,7 +10,6 @@ import pandas as pd
 from aeneas.executetask import ExecuteTask
 from aeneas.task import Task
 from loguru import logger
-from tqdm import tqdm
 
 from tts_data_pipeline import Book, Narrator, constants
 

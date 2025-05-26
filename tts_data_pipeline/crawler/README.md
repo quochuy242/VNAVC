@@ -39,18 +39,12 @@ options:
   -h, --help            show this help message and exit
   -s, --save-urls       Force to save all audiobook URLs to a file
   -f, --fetch-metadata  Force to fetch metadata for each book
-  --process-metadata    Process and convert metadata files to a single CSV file
+  --create-metadata-csv    Process and convert metadata files to a single CSV file
   -d DOWNLOAD, --download DOWNLOAD
                         Download books (available: all, none, query) (default: none)
-  --name NAME           Download books by name when --download is query
-  --author AUTHOR       Download books by author when --download is query
-  --narrator NARRATOR   Download books by narrator when --download is query
-```
-
-You can combine multiple operations in a single command:
-
-```bash
-python3 -m tts_data_pipeline.crawler --save-urls --fetch-metadata --process-metadata --download "all"
+  --name NAME           Download books by name when --download is query, check the metadata file for exact match
+  --author AUTHOR       Download books by author when --download is query, check the metadata file for exact match
+  --narrator NARRATOR   Download books by narrator when --download is query, check the metadata file for exact match
 ```
 
 ### Expected Output
