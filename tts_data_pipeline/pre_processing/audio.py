@@ -65,10 +65,10 @@ def convert_mp3_to_wav(mp3_path: str, wav_path: str) -> bool:
     logger.success(f"Converted {mp3_path} to {wav_path}")
     return True
   except subprocess.CalledProcessError as e:
-    logger.error(f"ffmpeg failed for {mp3_path}: {e}")
+    logger.exception(f"ffmpeg failed for {mp3_path}: {e}")
     return False
   except Exception as e:
-    logger.error(f"Error converting {mp3_path} to WAV: {e}")
+    logger.exception(f"Error converting {mp3_path} to WAV: {e}")
     return False
 
 
@@ -195,7 +195,7 @@ def get_audio_duration(audio_path: str) -> float:
     output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
     return float(output.decode("utf-8").strip())
   except subprocess.CalledProcessError as e:
-    logger.error(f"ffprobe failed to get duration: {e}")
+    logger.exception(f"ffprobe failed to get duration: {e}")
     return 0
 
 
@@ -256,7 +256,7 @@ def split_audiobook(
         f"Successfully split {input_audio_path} into {time_threshold} seconds, total {len(os.listdir(split_dir))} files."
       )
     except Exception as e:
-      logger.error(f"Error splitting {input_audio_path}: {e}")
+      logger.exception(f"Error splitting {input_audio_path}: {e}")
       return None
 
   # Remark all split files

@@ -10,7 +10,6 @@ import pandas as pd
 from aeneas.executetask import ExecuteTask
 from aeneas.task import Task
 from loguru import logger
-from tqdm import tqdm
 
 from tts_data_pipeline import Book, Narrator, constants
 
@@ -39,7 +38,7 @@ def check_dependencies():
   return True
 
 
-def split_audio(book: Book, max_workers: int = 8) -> None:
+def split_audio(book: Book, remove_outliers: bool = True) -> None:
   """
   Split audio file based on alignment data using multithreading.
   """
@@ -59,36 +58,47 @@ def split_audio(book: Book, max_workers: int = 8) -> None:
     book.alignment_path, sep="\t", names=["start", "end", "id", "duration"]
   )
 
-  def process_segment(row):
-    output_file = output_dir / f"{book.id}_{row['id']}.wav"
-    cmd = [
-      "ffmpeg",
-      "-y",
-      "-i",
-      book.audio_path,
-      "-ss",
-      str(row["start"]),
-      "-to",
-      str(row["end"]),
-      "-c:a",
-      "pcm_s16le",
-    ]
-    if constants.STANDARD_SAMPLE_RATE:
-      cmd.extend(["-ar", str(constants.STANDARD_SAMPLE_RATE)])
-    cmd.append(str(output_file))
-    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+  if book.audio_path is None:
+    logger.error("Audio path is None")
+    return
 
-  with ThreadPoolExecutor(max_workers=max_workers) as executor:
-    list(
-      tqdm(
-        executor.map(process_segment, [row for _, row in align_df.iterrows()]),
-        total=len(align_df),
-        desc="Splitting Audio",
-      )
-    )
+  # Create the segment times and output pattern arguments
+  segment_times = ",".join([str(end) for end in align_df["end"]])
+  output_pattern = output_dir / f"{book.id}_%d.wav"
+
+  # Run the ffmpeg command
+  cmd = [
+    "ffmpeg",
+    "-i",
+    str(book.audio_path),
+    "-f",
+    "segment",
+    "-segment_times",
+    segment_times,
+    "-c:a",
+    "pcm_s16le",
+    "-reset_timestamps",
+    "1",
+    str(output_pattern),
+  ]
+
+  if constants.STANDARD_SAMPLE_RATE:
+    cmd.extend(["-ar", str(constants.STANDARD_SAMPLE_RATE)])
+
+  subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+
+  # Remove the outliers
+  if remove_outliers:
+    with open(
+      Path(book.alignment_path).parent / "outlier.txt", "r", encoding="utf-8"
+    ) as f:
+      lines = [line.strip() for line in f if line.strip()]
+      for line in lines:
+        os.remove(output_dir / f"{book.id}_{line}.wav")
+  return
 
 
-def split_text(book: Book, max_workers: int = 8) -> None:
+def split_text(book: Book, remove_outliers: bool = True, max_workers: int = 8) -> None:
   """
   Split text file based on alignment data using multithreading.
   """
@@ -115,23 +125,30 @@ def split_text(book: Book, max_workers: int = 8) -> None:
   with open(book.text_path, "r", encoding="utf-8") as f:
     lines = f.read().splitlines()
 
-  def process_text_segment(row):
-    output_file = output_dir / f"{book.id}_{row['id']}.txt"
-    text_row_id = int(row["id"][1:]) - 1  # ex: id = f0001 -> 0
+  def process_text_segment(row: pd.Series):
+    id = int(row["id"])
+    output_file = output_dir / f"{book.id}_{id}.txt"
     try:
       with open(output_file, "w", encoding="utf-8") as f_out:
-        f_out.write(lines[text_row_id])
+        f_out.write(lines[id])
     except IndexError:
-      logger.warning(f"Line index {text_row_id} out of range for {book.text_path}")
+      logger.warning(f"Line index {id} out of range for {book.text_path}")
 
   with ThreadPoolExecutor(max_workers=max_workers) as executor:
-    list(
-      tqdm(
-        executor.map(process_text_segment, [row for _, row in align_df.iterrows()]),
-        total=len(align_df),
-        desc="Splitting Text",
-      )
+    future = executor.submit(
+      process_text_segment, [row for _, row in align_df.iterrows()]
     )
+    future.result()
+
+  # Remove the outliers
+  if remove_outliers:
+    with open(
+      Path(book.alignment_path).parent / "outlier.txt", "r", encoding="utf-8"
+    ) as f:
+      lines = f.read().splitlines()
+      for line in lines:
+        os.remove(output_dir / f"{book.id}_{line}.txt")
+  return
 
 
 def process_alignment_output(book: Book, remove_first: bool = True) -> None:
@@ -144,7 +161,10 @@ def process_alignment_output(book: Book, remove_first: bool = True) -> None:
   """
   # Load the alignment data
   align_df = pd.read_csv(book.alignment_path, sep="\t", names=["start", "end", "id"])
+
   align_df["duration"] = align_df["end"] - align_df["start"]
+  align_df["id"] = align_df["id"].str.replace("f", "").apply(int)
+  align_df.to_csv(book.alignment_path, sep="\t", index=False, header=False)
 
   # Initialize indices to drop
   drop_idxs = []
@@ -160,12 +180,10 @@ def process_alignment_output(book: Book, remove_first: bool = True) -> None:
     drop_idxs.extend(outlier_idxs)
     logger.info(f"Found {len(outlier_idxs)} outliers in alignment")
 
-  # Update the alignment output and the text source
-  drop_idxs = set(drop_idxs)
-  align_df_filtered = align_df.drop(index=[i for i in drop_idxs if i < len(align_df)])
-
-  # Write updated alignment
-  align_df_filtered.to_csv(book.alignment_path, sep="\t", header=False, index=False)
+  # Save the updated alignment data
+  drop_idxs = sorted(drop_idxs)
+  with open(Path(book.alignment_path).parent / "outlier.txt", "w") as f:
+    f.write("\n".join([str(idx) for idx in drop_idxs]))
 
 
 def book_alignment(book: Book, split: bool, remove_first: bool, jobs: int) -> bool:
@@ -184,7 +202,7 @@ def book_alignment(book: Book, split: bool, remove_first: bool, jobs: int) -> bo
   os.makedirs(constants.AENEAS_OUTPUT_DIR, exist_ok=True)
 
   output_path = (
-    str(Path(constants.AENEAS_OUTPUT_DIR) / book.name / f"{book.name}.tsv")
+    str(Path(constants.AENEAS_OUTPUT_DIR) / book.name / "output.tsv")
     if not book.alignment_path
     else book.alignment_path
   )
@@ -213,13 +231,13 @@ def book_alignment(book: Book, split: bool, remove_first: bool, jobs: int) -> bo
     if output_path:
       process_alignment_output(book, remove_first=remove_first)
       if split:
-        split_audio(book, max_workers=jobs)
+        split_audio(book)
         split_text(book, max_workers=jobs)
 
     logger.success(f"Book {book.name} aligned successfully")
     return True
   except Exception as e:
-    logger.error(f"Aeneas failed for {book.audio_path}: {e}")
+    logger.exception(f"Aeneas failed for {book.audio_path}: {e}")
     return False
 
 

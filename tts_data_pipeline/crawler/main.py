@@ -41,19 +41,19 @@ def parse_args():
   parser.add_argument(
     "--name",
     type=str,
-    help="Download books by name when --download is query",
+    help="Download books by name when --download is query, check the metadata file for exact match",
     default=None,
   )
   parser.add_argument(
     "--author",
     type=str,
-    help="Download books by author when --download is query",
+    help="Download books by author when --download is query, check the metadata file for exact match",
     default=None,
   )
   parser.add_argument(
     "--narrator",
     type=str,
-    help="Download books by narrator when --download is query",
+    help="Download books by narrator when --download is query, check the metadata file for exact match",
     default=None,
   )
   return parser.parse_args()
@@ -158,7 +158,7 @@ async def main():
     )
     logger.success("Grouping audiobooks")
   except Exception as e:
-    logger.error(f"Error grouping audiobooks: {e}")
+    logger.exception(f"Error grouping audiobooks: {e}")
 
 
 if __name__ == "__main__":

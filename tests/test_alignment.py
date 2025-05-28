@@ -1,3 +1,5 @@
+# CAUTION: Old version
+
 from tts_data_pipeline.alignment.utils import align_audio_text
 
 align_audio_text(
