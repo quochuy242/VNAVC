@@ -171,6 +171,7 @@ cython_debug/
 .pypirc
 
 # Data
+<<<<<<< HEAD
 data/
 dataset/
 
@@ -179,3 +180,6 @@ tmp/
 
 # Log 
 logs/
+=======
+data/
+>>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)

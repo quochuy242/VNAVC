@@ -7,8 +7,13 @@ from tts_data_pipeline.crawler.utils import logger
 
 
 async def download_by_cli(url: str, directory: str, filename: str = None):
+<<<<<<< HEAD
   """
   Download file using wget
+=======
+    """
+    Download file using wget
+>>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)
 
   Args:
       url (str): The download URL of the audio file.
@@ -16,6 +21,7 @@ async def download_by_cli(url: str, directory: str, filename: str = None):
   """
   os.makedirs(directory, exist_ok=True)
 
+<<<<<<< HEAD
   if filename:
     ext = os.path.splitext(url.split("/")[-1])[1]
     save_path = os.path.join(directory, filename + ext)
@@ -24,6 +30,16 @@ async def download_by_cli(url: str, directory: str, filename: str = None):
 
   # Configure wget command
   cmd = f'wget {url} -q --user-agent "{constants.USER_AGENTS}" -O {save_path}'
+=======
+    if filename:
+        ext = os.path.splitext(url.split("/")[-1])[1]
+        save_path = os.path.join(directory, filename + ext)
+    else:
+        save_path = os.path.join(directory, url.split("/")[-1])
+
+    # Configure wget command
+    cmd = f'wget {url} -q --user-agent "{constants.USER_AGENTS}" -O {save_path}'
+>>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)
 
   # Start the process
   process = await asyncio.create_subprocess_shell(
@@ -45,6 +61,7 @@ async def download_full_book(
   """
   Fetch download URLs and download a book in both text source and audio sources
 
+<<<<<<< HEAD
   Args:
       audio_url (str): The download URL of the audio file.
       text_url (str): The download URL of the text file.
@@ -64,6 +81,27 @@ async def download_full_book(
       )
       for idx, url in enumerate(audio_download_urls, start=1)
     ]
+=======
+    Args:
+        audio_url (str): The download URL of the audio file.
+        text_url (str): The download URL of the text file.
+        audio_save_path (str): The file path to save the downloaded audio file.
+        text_save_path (str): The file path to save the downloaded text file.
+    """
+    name_book = text_url.split("/")[-1].split(".")[0]
+    try:
+        # Each downloading URL of audio is the part of the book. Contrast, the text one is a book
+        audio_download_urls = await utils.fetch_download_audio_url(audio_url)
+
+        # Download audio
+        tasks = [
+            download_by_cli(url, audio_save_path, filename=f"{name_book}_{idx}")
+            for idx, url in enumerate(audio_download_urls, start=1)
+        ]
+
+        # Download text
+        tasks.append(download_by_cli(text_url, text_save_path, filename=name_book))
+>>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)
 
     # Download text
     tasks.append(download_by_cli(text_url, text_save_path, filename=name_book))
