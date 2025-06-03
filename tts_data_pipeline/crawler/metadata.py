@@ -117,7 +117,6 @@ def convert_metadata_to_csv():
     # Convert duration to hours
     df["duration_hour"] = df["duration"].apply(convert_duration, unit="hour")
 
-<<<<<<< HEAD
     # Add new columns
     df["sample_rate"] = pd.Series([None] * len(df))
     df["quality"] = pd.Series([None] * len(df))
@@ -171,8 +170,8 @@ def get_narrator_metadata():
       f.write(response.content)
 
   return pd.read_csv(constants.METADATA_NARRATOR_PATH)
-=======
-        return metadata
+
+# return metadata
 
 
 def convert_duration(time_str: str, unit: str = "second") -> float | None:
@@ -248,4 +247,5 @@ def get_valid_audio_urls() -> List[str]:
     Get a list of valid audio URLs from the metadata CSV file.
     """
     return pd.read_csv(constants.METADATA_BOOK_PATH)["audio_url"].tolist()
->>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)
+
+#  convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)
