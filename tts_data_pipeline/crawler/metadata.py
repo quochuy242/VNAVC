@@ -154,31 +154,59 @@ def get_narrator_metadata():
   Get metadata for each narrator from google sheet file.
   """
   # os.makedirs(os.path.dirname(constants.METADATA_NARRATOR_PATH), exist_ok=True)
-
   try:
-    # Read directly from content with encoding and quoting
-    df = pd.read_csv(
-      constants.METADATA_DOWNLOAD_URL,
-      encoding="utf-8",
-      dtype=str,              # ensure all columns are read as strings
-      keep_default_na=False,  # treat empty cells as NaN
-      on_bad_lines="skip",    # skip bad lines
-      quoting=csv.QUOTE_ALL,  # handle all quoting
-      escapechar="\\",        # except escape character
-      engine="python",        # use engine python instead of C
+    # Download data directly from GG Sheet
+    headers = {
+      "User-Agent": "Mozilla/5.0",
+      "Accept": "text/csv"
+    }
+    response = requests.get(
+      constants.METADATA_DOWNLOAD_URL, 
+      headers=headers,
+      allow_redirects=True
     )
+    response.raise_for_status()  # Raise an exception for HTTP errors
 
-    # Clean up column names
-    df.columns = df.columns.str.strip().str.lower()
+    # Check content-type
+    if "text/html" in response.headers.get("content-type", "").lower():
+      raise ValueError("Received HTML instead of CSV")
 
-    # Drop empty rows
-    df.dropna(how="all")
-
+    # Read CSV from response content
+    df = pd.read_csv(
+      io.StringIO(response.content.decode("utf-8")),
+      dtype=str,              # ensure all columns are read as strings  
+      keep_default_na=False  # treat empty cells as NaN
+    )
     return df
-    
+
   except Exception as e:
-      logger.error(f"Error: Can't read csv file: {str(e)}")
-      return pd.DataFrame()   # Return an empty DataFrame if there is an error
+    logger.error(f"Error: Can't narrator metadata: {str(e)}")
+    return pd.DataFrame()
+
+  # try:
+  #   # Read directly from content with encoding and quoting
+  #   df = pd.read_csv(
+  #     constants.METADATA_DOWNLOAD_URL,
+  #     encoding="utf-8",
+  #     dtype=str,              # ensure all columns are read as strings
+  #     keep_default_na=False,  # treat empty cells as NaN
+  #     on_bad_lines="skip",    # skip bad lines
+  #     quoting=csv.QUOTE_ALL,  # handle all quoting
+  #     escapechar="\\",        # except escape character
+  #     engine="python",        # use engine python instead of C
+  #   )
+
+  #   # Clean up column names
+  #   df.columns = df.columns.str.strip().str.lower()
+
+  #   # Drop empty rows
+  #   df.dropna(how="all")
+    
+  #   return df
+
+  # except Exception as e:
+  #     logger.error(f"Error: Can't read csv file: {str(e)}")
+  #     return pd.DataFrame()   # Return an empty DataFrame if there is an error
   
   # def convert_csv_to_json(df: pd.DataFrame) -> List[dict]:
   #     """
