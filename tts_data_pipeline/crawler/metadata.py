@@ -2,21 +2,14 @@ import asyncio
 import json
 import os
 from pathlib import Path
-<<<<<<< HEAD
 from typing import List, Optional
 
 import httpx
 import pandas as pd
 from tqdm.asyncio import tqdm
 import requests
-=======
-from typing import Dict, List
-
-import httpx
-import pandas as pd
-
-from tts_data_pipeline import constants
->>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)
+import io
+import csv
 
 from tts_data_pipeline import constants, Book, Narrator, convert_duration
 from tts_data_pipeline.crawler import utils
@@ -160,16 +153,48 @@ def get_narrator_metadata():
   """
   Get metadata for each narrator from google sheet file.
   """
-  os.makedirs(os.path.dirname(constants.METADATA_NARRATOR_PATH), exist_ok=True)
+  # os.makedirs(os.path.dirname(constants.METADATA_NARRATOR_PATH), exist_ok=True)
 
-  response = requests.get(constants.NARRATOR_DOWNLOAD_URL)
-  if response.status_code != 200:
-      raise Exception(f"Error: {response.status_code}")
+  try:
+    # Read directly from content with encoding and quoting
+    df = pd.read_csv(
+      constants.METADATA_DOWNLOAD_URL,
+      encoding="utf-8",
+      dtype=str,              # ensure all columns are read as strings
+      keep_default_na=False,  # treat empty cells as NaN
+      on_bad_lines="skip",    # skip bad lines
+      quoting=csv.QUOTE_ALL,  # handle all quoting
+      escapechar="\\",        # except escape character
+      engine="python",        # use engine python instead of C
+    )
 
-  with open(constants.METADATA_NARRATOR_PATH, "wb") as f:
-      f.write(response.content)
+    # Clean up column names
+    df.columns = df.columns.str.strip().str.lower()
 
-  return pd.read_csv(constants.METADATA_NARRATOR_PATH)
+    # Drop empty rows
+    df.dropna(how="all")
+
+    return df
+    
+  except Exception as e:
+      logger.error(f"Error: Can't read csv file: {str(e)}")
+      return pd.DataFrame()   # Return an empty DataFrame if there is an error
+  
+  # def convert_csv_to_json(df: pd.DataFrame) -> List[dict]:
+  #     """
+  #     Convert a DataFrame to a list of json file.
+  #     """
+  #     # Convert DataFrame to JSON
+  #     json_data = df.to_dict(orient="records")
+      
+  #     # Write to JSON file with proper encoding and indentation
+  #     with open(constants.METADATA_NARRATOR_PATH, "w", encoding="utf-8") as f:
+  #         json.dump(json_data, f, ensure_ascii=False, indent=2)
+
+  #     return json_data
+
+  # json_data = convert_csv_to_json(df)
+  # return json_data
 
 # return metadata
 
@@ -186,7 +211,6 @@ def convert_duration(time_str: str, unit: str = "second") -> float | None:
         total_seconds = sum(
             int(num) * 60**i for i, num in enumerate(reversed(time_values))
         )
-
         match unit.lower():
             case "second":
                 return total_seconds

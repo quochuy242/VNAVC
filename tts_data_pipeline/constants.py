@@ -12,7 +12,7 @@ TEXT_SAVE_PATH = "./data/text/"
 AUDIO_CATEGORY_URL = "https://sachnoiviet.net/danh-muc-sach/"
 TEXT_BASE_URL = "https://thuviensachpdf.com/"
 TEXT_DOWNLOAD_URL = "https://cloud.thuviensachpdf.com/pdf/vi/"
-NARRATOR_DOWNLOAD_URL = "https://docs.google.com/spreadsheets/d/1kaZ4PRYq_JvJAwWJN89Gcw_BuWHUogvDA43IZOd6MbE/edit?gid=0#gid=0"
+NARRATOR_DOWNLOAD_URL = "https://docs.google.com/spreadsheets/d/1kaZ4PRYq_JvJAwWJN89Gcw_BuWHUogvDA43IZOd6MbE/export?format=csv&gid=0"
 
 # Crawler config
 USER_AGENTS = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
@@ -22,7 +22,6 @@ DOWNLOAD_BOOK_LIMIT = 10
 # Pre-processing config
 MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
 
-<<<<<<< HEAD
 # Pre-processing path
 MIN_WORD_THRESHOLD = 20
 TEXT_SENTENCE_DIR = "./data/text/sentence/"
@@ -43,13 +42,3 @@ AENEAS_CONFIG = f"task_language=vie|is_text_type=plain|os_task_file_format={AENE
 AENEAS_OUTPUT_DIR = "./data/alignment/"
 DATASET_DIR = "./dataset/"
 STANDARD_SAMPLE_RATE = 24000
-=======
-# Pre-processing saving path
-SENTENCE_DIR = "./data/text/sentences/"
-PDF_DIR = "./data/text/pdf/"
-RAW_DIR = "./data/audio/raw/"
-QUALIFIED_DIR = "./data/audio/qualified/"
-UNQUALIFIED_DIR = "./data/audio/unqualified/"
-METADATA_BOOK_PATH = "./data/metadata/metadata_book.csv"
-METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
->>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)

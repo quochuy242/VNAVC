@@ -1,5 +1,4 @@
 import asyncio
-<<<<<<< HEAD
 import os
 import os.path as osp
 import random as randomlib
@@ -10,11 +9,6 @@ from typing import List, Optional
 import httpx
 import pandas as pd
 from loguru import logger
-=======
-from typing import List, Tuple
-
-import httpx
->>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)
 from playwright.async_api import async_playwright
 from selectolax.parser import HTMLParser
 
@@ -184,7 +178,6 @@ async def get_all_audiobook_url() -> List[str]:
 
 
 async def fetch_download_audio_url(book_url: str) -> List[str]:
-<<<<<<< HEAD
   """Fetch all download URLs for a given book using Playwright."""
   await ensure_playwright_server_running()  # Ensure Playwright server is running
   async with async_playwright() as p:
@@ -199,18 +192,3 @@ async def fetch_download_audio_url(book_url: str) -> List[str]:
 
     await browser.close()
     return mp3_links
-=======
-    """Fetch all download URLs for a given book using Playwright."""
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
-        await page.goto(book_url)
-
-        # Lấy tất cả các link có class 'ai-track-btn'
-        mp3_links = await page.locator("a.ai-track-btn").evaluate_all(
-            "elements => elements.map(el => el.href)"
-        )
-
-        await browser.close()
-        return mp3_links
->>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)
