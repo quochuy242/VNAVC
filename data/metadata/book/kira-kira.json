@@ -1,0 +1,22 @@
+{
+  "id": "b87d11df",
+  "name": "kira-kira",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "5f2a5600",
+    "name": "Như Minh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/nhu-minh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.1736,
+  "author": "Cynthia Kadohata",
+  "text_url": "https://thuviensachpdf.com/kira-kira",
+  "audio_url": "https://sachnoiviet.net/sach-noi/kira-kira"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "e4251ae9",
+  "name": "ke-don-rac",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "b85be77d",
+    "name": "Lưu Hà",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/luu-ha",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 15.67,
+  "author": "Tần Minh",
+  "text_url": "https://thuviensachpdf.com/ke-don-rac",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ke-don-rac"
+}

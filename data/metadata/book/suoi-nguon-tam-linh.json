@@ -1,0 +1,36 @@
+{
+  "id": "3ffa8680",
+  "name": "suoi-nguon-tam-linh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "6c09a00a",
+      "name": "Kiều Hạnh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-hanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "25713618",
+      "name": "Kiều Phương",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-phuong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 15.8017,
+  "author": "Ajahn Chah",
+  "text_url": "https://thuviensachpdf.com/suoi-nguon-tam-linh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/suoi-nguon-tam-linh"
+}

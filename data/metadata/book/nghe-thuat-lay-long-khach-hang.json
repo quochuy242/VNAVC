@@ -1,0 +1,22 @@
+{
+  "id": "aa0a40ea",
+  "name": "nghe-thuat-lay-long-khach-hang",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "f090dae6",
+    "name": "Bà Già Đọc Sách",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ba-gia-doc-sach",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.0614,
+  "author": "Michael J. Meher",
+  "text_url": "https://thuviensachpdf.com/nghe-thuat-lay-long-khach-hang",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nghe-thuat-lay-long-khach-hang"
+}

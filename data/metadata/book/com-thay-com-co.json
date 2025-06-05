@@ -1,0 +1,22 @@
+{
+  "id": "d85f7c2c",
+  "name": "com-thay-com-co",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "df30b4bd",
+    "name": "Hồng Trinh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hong-trinh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 1.5656,
+  "author": "Vũ Trọng Phụng",
+  "text_url": "https://thuviensachpdf.com/com-thay-com-co",
+  "audio_url": "https://sachnoiviet.net/sach-noi/com-thay-com-co"
+}

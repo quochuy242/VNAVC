@@ -1,0 +1,48 @@
+{
+  "id": "dafb3962",
+  "name": "đao-phat-đi-vao-cuoc-đoi",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "7ef7f91b",
+      "name": "Đức Uy",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/duc-uy",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "398d5ac5",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "1dc99d8f",
+      "name": "Kim Phượng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phuong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.7714,
+  "author": "Thích Nhất Hạnh",
+  "text_url": "https://thuviensachpdf.com/dao-phat-di-vao-cuoc-doi",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dao-phat-di-vao-cuoc-doi"
+}

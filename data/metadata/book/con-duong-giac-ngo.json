@@ -1,0 +1,48 @@
+{
+  "id": "e2208ff0",
+  "name": "con-đuong-giac-ngo",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "b7c9051f",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "83367948",
+      "name": "Kiều Hạnh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-hanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "524e0706",
+      "name": "Tuấn Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tuan-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 6.0058,
+  "author": "Thích Thông Phương",
+  "text_url": "https://thuviensachpdf.com/con-duong-giac-ngo",
+  "audio_url": "https://sachnoiviet.net/sach-noi/con-duong-giac-ngo"
+}

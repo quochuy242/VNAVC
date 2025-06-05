@@ -1,0 +1,22 @@
+{
+  "id": "5ca7fe08",
+  "name": "cong-chua-chan-ngong",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "89b6fe5c",
+    "name": "Ngọc Hân",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ngoc-han",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 13.2375,
+  "author": "Shannon Hale",
+  "text_url": "https://thuviensachpdf.com/cong-chua-chan-ngong",
+  "audio_url": "https://sachnoiviet.net/sach-noi/cong-chua-chan-ngong"
+}

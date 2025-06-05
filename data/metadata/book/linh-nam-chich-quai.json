@@ -1,0 +1,22 @@
+{
+  "id": "7b12c1a0",
+  "name": "linh-nam-chich-quai",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "3631b39a",
+    "name": "Thủy Tiên",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thuy-tien",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.0722,
+  "author": "Trần Thế Pháp",
+  "text_url": "https://thuviensachpdf.com/linh-nam-chich-quai",
+  "audio_url": "https://sachnoiviet.net/sach-noi/linh-nam-chich-quai"
+}

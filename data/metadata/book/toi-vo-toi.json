@@ -1,0 +1,22 @@
+{
+  "id": "9b027906",
+  "name": "toi-vo-toi",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "c32db0c3",
+    "name": "Ngọc Như",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ngoc-nhu",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 6.5172,
+  "author": "Agatha Christie",
+  "text_url": "https://thuviensachpdf.com/toi-vo-toi",
+  "audio_url": "https://sachnoiviet.net/sach-noi/toi-vo-toi"
+}

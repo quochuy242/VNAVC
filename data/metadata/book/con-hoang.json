@@ -1,0 +1,22 @@
+{
+  "id": "8349dc5e",
+  "name": "con-hoang",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "840115cd",
+    "name": "Hồng Nhung",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hong-nhung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.0556,
+  "author": "Lê Hồng Nguyên",
+  "text_url": "https://thuviensachpdf.com/con-hoang",
+  "audio_url": "https://sachnoiviet.net/sach-noi/con-hoang"
+}

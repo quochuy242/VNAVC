@@ -1,0 +1,22 @@
+{
+  "id": "f35a166a",
+  "name": "tru-tien",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "751c039c",
+    "name": "Thanh Long",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thanh-long",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 138.14,
+  "author": "Tiêu Đỉnh",
+  "text_url": "https://thuviensachpdf.com/tru-tien",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tru-tien"
+}

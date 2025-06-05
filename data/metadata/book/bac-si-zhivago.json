@@ -1,0 +1,22 @@
+{
+  "id": "0259b464",
+  "name": "bac-si-zhivago",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "dc4c98d2",
+    "name": "Minh Nguyệt",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/minh-nguyet",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 25.3397,
+  "author": "Boris Pasternak",
+  "text_url": "https://thuviensachpdf.com/bac-si-zhivago",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bac-si-zhivago"
+}

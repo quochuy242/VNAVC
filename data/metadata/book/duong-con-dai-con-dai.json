@@ -1,0 +1,36 @@
+{
+  "id": "4e0c78c8",
+  "name": "đuong-con-dai,-con-dai",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "572aabaf",
+      "name": "Hiền Lương Xal",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/hien-luong-xal",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "6f31cac1",
+      "name": "Hoàng Coco",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/hoang-coco",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.0033,
+  "author": "Nguyễn Thiên Ngân",
+  "text_url": "https://thuviensachpdf.com/duong-con-dai-con-dai",
+  "audio_url": "https://sachnoiviet.net/sach-noi/duong-con-dai-con-dai"
+}

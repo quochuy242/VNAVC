@@ -1,0 +1,22 @@
+{
+  "id": "2174fbda",
+  "name": "mo-yeu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "8d5de6db",
+    "name": "Tịnh Khẩu",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/tinh-khau",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 6.1031,
+  "author": "Khánh Văn",
+  "text_url": "https://thuviensachpdf.com/mo-yeu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/mo-yeu"
+}

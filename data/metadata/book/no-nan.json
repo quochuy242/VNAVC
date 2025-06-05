@@ -1,0 +1,22 @@
+{
+  "id": "74143d65",
+  "name": "no-nan",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "d4272c18",
+    "name": "Hồng Trinh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hong-trinh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 3.1033,
+  "author": "Nguyễn Công Hoan",
+  "text_url": "https://thuviensachpdf.com/no-nan",
+  "audio_url": "https://sachnoiviet.net/sach-noi/no-nan"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "a594b454",
+  "name": "ba-bovary",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "c5be98cf",
+    "name": "Phương Minh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/phuong-minh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 16.2153,
+  "author": "Gustave Flaubert",
+  "text_url": "https://thuviensachpdf.com/ba-bovary",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ba-bovary"
+}

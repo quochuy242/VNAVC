@@ -1,0 +1,22 @@
+{
+  "id": "1c2a5400",
+  "name": "ba-tuoc-monte-cristo",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "2dae638e",
+    "name": "Bá Trung",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ba-trung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 16.2011,
+  "author": "Alexandre Dumas",
+  "text_url": "https://thuviensachpdf.com/ba-tuoc-monte-cristo",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ba-tuoc-monte-cristo"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "b011bbf8",
+  "name": "vo-nga-vo-uu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "3c5b7da9",
+    "name": "Thanh Trúc",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thanh-truc",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.9222,
+  "author": "Ayya Khema",
+  "text_url": "https://thuviensachpdf.com/vo-nga-vo-uu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/vo-nga-vo-uu"
+}

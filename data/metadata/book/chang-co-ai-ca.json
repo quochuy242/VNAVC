@@ -1,0 +1,22 @@
+{
+  "id": "17b0bfd1",
+  "name": "chang-co-ai-ca",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "a57ca3cf",
+    "name": "Tuấn Anh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/tuan-anh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 1.8889,
+  "author": "Ajahn Chah",
+  "text_url": "https://thuviensachpdf.com/chang-co-ai-ca",
+  "audio_url": "https://sachnoiviet.net/sach-noi/chang-co-ai-ca"
+}

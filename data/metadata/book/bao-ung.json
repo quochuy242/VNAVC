@@ -1,0 +1,22 @@
+{
+  "id": "0db8d8ff",
+  "name": "bao-ung",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "51778332",
+    "name": "Hồng Hà",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hong-ha",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.0417,
+  "author": "Philip Roth",
+  "text_url": "https://thuviensachpdf.com/bao-ung",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bao-ung"
+}

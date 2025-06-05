@@ -1,0 +1,22 @@
+{
+  "id": "2f479640",
+  "name": "ben-khong-chong",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "8ac0759c",
+    "name": "Hồng Hà",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hong-ha",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 8.675,
+  "author": "Dương Hướng",
+  "text_url": "https://thuviensachpdf.com/ben-khong-chong",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ben-khong-chong"
+}

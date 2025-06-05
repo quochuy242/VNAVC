@@ -1,0 +1,22 @@
+{
+  "id": "af1c023a",
+  "name": "vong-tai-sinh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "e9e5a227",
+    "name": "Phương Minh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/phuong-minh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.0308,
+  "author": "H. K. Challoner",
+  "text_url": "https://thuviensachpdf.com/vong-tai-sinh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/vong-tai-sinh"
+}

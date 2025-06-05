@@ -1,0 +1,22 @@
+{
+  "id": "a35b8e3a",
+  "name": "nguoi-song-sot",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "b38de74b",
+    "name": "Matean",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/matean",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 14.5889,
+  "author": "Tần Minh",
+  "text_url": "https://thuviensachpdf.com/nguoi-song-sot",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nguoi-song-sot"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "e8624d6f",
+  "name": "toi-tai-gioi-ban-cung-the",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "b13e5b54",
+      "name": "Ái Hằng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hang",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "256d45ef",
+      "name": "Minh Trung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/minh-trung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 10.1725,
+  "author": "Adam Khoo",
+  "text_url": "https://thuviensachpdf.com/toi-tai-gioi-ban-cung-the",
+  "audio_url": "https://sachnoiviet.net/sach-noi/toi-tai-gioi-ban-cung-the"
+}

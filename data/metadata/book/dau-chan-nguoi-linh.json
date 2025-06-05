@@ -1,0 +1,36 @@
+{
+  "id": "a7126a82",
+  "name": "dau-chan-nguoi-linh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "75029d54",
+      "name": "Kim Phượng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phuong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "770dac6d",
+      "name": "Xuân Khoa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/xuan-khoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 15.8483,
+  "author": "Nguyễn Minh Châu",
+  "text_url": "https://thuviensachpdf.com/dau-chan-nguoi-linh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dau-chan-nguoi-linh"
+}

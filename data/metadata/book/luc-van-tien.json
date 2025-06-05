@@ -1,0 +1,22 @@
+{
+  "id": "1152f2af",
+  "name": "luc-van-tien",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "144ccc38",
+    "name": "Bình Nguyên",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/binh-nguyen",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 2.695,
+  "author": "Nguyễn Đình Chiểu",
+  "text_url": "https://thuviensachpdf.com/luc-van-tien",
+  "audio_url": "https://sachnoiviet.net/sach-noi/luc-van-tien"
+}

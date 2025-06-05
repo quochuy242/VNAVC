@@ -1,0 +1,22 @@
+{
+  "id": "552e5713",
+  "name": "nguoi-van-chuyen",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "f38ae9a5",
+    "name": "Nguyễn Huy",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/nguyen-huy",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.5889,
+  "author": "Lê Tuấn",
+  "text_url": "https://thuviensachpdf.com/nguoi-van-chuyen",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nguoi-van-chuyen"
+}

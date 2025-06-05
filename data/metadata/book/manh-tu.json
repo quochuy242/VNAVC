@@ -1,0 +1,22 @@
+{
+  "id": "73b3c667",
+  "name": "manh-tu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "b2eef999",
+    "name": "Phương Anh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/phuong-anh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.2019,
+  "author": "Nguyễn Hiến Lê",
+  "text_url": "https://thuviensachpdf.com/manh-tu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/manh-tu"
+}

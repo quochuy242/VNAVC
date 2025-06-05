@@ -1,0 +1,48 @@
+{
+  "id": "b8b2f561",
+  "name": "am-may-ngu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "046a47b1",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "ba12e5f9",
+      "name": "Minh Thảo",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/minh-thao",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "a01924ea",
+      "name": "Nguyễn Kim Ngân",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nguyen-kim-ngan",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 5.1942,
+  "author": "Thích Nhất Hạnh",
+  "text_url": "https://thuviensachpdf.com/am-may-ngu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/am-may-ngu"
+}

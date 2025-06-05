@@ -1,0 +1,22 @@
+{
+  "id": "95d98021",
+  "name": "khuon-mat-nguoi-khac",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "c95136ce",
+    "name": "Bá Trung",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ba-trung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 6.1361,
+  "author": "Kobo Abe",
+  "text_url": "https://thuviensachpdf.com/khuon-mat-nguoi-khac",
+  "audio_url": "https://sachnoiviet.net/sach-noi/khuon-mat-nguoi-khac"
+}

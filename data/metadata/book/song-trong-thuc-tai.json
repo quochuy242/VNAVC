@@ -1,0 +1,36 @@
+{
+  "id": "616362d9",
+  "name": "song-trong-thuc-tai",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "03b37a0a",
+      "name": "Kiều Hạnh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-hanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "112bf5f6",
+      "name": "Tuấn Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tuan-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 5.5533,
+  "author": "Viên Minh",
+  "text_url": "https://thuviensachpdf.com/song-trong-thuc-tai",
+  "audio_url": "https://sachnoiviet.net/sach-noi/song-trong-thuc-tai"
+}

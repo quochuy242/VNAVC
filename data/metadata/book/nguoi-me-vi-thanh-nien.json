@@ -1,0 +1,22 @@
+{
+  "id": "9f9ce250",
+  "name": "nguoi-me-vi-thanh-nien",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "30f2a4ab",
+    "name": "Lê Duyên",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/le-duyen",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 15.5161,
+  "author": "Thiên Cầm",
+  "text_url": "https://thuviensachpdf.com/nguoi-me-vi-thanh-nien",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nguoi-me-vi-thanh-nien"
+}

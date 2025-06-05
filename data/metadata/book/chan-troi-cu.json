@@ -1,0 +1,22 @@
+{
+  "id": "f3be7659",
+  "name": "chan-troi-cu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "bcb1c065",
+    "name": "Mạc Duy Thắng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/mac-duy-thang",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.0167,
+  "author": "Hồ Dzếnh",
+  "text_url": "https://thuviensachpdf.com/chan-troi-cu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/chan-troi-cu"
+}

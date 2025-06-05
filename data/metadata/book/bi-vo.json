@@ -1,0 +1,22 @@
+{
+  "id": "2dd46432",
+  "name": "bi-vo",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "1889d45f",
+    "name": "Bá Trung",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ba-trung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.0883,
+  "author": "Nguyên Hồng",
+  "text_url": "https://thuviensachpdf.com/bi-vo",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bi-vo"
+}

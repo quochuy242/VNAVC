@@ -1,0 +1,22 @@
+{
+  "id": "1ce6187f",
+  "name": "dam-bi-ghet",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "a0539bdd",
+    "name": "Việt Cường",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/viet-cuong",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 6.3286,
+  "author": "Kishimi Ichiro",
+  "text_url": "https://thuviensachpdf.com/dam-bi-ghet",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dam-bi-ghet"
+}

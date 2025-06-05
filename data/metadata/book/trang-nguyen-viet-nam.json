@@ -1,0 +1,36 @@
+{
+  "id": "89414553",
+  "name": "trang-nguyen-viet-nam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "3122e547",
+      "name": "Hoàng Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/hoang-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "387bed8d",
+      "name": "Thanh Trúc",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thanh-truc",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 18.1614,
+  "author": "Nhiều Tác Giả",
+  "text_url": "https://thuviensachpdf.com/trang-nguyen-viet-nam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/trang-nguyen-viet-nam"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "cfb8b5f4",
+  "name": "mau-thuong-ngan",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "738e32b2",
+      "name": "Đức Huy",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/duc-huy",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "946d1628",
+      "name": "Kim Phượng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phuong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 25.0556,
+  "author": "Nguyễn Xuân Khánh",
+  "text_url": "https://thuviensachpdf.com/mau-thuong-ngan",
+  "audio_url": "https://sachnoiviet.net/sach-noi/mau-thuong-ngan"
+}

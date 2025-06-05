@@ -105,14 +105,13 @@ def convert_metadata_to_csv():
     # Remove the tvshow
     df = df[~df["audio_url"].str.contains("tvshows", na=False)].copy()
 
-    # Convert duration to hours
-    df["duration_hour"] = df["duration"].apply(convert_duration, unit="hour")
-
     # Add new columns
     df["sample_rate"] = pd.Series([None] * len(df))
     df["quality"] = pd.Series([None] * len(df))
     df["word_count"] = pd.Series([None] * len(df))
     df["num_sentences"] = pd.Series([None] * len(df))
+    df["audio_size"] = pd.Series([None] * len(df))
+    df["text_size"] = pd.Series([None] * len(df))
 
     return df
 

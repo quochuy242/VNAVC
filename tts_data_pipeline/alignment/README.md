@@ -14,9 +14,11 @@ This module aligns audiobook audio files with their corresponding text files usi
 
 1. Clone the repository and navigate to the project directory.
 2. Install Python dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
+
 3. Make sure `ffmpeg`, `ffprobe`, and `espeak` are installed and available in your PATH.
 
 ## Usage

@@ -1,0 +1,48 @@
+{
+  "id": "bd77ee1f",
+  "name": "tim-lai-chinh-minh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "536f8509",
+      "name": "Minh Huệ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/minh-hue",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "2457b41d",
+      "name": "Phan Phương Thảo",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/phan-phuong-thao",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "f887fadc",
+      "name": "Thanh Phương",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thanh-phuong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.4161,
+  "author": "Thích Thánh Nghiêm",
+  "text_url": "https://thuviensachpdf.com/tim-lai-chinh-minh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tim-lai-chinh-minh"
+}

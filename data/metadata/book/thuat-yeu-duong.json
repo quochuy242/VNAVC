@@ -1,0 +1,22 @@
+{
+  "id": "1d0c7abb",
+  "name": "thuat-yeu-đuong",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "baeecf76",
+    "name": "Kin",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/kin",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 6.1014,
+  "author": "Nguyễn Duy Cần",
+  "text_url": "https://thuviensachpdf.com/thuat-yeu-duong",
+  "audio_url": "https://sachnoiviet.net/sach-noi/thuat-yeu-duong"
+}

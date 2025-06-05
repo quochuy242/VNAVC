@@ -1,0 +1,22 @@
+{
+  "id": "5353fde4",
+  "name": "thien-tang",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "e9d2ec6b",
+    "name": "Thanh Hảo",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thanh-hao",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.5292,
+  "author": "Hân Nhiên",
+  "text_url": "https://thuviensachpdf.com/thien-tang",
+  "audio_url": "https://sachnoiviet.net/sach-noi/thien-tang"
+}

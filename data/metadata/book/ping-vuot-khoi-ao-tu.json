@@ -1,0 +1,36 @@
+{
+  "id": "22cc1788",
+  "name": "ping---vuot-khoi-ao-tu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "038105ac",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "7e186c39",
+      "name": "Nam Trung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nam-trung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 2.0525,
+  "author": "Stuart Avery Gold",
+  "text_url": "https://thuviensachpdf.com/ping-vuot-khoi-ao-tu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ping-vuot-khoi-ao-tu"
+}

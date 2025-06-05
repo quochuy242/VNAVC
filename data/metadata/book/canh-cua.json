@@ -1,0 +1,22 @@
+{
+  "id": "34db1dd9",
+  "name": "canh-cua",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "e2524ac8",
+    "name": "Anh Tú",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/anh-tu",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 3.1422,
+  "author": "Chu Đức Đông",
+  "text_url": "https://thuviensachpdf.com/canh-cua",
+  "audio_url": "https://sachnoiviet.net/sach-noi/canh-cua"
+}

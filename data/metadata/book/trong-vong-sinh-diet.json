@@ -1,0 +1,48 @@
+{
+  "id": "571b7866",
+  "name": "trong-vong-sinh-diet",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "116e8646",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "d3f51152",
+      "name": "Kiều Hạnh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-hanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "51878388",
+      "name": "Tuấn Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tuan-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 5.5511,
+  "author": "Ajahn Chah",
+  "text_url": "https://thuviensachpdf.com/trong-vong-sinh-diet",
+  "audio_url": "https://sachnoiviet.net/sach-noi/trong-vong-sinh-diet"
+}

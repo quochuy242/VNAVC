@@ -1,0 +1,36 @@
+{
+  "id": "a130f314",
+  "name": "me-ghe-con-ghe",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "276268b4",
+      "name": "Kim Oanh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-oanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "c9fcfca6",
+      "name": "Nam Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nam-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 8.7758,
+  "author": "Hồ Biểu Chánh",
+  "text_url": "https://thuviensachpdf.com/me-ghe-con-ghe",
+  "audio_url": "https://sachnoiviet.net/sach-noi/me-ghe-con-ghe"
+}

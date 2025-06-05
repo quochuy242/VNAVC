@@ -1,0 +1,48 @@
+{
+  "id": "89deb9b0",
+  "name": "giao-tiep-bang-trai-tim",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "954725c0",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "1acbdf03",
+      "name": "Kiều Hạnh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-hanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "84f84de5",
+      "name": "Trần Vũ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tran-vu",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.1744,
+  "author": "Thích Thánh Nghiêm",
+  "text_url": "https://thuviensachpdf.com/giao-tiep-bang-trai-tim",
+  "audio_url": "https://sachnoiviet.net/sach-noi/giao-tiep-bang-trai-tim"
+}

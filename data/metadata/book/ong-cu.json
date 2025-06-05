@@ -1,0 +1,48 @@
+{
+  "id": "b79d8d08",
+  "name": "ong-cu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "6f325fd9",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "4e731ba4",
+      "name": "Kim Phụng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "ff713533",
+      "name": "Thy Mai",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thy-mai",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.3422,
+  "author": "Hồ Biểu Chánh",
+  "text_url": "https://thuviensachpdf.com/ong-cu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ong-cu"
+}

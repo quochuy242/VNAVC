@@ -1,0 +1,22 @@
+{
+  "id": "01124a1f",
+  "name": "song-ngam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "6b73d26b",
+    "name": "Matean",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/matean",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 13.9194,
+  "author": "Lôi Mễ",
+  "text_url": "https://thuviensachpdf.com/song-ngam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/song-ngam"
+}

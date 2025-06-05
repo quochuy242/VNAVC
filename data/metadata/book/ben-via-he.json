@@ -1,0 +1,22 @@
+{
+  "id": "605db91a",
+  "name": "ben-via-he",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "666e3ec7",
+    "name": "Thanh Nguyệt",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thanh-nguyet",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 2.3292,
+  "author": "Ngọc Phương",
+  "text_url": "https://thuviensachpdf.com/ben-via-he",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ben-via-he"
+}

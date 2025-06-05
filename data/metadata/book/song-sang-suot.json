@@ -1,0 +1,22 @@
+{
+  "id": "588af25b",
+  "name": "song-sang-suot",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "6dd98159",
+    "name": "Minh Dũng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/minh-dung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 3.3328,
+  "author": "Dean Cunningham",
+  "text_url": "https://thuviensachpdf.com/song-sang-suot",
+  "audio_url": "https://sachnoiviet.net/sach-noi/song-sang-suot"
+}

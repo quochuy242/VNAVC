@@ -1,0 +1,22 @@
+{
+  "id": "9e2073f5",
+  "name": "danh-nhan-khoa-hoc-viet-nam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "07fa3ca8",
+    "name": "Trung Can",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/trung-can",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 3.6656,
+  "author": "Lê Minh Quốc",
+  "text_url": "https://thuviensachpdf.com/danh-nhan-khoa-hoc-viet-nam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/danh-nhan-khoa-hoc-viet-nam"
+}

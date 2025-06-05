@@ -1,0 +1,36 @@
+{
+  "id": "41b303d4",
+  "name": "10-nghich-ly-cuoc-song",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "ef8ad6d5",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "e75c6d7a",
+      "name": "Minh Trung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/minh-trung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.2611,
+  "author": "Kent M. Keith Ph. D.",
+  "text_url": "https://thuviensachpdf.com/10-nghich-ly-cuoc-song",
+  "audio_url": "https://sachnoiviet.net/sach-noi/10-nghich-ly-cuoc-song"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "4bcc2493",
+  "name": "đep-va-buon",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "ff957e3b",
+    "name": "Quảng Bùi",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/quang-bui",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.8389,
+  "author": "Yasunari Kawabata",
+  "text_url": "https://thuviensachpdf.com/dep-va-buon",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dep-va-buon"
+}

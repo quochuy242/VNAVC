@@ -1,0 +1,22 @@
+{
+  "id": "5d276218",
+  "name": "thu-hoang",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "98ca1522",
+    "name": "Kim Phượng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/kim-phuong",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.0256,
+  "author": "Nguyễn Thị Thụy Vũ",
+  "text_url": "https://thuviensachpdf.com/thu-hoang",
+  "audio_url": "https://sachnoiviet.net/sach-noi/thu-hoang"
+}

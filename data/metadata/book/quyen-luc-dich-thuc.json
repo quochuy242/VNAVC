@@ -1,0 +1,48 @@
+{
+  "id": "fb3b25c7",
+  "name": "quyen-luc-đich-thuc",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "0cf6763b",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "3c592b86",
+      "name": "Nam Trung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nam-trung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "04bc7e91",
+      "name": "Thy Mai",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thy-mai",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 7.0042,
+  "author": "Thích Nhất Hạnh",
+  "text_url": "https://thuviensachpdf.com/quyen-luc-dich-thuc",
+  "audio_url": "https://sachnoiviet.net/sach-noi/quyen-luc-dich-thuc"
+}

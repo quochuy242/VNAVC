@@ -1,0 +1,22 @@
+{
+  "id": "77ca4881",
+  "name": "vo-lam-ngu-ba",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "954709e9",
+    "name": "Hoàng Vinh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hoang-vinh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 33.2939,
+  "author": "Kim Dung",
+  "text_url": "https://thuviensachpdf.com/vo-lam-ngu-ba",
+  "audio_url": "https://sachnoiviet.net/sach-noi/vo-lam-ngu-ba"
+}

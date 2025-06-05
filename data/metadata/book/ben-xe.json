@@ -1,0 +1,22 @@
+{
+  "id": "2f54c851",
+  "name": "ben-xe",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "6148ec6b",
+    "name": "Phan Hồng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/phan-hong",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.775,
+  "author": "Thương Thái Vi",
+  "text_url": "https://thuviensachpdf.com/ben-xe",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ben-xe"
+}

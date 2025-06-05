@@ -1,0 +1,22 @@
+{
+  "id": "1730e101",
+  "name": "đac-nhan-tam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "b8e8e6a8",
+    "name": "Đồng Linh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/dong-linh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.7125,
+  "author": "Nguyễn Hiến Lê",
+  "text_url": "https://thuviensachpdf.com/dac-nhan-tam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dac-nhan-tam"
+}

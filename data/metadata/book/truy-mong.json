@@ -1,0 +1,22 @@
+{
+  "id": "8cbb3ff8",
+  "name": "truy-mong",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "f5b059e6",
+    "name": "Châu Reading",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/chau-reading",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 1.6114,
+  "author": "Neil Gaiman",
+  "text_url": "https://thuviensachpdf.com/truy-mong",
+  "audio_url": "https://sachnoiviet.net/sach-noi/truy-mong"
+}

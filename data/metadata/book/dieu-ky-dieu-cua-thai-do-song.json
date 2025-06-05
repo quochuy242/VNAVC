@@ -1,0 +1,36 @@
+{
+  "id": "e5652b89",
+  "name": "đieu-ky-dieu-cua-thai-đo-song",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "47ea56ba",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "2fc5fd55",
+      "name": "Minh Trung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/minh-trung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 1.5342,
+  "author": "Mac Anderson",
+  "text_url": "https://thuviensachpdf.com/dieu-ky-dieu-cua-thai-do-song",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dieu-ky-dieu-cua-thai-do-song"
+}

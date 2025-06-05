@@ -1,0 +1,22 @@
+{
+  "id": "d509ee13",
+  "name": "ivanhoe",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "24eefff0",
+    "name": "Ngô Hồng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ngo-hong",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 20.0233,
+  "author": "Sir Walter Scott",
+  "text_url": "https://thuviensachpdf.com/ivanhoe",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ivanhoe"
+}

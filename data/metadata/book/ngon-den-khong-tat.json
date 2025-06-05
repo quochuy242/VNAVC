@@ -1,0 +1,48 @@
+{
+  "id": "cb454fcf",
+  "name": "ngon-đen-khong-tat",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "2e28d6b5",
+      "name": "Anh Chi",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/anh-chi",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "c2a3e8fc",
+      "name": "Sài Gòn Voice",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/sai-gon-voice",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "841b8b08",
+      "name": "SHI",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/shi",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 1.4425,
+  "author": "Nguyễn Ngọc Tư",
+  "text_url": "https://thuviensachpdf.com/ngon-den-khong-tat",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ngon-den-khong-tat"
+}

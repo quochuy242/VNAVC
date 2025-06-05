@@ -1,0 +1,36 @@
+{
+  "id": "fbbd8105",
+  "name": "bi-quyet-cua-thanh-cong",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "38125c07",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "3b9e6d44",
+      "name": "Minh Trung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/minh-trung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 4.8569,
+  "author": "David Niven",
+  "text_url": "https://thuviensachpdf.com/bi-quyet-cua-thanh-cong",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bi-quyet-cua-thanh-cong"
+}

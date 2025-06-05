@@ -1,0 +1,22 @@
+{
+  "id": "d091a091",
+  "name": "su-ky-tu-ma-thien",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "2a1c4807",
+    "name": "Thủy Tiên",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thuy-tien",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 19.9025,
+  "author": "Phạm Hồng",
+  "text_url": "https://thuviensachpdf.com/su-ky-tu-ma-thien",
+  "audio_url": "https://sachnoiviet.net/sach-noi/su-ky-tu-ma-thien"
+}

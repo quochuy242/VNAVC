@@ -1,0 +1,48 @@
+{
+  "id": "7cc9b41d",
+  "name": "tam-tinh-lang",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "c47a0da8",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "babcf784",
+      "name": "Kiều Hạnh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-hanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "9f078cda",
+      "name": "Kiều Oanh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-oanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 5.3622,
+  "author": "Ajahn Chah",
+  "text_url": "https://thuviensachpdf.com/tam-tinh-lang",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tam-tinh-lang"
+}

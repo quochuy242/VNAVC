@@ -1,0 +1,22 @@
+{
+  "id": "aeb06940",
+  "name": "mat-troi-đem",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "6f9159fd",
+    "name": "Thái Hoàng Phi",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thai-hoang-phi",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 12.3944,
+  "author": "Lê Xuyên",
+  "text_url": "https://thuviensachpdf.com/mat-troi-dem",
+  "audio_url": "https://sachnoiviet.net/sach-noi/mat-troi-dem"
+}

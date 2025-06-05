@@ -1,0 +1,36 @@
+{
+  "id": "c02d3a69",
+  "name": "hoa-huong-duong-khong-can-mat-troi",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "b2be11d4",
+      "name": "Hướng Dương",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huong-duong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "4265f0c7",
+      "name": "Quỳnh Giang",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/quynh-giang",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 6.5417,
+  "author": "Trần Tử Khâm",
+  "text_url": "https://thuviensachpdf.com/hoa-huong-duong-khong-can-mat-troi",
+  "audio_url": "https://sachnoiviet.net/sach-noi/hoa-huong-duong-khong-can-mat-troi"
+}

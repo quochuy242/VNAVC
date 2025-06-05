@@ -1,0 +1,22 @@
+{
+  "id": "24b951a3",
+  "name": "nang-trong-vuon",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "0df0e42a",
+    "name": "Mạc Duy Thắng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/mac-duy-thang",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 3.355,
+  "author": "Thạch Lam",
+  "text_url": "https://thuviensachpdf.com/nang-trong-vuon",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nang-trong-vuon"
+}

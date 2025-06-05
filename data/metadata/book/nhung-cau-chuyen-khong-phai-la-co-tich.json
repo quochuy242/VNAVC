@@ -1,0 +1,36 @@
+{
+  "id": "4d001832",
+  "name": "nhung-cau-chuyen-khong-phai-la-co-tich",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "891e556a",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "904a4b91",
+      "name": "Tuấn Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tuan-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 2.9244,
+  "author": "Sue Gallehugh",
+  "text_url": "https://thuviensachpdf.com/nhung-cau-chuyen-khong-phai-la-co-tich",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nhung-cau-chuyen-khong-phai-la-co-tich"
+}

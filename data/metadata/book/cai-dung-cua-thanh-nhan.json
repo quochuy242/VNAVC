@@ -1,0 +1,22 @@
+{
+  "id": "6ab70446",
+  "name": "cai-dung-cua-thanh-nhan",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "29a59fd0",
+    "name": "Minh Hoàng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/minh-hoang",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 2.0556,
+  "author": "Nguyễn Duy Cần",
+  "text_url": "https://thuviensachpdf.com/cai-dung-cua-thanh-nhan",
+  "audio_url": "https://sachnoiviet.net/sach-noi/cai-dung-cua-thanh-nhan"
+}

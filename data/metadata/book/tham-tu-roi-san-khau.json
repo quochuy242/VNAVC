@@ -1,0 +1,22 @@
+{
+  "id": "fd8bba49",
+  "name": "tham-tu-roi-san-khau",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "d69ef4f1",
+    "name": "Ngọc Như",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ngoc-nhu",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.5281,
+  "author": "Agatha Christie",
+  "text_url": "https://thuviensachpdf.com/tham-tu-roi-san-khau",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tham-tu-roi-san-khau"
+}

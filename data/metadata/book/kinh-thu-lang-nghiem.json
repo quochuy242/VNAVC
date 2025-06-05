@@ -1,0 +1,48 @@
+{
+  "id": "22ae61e1",
+  "name": "kinh-thu-lang-nghiem",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "44f3b570",
+      "name": "Bình Nguyên",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/binh-nguyen",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "c1e76c08",
+      "name": "Thy Mai",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thy-mai",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "e22f1192",
+      "name": "Trần Ngọc San",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tran-ngoc-san",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 9.5339,
+  "author": "Tâm Minh",
+  "text_url": "https://thuviensachpdf.com/kinh-thu-lang-nghiem",
+  "audio_url": "https://sachnoiviet.net/sach-noi/kinh-thu-lang-nghiem"
+}

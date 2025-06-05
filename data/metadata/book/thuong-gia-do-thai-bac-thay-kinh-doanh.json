@@ -1,0 +1,36 @@
+{
+  "id": "d45ae596",
+  "name": "thuong-gia-do-thai-bac-thay-kinh-doanh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "be4d2252",
+      "name": "Ngọc Hân",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ngoc-han",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "0fa6c29b",
+      "name": "Trần Diệu Lan",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tran-dieu-lan",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 5.8378,
+  "author": "Trương Đống Triết",
+  "text_url": "https://thuviensachpdf.com/thuong-gia-do-thai-bac-thay-kinh-doanh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/thuong-gia-do-thai-bac-thay-kinh-doanh"
+}

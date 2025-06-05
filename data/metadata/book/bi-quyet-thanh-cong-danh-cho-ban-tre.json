@@ -1,0 +1,36 @@
+{
+  "id": "7d3374b2",
+  "name": "bi-quyet-thanh-cong-danh-cho-ban-tre",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "022f662f",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "cd557a2b",
+      "name": "Minh Trung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/minh-trung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 9.5958,
+  "author": "Jack Canfield",
+  "text_url": "https://thuviensachpdf.com/bi-quyet-thanh-cong-danh-cho-ban-tre",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bi-quyet-thanh-cong-danh-cho-ban-tre"
+}

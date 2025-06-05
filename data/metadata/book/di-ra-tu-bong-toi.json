@@ -1,0 +1,22 @@
+{
+  "id": "9feba305",
+  "name": "đi-ra-tu-bong-toi",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "4574f6d8",
+    "name": "Ngọc Hiếu",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ngoc-hieu",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 12.2431,
+  "author": "Dave Pelzer",
+  "text_url": "https://thuviensachpdf.com/di-ra-tu-bong-toi",
+  "audio_url": "https://sachnoiviet.net/sach-noi/di-ra-tu-bong-toi"
+}

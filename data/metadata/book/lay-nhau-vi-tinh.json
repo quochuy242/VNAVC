@@ -1,0 +1,36 @@
+{
+  "id": "f14a644c",
+  "name": "lay-nhau-vi-tinh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "eaf77c6a",
+      "name": "Khởi Nguyên",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/khoi-nguyen",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "92eb1cd1",
+      "name": "Sơn Tùng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/son-tung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 4.5328,
+  "author": "Vũ Trọng Phụng",
+  "text_url": "https://thuviensachpdf.com/lay-nhau-vi-tinh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/lay-nhau-vi-tinh"
+}

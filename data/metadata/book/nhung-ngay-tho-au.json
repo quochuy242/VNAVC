@@ -1,0 +1,22 @@
+{
+  "id": "a1b77d22",
+  "name": "nhung-ngay-tho-au",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "d050b7f1",
+    "name": "Ngô Hồng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ngo-hong",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 3.2722,
+  "author": "Nguyên Hồng",
+  "text_url": "https://thuviensachpdf.com/nhung-ngay-tho-au",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nhung-ngay-tho-au"
+}

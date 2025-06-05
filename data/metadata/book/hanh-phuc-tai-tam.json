@@ -1,0 +1,22 @@
+{
+  "id": "a42191a1",
+  "name": "hanh-phuc-tai-tam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "ec5e8d24",
+    "name": "Thi Lê",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thi-le",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.7592,
+  "author": "Osho",
+  "text_url": "https://thuviensachpdf.com/hanh-phuc-tai-tam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/hanh-phuc-tai-tam"
+}

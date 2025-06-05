@@ -1,0 +1,22 @@
+{
+  "id": "5f131835",
+  "name": "đong-tam-long",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "7cd78700",
+    "name": "Thanh Trúc",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thanh-truc",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 3.4192,
+  "author": "Nguyễn Ngọc Tư",
+  "text_url": "https://thuviensachpdf.com/dong-tam-long",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dong-tam-long"
+}

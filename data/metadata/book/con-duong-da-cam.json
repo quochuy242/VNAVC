@@ -1,0 +1,22 @@
+{
+  "id": "fbc4414e",
+  "name": "con-đuong-da-cam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "c68810f7",
+    "name": "Xuân Hùng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/xuan-hung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.5222,
+  "author": "David Zierler",
+  "text_url": "https://thuviensachpdf.com/con-duong-da-cam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/con-duong-da-cam"
+}

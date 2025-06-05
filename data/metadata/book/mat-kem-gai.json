@@ -1,0 +1,36 @@
+{
+  "id": "3795086c",
+  "name": "mat-kem-gai",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "0cba2d43",
+      "name": "Nam Phong",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nam-phong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "9d28022b",
+      "name": "Phượng Dung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/phuong-dung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 6.5781,
+  "author": "Chu Sa Lan",
+  "text_url": "https://thuviensachpdf.com/mat-kem-gai",
+  "audio_url": "https://sachnoiviet.net/sach-noi/mat-kem-gai"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "1bc676b2",
+  "name": "loi-the-truoc-mieu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "4a4a4f2d",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "a4304471",
+      "name": "Kim Phụng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "7aaab26b",
+      "name": "Thy Mai",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thy-mai",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 2.5608,
+  "author": "Hồ Biểu Chánh",
+  "text_url": "https://thuviensachpdf.com/loi-the-truoc-mieu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/loi-the-truoc-mieu"
+}

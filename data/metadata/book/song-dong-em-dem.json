@@ -1,0 +1,22 @@
+{
+  "id": "1a429712",
+  "name": "song-đong-em-đem",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "c5896970",
+    "name": "Việt Hùng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/viet-hung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 62.1728,
+  "author": "Mikhail Sholokhov",
+  "text_url": "https://thuviensachpdf.com/song-dong-em-dem",
+  "audio_url": "https://sachnoiviet.net/sach-noi/song-dong-em-dem"
+}

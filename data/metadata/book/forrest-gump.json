@@ -1,0 +1,22 @@
+{
+  "id": "46473787",
+  "name": "forrest-gump",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "bec94aec",
+    "name": "Ngọc Trà",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ngo%cc%a3c-tra",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.0889,
+  "author": "Winston Groom",
+  "text_url": "https://thuviensachpdf.com/forrest-gump",
+  "audio_url": "https://sachnoiviet.net/sach-noi/forrest-gump"
+}

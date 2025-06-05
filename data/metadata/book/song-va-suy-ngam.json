@@ -1,0 +1,22 @@
+{
+  "id": "ef045bd9",
+  "name": "song-va-suy-ngam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "ea5c2366",
+    "name": "Minh Hoàng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/minh-hoang",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 2.475,
+  "author": "V. N. Kakar",
+  "text_url": "https://thuviensachpdf.com/song-va-suy-ngam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/song-va-suy-ngam"
+}

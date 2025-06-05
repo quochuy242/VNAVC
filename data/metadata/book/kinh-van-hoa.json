@@ -1,0 +1,36 @@
+{
+  "id": "eb554d05",
+  "name": "kinh-van-hoa",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "e746f9c1",
+      "name": "Nguyễn Nguyễn",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nguyen-nguyen",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "ce2f2a17",
+      "name": "Trần Ngọc San",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tran-ngoc-san",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 82.375,
+  "author": "Nguyễn Nhật Ánh",
+  "text_url": "https://thuviensachpdf.com/kinh-van-hoa",
+  "audio_url": "https://sachnoiviet.net/sach-noi/kinh-van-hoa"
+}

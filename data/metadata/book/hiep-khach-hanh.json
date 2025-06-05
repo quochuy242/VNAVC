@@ -1,0 +1,22 @@
+{
+  "id": "88eff3aa",
+  "name": "hiep-khach-hanh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "42a50039",
+    "name": "VOV Giao Thông",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/vov-giao-thong",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 32.0258,
+  "author": "Kim Dung",
+  "text_url": "https://thuviensachpdf.com/hiep-khach-hanh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/hiep-khach-hanh"
+}

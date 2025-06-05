@@ -1,0 +1,48 @@
+{
+  "id": "c1c96157",
+  "name": "chuyen-tinh-romeo-va-juliet",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "61ffd7a2",
+      "name": "Ka Nguyễn",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ka-nguyen",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "83b26585",
+      "name": "Ngọc Quý",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ngoc-quy",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "a031eaae",
+      "name": "Phương Minh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/phuong-minh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 1.0,
+  "author": "Willam Shakespeare",
+  "text_url": "https://thuviensachpdf.com/chuyen-tinh-romeo-va-juliet",
+  "audio_url": "https://sachnoiviet.net/sach-noi/chuyen-tinh-romeo-va-juliet"
+}

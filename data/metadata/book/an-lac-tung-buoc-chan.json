@@ -1,0 +1,48 @@
+{
+  "id": "5ff9b7d0",
+  "name": "an-lac-tung-buoc-chan",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "95c4dc73",
+      "name": "Đức Uy",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/duc-uy",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "61a321c2",
+      "name": "Kim Phượng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phuong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "55397036",
+      "name": "Thy Mai",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thy-mai",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.3269,
+  "author": "Thích Nhất Hạnh",
+  "text_url": "https://thuviensachpdf.com/an-lac-tung-buoc-chan",
+  "audio_url": "https://sachnoiviet.net/sach-noi/an-lac-tung-buoc-chan"
+}

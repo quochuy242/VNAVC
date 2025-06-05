@@ -1,0 +1,22 @@
+{
+  "id": "4c4c0f1c",
+  "name": "mot-nghe-thuat-song",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "47c57b25",
+    "name": "Liên Xuyến",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/lien-xuyen",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 1.8022,
+  "author": "Thu Giang",
+  "text_url": "https://thuviensachpdf.com/mot-nghe-thuat-song",
+  "audio_url": "https://sachnoiviet.net/sach-noi/mot-nghe-thuat-song"
+}

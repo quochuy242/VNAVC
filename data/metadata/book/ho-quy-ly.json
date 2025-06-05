@@ -1,0 +1,22 @@
+{
+  "id": "3b223cc5",
+  "name": "ho-quy-ly",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "568ce6ac",
+    "name": "VOH",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/voh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 21.5494,
+  "author": "Nguyễn Xuân Khánh",
+  "text_url": "https://thuviensachpdf.com/ho-quy-ly",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ho-quy-ly"
+}

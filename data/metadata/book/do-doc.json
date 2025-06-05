@@ -1,0 +1,36 @@
+{
+  "id": "7b61af15",
+  "name": "đo-doc",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "53dc6a0e",
+      "name": "Cẩm Thu",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/cam-thu",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "f359da63",
+      "name": "Nam Phong",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nam-phong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 6.995,
+  "author": "Bình Nguyên Lộc",
+  "text_url": "https://thuviensachpdf.com/do-doc",
+  "audio_url": "https://sachnoiviet.net/sach-noi/do-doc"
+}

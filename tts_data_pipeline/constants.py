@@ -40,4 +40,4 @@ AENEAS_CONFIG = f"task_language=vie|is_text_type=plain|os_task_file_format={AENE
 # Align path
 AENEAS_OUTPUT_DIR = "./data/alignment/"
 DATASET_DIR = "./dataset/"
-STANDARD_SAMPLE_RATE = 24000
+STANDARD_SAMPLE_RATE = None

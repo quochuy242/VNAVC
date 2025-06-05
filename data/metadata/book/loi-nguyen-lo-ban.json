@@ -1,0 +1,36 @@
+{
+  "id": "0da282aa",
+  "name": "loi-nguyen-lo-ban",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "339c23c8",
+      "name": "Lưu Hà",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/luu-ha",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "c0e55722",
+      "name": "Phạm Vân",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/pham-van",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 69.5336,
+  "author": "Viên Thái Cực",
+  "text_url": "https://thuviensachpdf.com/loi-nguyen-lo-ban",
+  "audio_url": "https://sachnoiviet.net/sach-noi/loi-nguyen-lo-ban"
+}

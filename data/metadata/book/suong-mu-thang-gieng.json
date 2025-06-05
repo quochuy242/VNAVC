@@ -1,0 +1,22 @@
+{
+  "id": "b3dcc61e",
+  "name": "suong-mu-thang-gieng",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "73d87ad2",
+    "name": "MC Quốc Bình",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/mc-quoc-binh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.7583,
+  "author": "Uông Triều",
+  "text_url": "https://thuviensachpdf.com/suong-mu-thang-gieng",
+  "audio_url": "https://sachnoiviet.net/sach-noi/suong-mu-thang-gieng"
+}

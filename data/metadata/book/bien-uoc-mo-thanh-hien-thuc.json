@@ -1,0 +1,36 @@
+{
+  "id": "0b2a7568",
+  "name": "bien-uoc-mo-thanh-hien-thuc",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "fbfa9315",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "570db481",
+      "name": "Minh Trung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/minh-trung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 2.9222,
+  "author": "Pamala Oslie",
+  "text_url": "https://thuviensachpdf.com/bien-uoc-mo-thanh-hien-thuc",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bien-uoc-mo-thanh-hien-thuc"
+}

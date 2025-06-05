@@ -1,0 +1,48 @@
+{
+  "id": "edf92587",
+  "name": "neo-ve-cua-y",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "de06b29f",
+      "name": "Đức Uy",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/duc-uy",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "887b8e01",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "63578bc7",
+      "name": "Kim Phượng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phuong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 7.1289,
+  "author": "Thích Nhất Hạnh",
+  "text_url": "https://thuviensachpdf.com/neo-ve-cua-y",
+  "audio_url": "https://sachnoiviet.net/sach-noi/neo-ve-cua-y"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "99b28a6f",
+  "name": "bo-vo",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "a6f07b01",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "445632b9",
+      "name": "Kim Phụng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "5c284731",
+      "name": "Thy Mai",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thy-mai",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 2.5169,
+  "author": "Nguyễn Công Hoan",
+  "text_url": "https://thuviensachpdf.com/bo-vo",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bo-vo"
+}

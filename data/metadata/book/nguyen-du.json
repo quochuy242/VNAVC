@@ -1,0 +1,22 @@
+{
+  "id": "9ac2dcbe",
+  "name": "nguyen-du",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "16a63702",
+    "name": "Ngọc Hân",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/ngoc-han",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 14.3583,
+  "author": "Nguyễn Thế Quang",
+  "text_url": "https://thuviensachpdf.com/nguyen-du",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nguyen-du"
+}

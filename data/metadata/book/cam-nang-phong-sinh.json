@@ -1,0 +1,22 @@
+{
+  "id": "173c8d52",
+  "name": "cam-nang-phong-sinh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "b5fd57ae",
+    "name": "Trường Tân",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/truong-tan",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 2.7056,
+  "author": "Nguyễn Minh Tiến",
+  "text_url": "https://thuviensachpdf.com/cam-nang-phong-sinh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/cam-nang-phong-sinh"
+}

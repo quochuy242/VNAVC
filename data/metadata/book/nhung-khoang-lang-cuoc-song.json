@@ -1,0 +1,36 @@
+{
+  "id": "5c71360c",
+  "name": "nhung-khoang-lang-cuoc-song",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "bc748277",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "7979f5fb",
+      "name": "Tuấn Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tuan-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 2.6889,
+  "author": "Nhiều Tác Giả",
+  "text_url": "https://thuviensachpdf.com/nhung-khoang-lang-cuoc-song",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nhung-khoang-lang-cuoc-song"
+}

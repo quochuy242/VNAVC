@@ -1,0 +1,36 @@
+{
+  "id": "0fb7582e",
+  "name": "than-va-tam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "90e13a86",
+      "name": "Kiều Hạnh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-hanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "51558f58",
+      "name": "Tuấn Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tuan-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.1217,
+  "author": "Ajahn Chah",
+  "text_url": "https://thuviensachpdf.com/than-va-tam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/than-va-tam"
+}

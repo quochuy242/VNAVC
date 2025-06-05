@@ -1,0 +1,22 @@
+{
+  "id": "65a754e3",
+  "name": "lo-mat",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "fd7f6ecf",
+    "name": "Lê Duyên",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/le-duyen",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.0244,
+  "author": "Sidney Sheldon",
+  "text_url": "https://thuviensachpdf.com/lo-mat",
+  "audio_url": "https://sachnoiviet.net/sach-noi/lo-mat"
+}

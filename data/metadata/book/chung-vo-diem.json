@@ -1,0 +1,22 @@
+{
+  "id": "ad88221b",
+  "name": "chung-vo-diem",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "ecf9e770",
+    "name": "Hoàng Anh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hoang-anh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 29.5222,
+  "author": "Tô Chẩn",
+  "text_url": "https://thuviensachpdf.com/chung-vo-diem",
+  "audio_url": "https://sachnoiviet.net/sach-noi/chung-vo-diem"
+}

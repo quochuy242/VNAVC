@@ -1,0 +1,48 @@
+{
+  "id": "b56d8518",
+  "name": "buong-bo-buon-buong",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "57b7b670",
+      "name": "Huy Hồ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huy-ho",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "613f9600",
+      "name": "Kiều Hạnh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kieu-hanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "0919df27",
+      "name": "Thủy Tiên",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thuy-tien",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 6.1756,
+  "author": "Ajahn Brahm",
+  "text_url": "https://thuviensachpdf.com/buong-bo-buon-buong",
+  "audio_url": "https://sachnoiviet.net/sach-noi/buong-bo-buon-buong"
+}

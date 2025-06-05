@@ -1,0 +1,48 @@
+{
+  "id": "2bcde9db",
+  "name": "thanh-tinh-đao",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "bc17fa4b",
+      "name": "Bình Nguyên",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/binh-nguyen",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "5ab19e2e",
+      "name": "Thy Mai",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thy-mai",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "819b9333",
+      "name": "Trần Ngọc San",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tran-ngoc-san",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 35.8519,
+  "author": "Bhadantacariya Buddhaghosa",
+  "text_url": "https://thuviensachpdf.com/thanh-tinh-dao",
+  "audio_url": "https://sachnoiviet.net/sach-noi/thanh-tinh-dao"
+}

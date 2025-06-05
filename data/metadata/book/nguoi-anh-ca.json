@@ -1,0 +1,22 @@
+{
+  "id": "808dc6e4",
+  "name": "nguoi-anh-ca",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "e441aaa3",
+    "name": "Hồng Huệ",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hong-hue",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.5983,
+  "author": "Lê Văn Trương",
+  "text_url": "https://thuviensachpdf.com/nguoi-anh-ca",
+  "audio_url": "https://sachnoiviet.net/sach-noi/nguoi-anh-ca"
+}

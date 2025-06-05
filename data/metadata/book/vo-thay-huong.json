@@ -1,0 +1,22 @@
+{
+  "id": "082ecc75",
+  "name": "vo-thay-huong",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "a3e9321a",
+    "name": "Thái Hoàng Phi",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thai-hoang-phi",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 12.5389,
+  "author": "Lê Xuyên",
+  "text_url": "https://thuviensachpdf.com/vo-thay-huong",
+  "audio_url": "https://sachnoiviet.net/sach-noi/vo-thay-huong"
+}

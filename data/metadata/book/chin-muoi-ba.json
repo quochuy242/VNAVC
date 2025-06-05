@@ -1,0 +1,22 @@
+{
+  "id": "fb9bba7b",
+  "name": "chin-muoi-ba",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "67745ec7",
+    "name": "Thủy Tiên",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thuy-tien",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 13.3525,
+  "author": "Victor Hugo",
+  "text_url": "https://thuviensachpdf.com/chin-muoi-ba",
+  "audio_url": "https://sachnoiviet.net/sach-noi/chin-muoi-ba"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "62a6e45d",
+  "name": "vat-nang-sau-he",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "a06adfb6",
+      "name": "Nam Phong",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nam-phong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "9a338b07",
+      "name": "Phượng Dung",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/phuong-dung",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 4.7692,
+  "author": "Chu Sa Lan",
+  "text_url": "https://thuviensachpdf.com/vat-nang-sau-he",
+  "audio_url": "https://sachnoiviet.net/sach-noi/vat-nang-sau-he"
+}

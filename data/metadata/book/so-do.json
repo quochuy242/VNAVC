@@ -1,0 +1,48 @@
+{
+  "id": "0a3359ce",
+  "name": "so-đo",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "654f401e",
+      "name": "Bình Nguyên",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/binh-nguyen",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "3fcc6f65",
+      "name": "Thanh Trúc",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/thanh-truc",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "37a40774",
+      "name": "Trần Ngọc San",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tran-ngoc-san",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 5.0653,
+  "author": "Vũ Trọng Phụng",
+  "text_url": "https://thuviensachpdf.com/so-do",
+  "audio_url": "https://sachnoiviet.net/sach-noi/so-do"
+}

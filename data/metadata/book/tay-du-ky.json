@@ -1,0 +1,36 @@
+{
+  "id": "b1ef4c01",
+  "name": "tay-du-ky",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "690ddce2",
+      "name": "Hướng Dương",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/huong-duong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "90334045",
+      "name": "Mạnh Linh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/manh-linh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 65.42,
+  "author": "Ngô Thừa Ân",
+  "text_url": "https://thuviensachpdf.com/tay-du-ky",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tay-du-ky"
+}

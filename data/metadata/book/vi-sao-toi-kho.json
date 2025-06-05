@@ -1,0 +1,22 @@
+{
+  "id": "969977c4",
+  "name": "vi-sao-toi-kho",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "bf376e46",
+    "name": "Việt Cường",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/viet-cuong",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 1.8517,
+  "author": "Nguyên Minh",
+  "text_url": "https://thuviensachpdf.com/vi-sao-toi-kho",
+  "audio_url": "https://sachnoiviet.net/sach-noi/vi-sao-toi-kho"
+}

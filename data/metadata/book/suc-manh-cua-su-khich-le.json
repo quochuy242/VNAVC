@@ -1,0 +1,36 @@
+{
+  "id": "a4557bae",
+  "name": "suc-manh-cua-su-khich-le",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "c8113e03",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "dac0acd9",
+      "name": "Công Danh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/cong-danh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 2.7033,
+  "author": "Ken Blanchard",
+  "text_url": "https://thuviensachpdf.com/suc-manh-cua-su-khich-le",
+  "audio_url": "https://sachnoiviet.net/sach-noi/suc-manh-cua-su-khich-le"
+}

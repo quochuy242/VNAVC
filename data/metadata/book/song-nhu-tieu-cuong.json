@@ -1,0 +1,22 @@
+{
+  "id": "5c861dd1",
+  "name": "song-nhu-tieu-cuong",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "e1441ab8",
+    "name": "Lưu Hà",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/luu-ha",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 9.7583,
+  "author": "Bukla",
+  "text_url": "https://thuviensachpdf.com/song-nhu-tieu-cuong",
+  "audio_url": "https://sachnoiviet.net/sach-noi/song-nhu-tieu-cuong"
+}

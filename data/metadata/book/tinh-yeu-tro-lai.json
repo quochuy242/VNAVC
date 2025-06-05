@@ -1,0 +1,22 @@
+{
+  "id": "ff89e8f9",
+  "name": "tinh-yeu-tro-lai",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "decbb720",
+    "name": "Việt Hùng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/viet-hung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 25.3556,
+  "author": "Rachel Gibson",
+  "text_url": "https://thuviensachpdf.com/tinh-yeu-tro-lai",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tinh-yeu-tro-lai"
+}

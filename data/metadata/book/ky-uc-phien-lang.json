@@ -1,0 +1,22 @@
+{
+  "id": "3eb1b586",
+  "name": "ky-uc-phien-lang",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "a7ff19e9",
+    "name": "Trung Nghị",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/trung-nghi",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 9.1222,
+  "author": "Tô Hoài",
+  "text_url": "https://thuviensachpdf.com/ky-uc-phien-lang",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ky-uc-phien-lang"
+}

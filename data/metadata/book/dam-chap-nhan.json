@@ -1,0 +1,22 @@
+{
+  "id": "8b53dad3",
+  "name": "dam-chap-nhan",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "9e8aad45",
+    "name": "Minh Hoàng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/minh-hoang",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 1.8889,
+  "author": "Ernie Carwile",
+  "text_url": "https://thuviensachpdf.com/dam-chap-nhan",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dam-chap-nhan"
+}

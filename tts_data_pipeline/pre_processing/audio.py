@@ -32,12 +32,6 @@ def check_ffmpeg():
   return True
 
 
-# CAUTION: Not used
-def delete_old_processed_audio():
-  shutil.rmtree(constants.AUDIO_QUALIFIED_DIR)
-  shutil.rmtree(constants.AUDIO_UNQUALIFIED_DIR)
-
-
 def convert_mp3_to_wav(mp3_path: str, wav_path: str) -> bool:
   """
   Convert an MP3 file to WAV format using ffmpeg.
@@ -199,6 +193,82 @@ def get_audio_duration(audio_path: str) -> float:
     return 0
 
 
+def audio_processing(
+  mp3_paths: List[str], update_metadata: bool = True, remove_original_files: bool = True
+):
+  """
+  Process a single audio file. It contains converting MP3 to WAV and checking sample rate.
+
+  Args:
+      update_metadata (bool, optional): Whether to update metadata file. Defaults to False.
+  """
+
+  # Read the metadata file for updating sample rate
+  metadata_df = (
+    pd.read_csv(constants.METADATA_BOOK_PATH) if update_metadata else pd.DataFrame()
+  )
+
+  # Get audiobook name
+  audiobook_name = osp.basename(mp3_paths[0]).split("_")[0]
+
+  # Convert mp3 to wav
+  wav_paths = []
+  for mp3_path in mp3_paths:
+    wav_path = osp.join(
+      constants.AUDIO_QUALIFIED_DIR, osp.basename(mp3_path).replace(".mp3", ".wav")
+    )
+    wav_paths.append(wav_path)
+    convert_mp3_to_wav(mp3_path, wav_path)
+
+  # Combine mp3 files into a single wav file
+  output_wav_path = osp.join(constants.AUDIO_QUALIFIED_DIR, f"{audiobook_name}.wav")
+  combine_wav_files(output_wav_path, wav_paths)
+
+  # Check sample rate
+  sample_rate = get_sample_rate(output_wav_path)
+
+  if sample_rate < constants.MIN_SAMPLE_RATE:
+    logger.error(
+      f"Sample rate for {audiobook_name}, which is {sample_rate}, is less than {constants.MIN_SAMPLE_RATE}"
+    )
+    shutil.move(output_wav_path, constants.AUDIO_UNQUALIFIED_DIR)
+    # Update qualified column
+    metadata_df.loc[
+      metadata_df["audio_url"].str.contains(audiobook_name), "qualified"
+    ] = 0
+  else:
+    logger.info(f"Sample rate for {audiobook_name} is {sample_rate}")
+    # Update qualified column
+    metadata_df.loc[
+      metadata_df["audio_url"].str.contains(audiobook_name), "qualified"
+    ] = 1
+
+  # Update sample rate column for metadata
+  if update_metadata:
+    metadata_df.loc[
+      metadata_df["audio_url"].str.contains(audiobook_name), "sample_rate"
+    ] = sample_rate
+    metadata_df.loc[
+      metadata_df["audio_url"].str.contains(audiobook_name), "audio_size"
+    ] = os.path.getsize(output_wav_path)  # Update audio size in bytes
+
+  # Save metadata
+  if update_metadata:
+    metadata_df.to_csv(constants.METADATA_BOOK_PATH, index=False)
+
+  # Remove the original files
+  if remove_original_files:
+    [os.remove(mp3_path) for mp3_path in mp3_paths]
+
+  return audiobook_name
+
+
+# CAUTION: Not used
+def delete_old_processed_audio():
+  shutil.rmtree(constants.AUDIO_QUALIFIED_DIR)
+  shutil.rmtree(constants.AUDIO_UNQUALIFIED_DIR)
+
+
 # CAUTION: Not used
 def split_audiobook(
   book_name: str,
@@ -277,70 +347,3 @@ def split_audiobook(
     shutil.rmtree(audio_dir)
 
   return glob.glob(new_audio_dir + "/*.mp3"), counter
-
-
-def audio_processing(
-  mp3_paths: List[str], update_metadata: bool = True, remove_original_files: bool = True
-):
-  """
-  Process a single audio file. It contains converting MP3 to WAV and checking sample rate.
-
-  Args:
-      update_metadata (bool, optional): Whether to update metadata file. Defaults to False.
-  """
-
-  # Read the metadata file for updating sample rate
-  metadata_df = (
-    pd.read_csv(constants.METADATA_BOOK_PATH) if update_metadata else pd.DataFrame()
-  )
-
-  # Get audiobook name
-  audiobook_name = osp.basename(mp3_paths[0]).split("_")[0]
-
-  # Convert mp3 to wav
-  wav_paths = []
-  for mp3_path in mp3_paths:
-    wav_path = osp.join(
-      constants.AUDIO_QUALIFIED_DIR, osp.basename(mp3_path).replace(".mp3", ".wav")
-    )
-    wav_paths.append(wav_path)
-    convert_mp3_to_wav(mp3_path, wav_path)
-
-  # Combine mp3 files into a single wav file
-  output_wav_path = osp.join(constants.AUDIO_QUALIFIED_DIR, f"{audiobook_name}.wav")
-  combine_wav_files(output_wav_path, wav_paths)
-
-  # Check sample rate
-  sample_rate = get_sample_rate(output_wav_path)
-
-  if sample_rate < constants.MIN_SAMPLE_RATE:
-    logger.error(
-      f"Sample rate for {audiobook_name}, which is {sample_rate}, is less than {constants.MIN_SAMPLE_RATE}"
-    )
-    shutil.move(output_wav_path, constants.AUDIO_UNQUALIFIED_DIR)
-    # Update qualified column
-    metadata_df.loc[
-      metadata_df["audio_url"].str.contains(audiobook_name), "qualified"
-    ] = 0
-  else:
-    logger.info(f"Sample rate for {audiobook_name} is {sample_rate}")
-    # Update qualified column
-    metadata_df.loc[
-      metadata_df["audio_url"].str.contains(audiobook_name), "qualified"
-    ] = 1
-
-  # Update sample rate column for metadata
-  if update_metadata:
-    metadata_df.loc[
-      metadata_df["audio_url"].str.contains(audiobook_name), "sample_rate"
-    ] = sample_rate
-
-  # Save metadata
-  if update_metadata:
-    metadata_df.to_csv(constants.METADATA_BOOK_PATH, index=False)
-
-  # Remove the original files
-  if remove_original_files:
-    [os.remove(mp3_path) for mp3_path in mp3_paths]
-
-  return audiobook_name

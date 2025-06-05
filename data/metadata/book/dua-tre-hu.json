@@ -1,0 +1,22 @@
+{
+  "id": "343c4d73",
+  "name": "đua-tre-hu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "7f18a4bf",
+    "name": "Matean",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/matean",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 14.0125,
+  "author": "Tử Kim Trần",
+  "text_url": "https://thuviensachpdf.com/dua-tre-hu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/dua-tre-hu"
+}

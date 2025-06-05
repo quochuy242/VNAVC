@@ -1,0 +1,22 @@
+{
+  "id": "012d2f4f",
+  "name": "song-mon",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "206934c3",
+    "name": "Trung Nghị",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/trung-nghi",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.0172,
+  "author": "Nam Cao",
+  "text_url": "https://thuviensachpdf.com/song-mon",
+  "audio_url": "https://sachnoiviet.net/sach-noi/song-mon"
+}

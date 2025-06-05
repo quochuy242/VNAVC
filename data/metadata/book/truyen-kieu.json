@@ -1,0 +1,22 @@
+{
+  "id": "6fb117b1",
+  "name": "truyen-kieu",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "6dc3c674",
+    "name": "Bình Nguyên",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/binh-nguyen",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 4.4497,
+  "author": "Nguyễn Du",
+  "text_url": "https://thuviensachpdf.com/truyen-kieu",
+  "audio_url": "https://sachnoiviet.net/sach-noi/truyen-kieu"
+}

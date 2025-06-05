@@ -1,0 +1,36 @@
+{
+  "id": "12f8e680",
+  "name": "toi-đung,-ban-sai---gio-thi-sao?",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "fe806606",
+      "name": "Nguyễn Thành Vũ",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nguyen-thanh-vu",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "f7c30a36",
+      "name": "Nguyễn Thị Hoa Mai",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/nguyen-thi-hoa-mai",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 11.0922,
+  "author": "Xavier Amador",
+  "text_url": "https://thuviensachpdf.com/toi-dung-ban-sai-gio-thi-sao",
+  "audio_url": "https://sachnoiviet.net/sach-noi/toi-dung-ban-sai-gio-thi-sao"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "7a57a5a8",
+  "name": "gian",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "dad29555",
+    "name": "Kim Phụng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/kim-phung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 5.6483,
+  "author": "Thích Nhất Hạnh",
+  "text_url": "https://thuviensachpdf.com/gian",
+  "audio_url": "https://sachnoiviet.net/sach-noi/gian"
+}

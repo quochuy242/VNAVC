@@ -1,0 +1,22 @@
+{
+  "id": "6083cc88",
+  "name": "tu-quai-tkkg",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "35847b38",
+    "name": "Thu Uy",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/thu-uy",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 44.9222,
+  "author": "Stefan Wolf",
+  "text_url": "https://thuviensachpdf.com/tu-quai-tkkg",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tu-quai-tkkg"
+}

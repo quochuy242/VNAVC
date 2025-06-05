@@ -1,0 +1,22 @@
+{
+  "id": "ac646b7d",
+  "name": "bich-huyet-kiem",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "bee399f5",
+    "name": "VOV Giao Thông",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/vov-giao-thong",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 40.415,
+  "author": "Kim Dung",
+  "text_url": "https://thuviensachpdf.com/bich-huyet-kiem",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bich-huyet-kiem"
+}

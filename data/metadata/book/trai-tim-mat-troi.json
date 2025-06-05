@@ -1,0 +1,36 @@
+{
+  "id": "bca69b61",
+  "name": "trai-tim-mat-troi",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "067d7587",
+      "name": "Đức Uy",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/duc-uy",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "681ab05b",
+      "name": "Kim Phượng",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/kim-phuong",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.6275,
+  "author": "Thích Nhất Hạnh",
+  "text_url": "https://thuviensachpdf.com/trai-tim-mat-troi",
+  "audio_url": "https://sachnoiviet.net/sach-noi/trai-tim-mat-troi"
+}

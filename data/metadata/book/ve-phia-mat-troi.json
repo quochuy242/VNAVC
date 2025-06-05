@@ -1,0 +1,22 @@
+{
+  "id": "6b4667ad",
+  "name": "ve-phia-mat-troi",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "6d1abf7b",
+    "name": "Xuân Hiếu",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/xuan-hieu",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.5058,
+  "author": "Matthew Quick",
+  "text_url": "https://thuviensachpdf.com/ve-phia-mat-troi",
+  "audio_url": "https://sachnoiviet.net/sach-noi/ve-phia-mat-troi"
+}

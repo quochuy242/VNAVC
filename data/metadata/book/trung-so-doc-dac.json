@@ -1,0 +1,22 @@
+{
+  "id": "fe81c2fe",
+  "name": "trung-so-đoc-đac",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "c28492b9",
+    "name": "Khởi Nguyên",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/khoi-nguyen",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 7.3819,
+  "author": "Vũ Trọng Phụng",
+  "text_url": "https://thuviensachpdf.com/trung-so-doc-dac",
+  "audio_url": "https://sachnoiviet.net/sach-noi/trung-so-doc-dac"
+}

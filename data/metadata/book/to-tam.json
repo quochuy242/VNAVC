@@ -1,0 +1,22 @@
+{
+  "id": "b66af91a",
+  "name": "to-tam",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "73fd4945",
+    "name": "Hồng Trinh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/hong-trinh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 2.7064,
+  "author": "Hoàng Ngọc Phách",
+  "text_url": "https://thuviensachpdf.com/to-tam",
+  "audio_url": "https://sachnoiviet.net/sach-noi/to-tam"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "ab2b1952",
+  "name": "hich-tuong-si",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "50f21a96",
+      "name": "Lê Á Thi",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/le-a-thi",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "2cb8e827",
+      "name": "Tiến Thành",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tien-thanh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 0.5464,
+  "author": "Trần Quốc Tuấn",
+  "text_url": "https://thuviensachpdf.com/hich-tuong-si",
+  "audio_url": "https://sachnoiviet.net/sach-noi/hich-tuong-si"
+}

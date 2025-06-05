@@ -1,0 +1,22 @@
+{
+  "id": "db246bc1",
+  "name": "tram-nam-co-đon",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "f8e9038a",
+    "name": "Mạnh Tuấn",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/manh-tuan",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 18.5192,
+  "author": "Gabriel Garcia Marquez",
+  "text_url": "https://thuviensachpdf.com/tram-nam-co-don",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tram-nam-co-don"
+}

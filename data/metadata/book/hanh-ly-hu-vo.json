@@ -1,0 +1,36 @@
+{
+  "id": "ebd7ab80",
+  "name": "hanh-ly-hu-vo",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "50501c20",
+      "name": "Trần Ngọc San",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tran-ngoc-san",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "5843d9dc",
+      "name": "Xuân Hiếu",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/xuan-hieu",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 2.3453,
+  "author": "Nguyễn Ngọc Tư",
+  "text_url": "https://thuviensachpdf.com/hanh-ly-hu-vo",
+  "audio_url": "https://sachnoiviet.net/sach-noi/hanh-ly-hu-vo"
+}

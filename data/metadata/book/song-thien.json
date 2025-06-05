@@ -1,0 +1,22 @@
+{
+  "id": "c6ce3a8a",
+  "name": "song-thien",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "a2770e8a",
+    "name": "Trường Tân",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/truong-tan",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 3.1431,
+  "author": "Nguyên Minh",
+  "text_url": "https://thuviensachpdf.com/song-thien",
+  "audio_url": "https://sachnoiviet.net/sach-noi/song-thien"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "047a1353",
+  "name": "hay-tin-toi",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "cc6fe6ae",
+    "name": "Việt Hùng",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/viet-hung",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 27.5281,
+  "author": "Lesley Pearse",
+  "text_url": "https://thuviensachpdf.com/hay-tin-toi",
+  "audio_url": "https://sachnoiviet.net/sach-noi/hay-tin-toi"
+}

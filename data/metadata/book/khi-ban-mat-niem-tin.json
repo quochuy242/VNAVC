@@ -1,0 +1,36 @@
+{
+  "id": "cf3cc5cb",
+  "name": "khi-ban-mat-niem-tin",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": [
+    {
+      "id": "ee01582b",
+      "name": "Ái Hòa",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/ai-hoa",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    },
+    {
+      "id": "71225001",
+      "name": "Tuấn Anh",
+      "dialect": null,
+      "gender": null,
+      "age": null,
+      "url": "https://sachnoiviet.net/giong-doc/tuan-anh",
+      "tone": null,
+      "volume": null,
+      "speed": null,
+      "pitch": null
+    }
+  ],
+  "duration": 3.2944,
+  "author": "Jack Canfield",
+  "text_url": "https://thuviensachpdf.com/khi-ban-mat-niem-tin",
+  "audio_url": "https://sachnoiviet.net/sach-noi/khi-ban-mat-niem-tin"
+}

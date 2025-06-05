@@ -1,0 +1,22 @@
+{
+  "id": "d80ee9a9",
+  "name": "bat-nha-tam-kinh",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "e83059a0",
+    "name": "Phương Minh",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/phuong-minh",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 14.2581,
+  "author": "Thích Thanh Từ",
+  "text_url": "https://thuviensachpdf.com/bat-nha-tam-kinh",
+  "audio_url": "https://sachnoiviet.net/sach-noi/bat-nha-tam-kinh"
+}

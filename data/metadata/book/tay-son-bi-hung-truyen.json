@@ -1,0 +1,22 @@
+{
+  "id": "eaebc1ca",
+  "name": "tay-son-bi-hung-truyen",
+  "text_path": null,
+  "audio_path": null,
+  "narrator": {
+    "id": "b6557bb5",
+    "name": "VDC Audio",
+    "dialect": null,
+    "gender": null,
+    "age": null,
+    "url": "https://sachnoiviet.net/giong-doc/vdc-audio",
+    "tone": null,
+    "volume": null,
+    "speed": null,
+    "pitch": null
+  },
+  "duration": 30.0428,
+  "author": "Lê Đình Danh",
+  "text_url": "https://thuviensachpdf.com/tay-son-bi-hung-truyen",
+  "audio_url": "https://sachnoiviet.net/sach-noi/tay-son-bi-hung-truyen"
+}
