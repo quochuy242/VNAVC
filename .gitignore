@@ -173,6 +173,8 @@ cython_debug/
 # Data
 data/audio
 data/text
+data/metadata/book
+data/metadata/narrator
 dataset/
 
 # Tmp folder

@@ -4,7 +4,6 @@ import os
 import os.path as osp
 
 import aiofiles
-from tqdm.asyncio import tqdm
 
 from tts_data_pipeline import constants
 
@@ -66,8 +65,8 @@ async def main():
   args = parse_args()
 
   # Added to ensure both dirs exist
-  os.makedirs(constants.AUDIO_SAVE_PATH, exist_ok=True)
-  os.makedirs(constants.TEXT_SAVE_PATH, exist_ok=True)
+  os.makedirs(constants.AUDIO_RAW_DIR, exist_ok=True)
+  os.makedirs(constants.TEXT_PDF_DIR, exist_ok=True)
 
   # Get all book's URLs
   if args.save_urls or not osp.exists(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH):
@@ -143,11 +142,7 @@ async def main():
     )
     for audio_url, text_url in zip(valid_audio_urls, text_download_urls)
   ]
-  for task in tqdm(
-    asyncio.as_completed(download_tasks),
-    total=len(download_tasks),
-    desc="Downloading books",
-  ):
+  for task in asyncio.as_completed(download_tasks):
     await task
   logger.success("Download complete!")
 

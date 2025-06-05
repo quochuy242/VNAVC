@@ -32,7 +32,7 @@ def check_ffmpeg():
   return True
 
 
-def convert_mp3_to_wav(mp3_path: str, wav_path: str) -> bool:
+def convert_audio_to_wav(input_path: str, wav_path: str) -> bool:
   """
   Convert an MP3 file to WAV format using ffmpeg.
 
@@ -51,18 +51,17 @@ def convert_mp3_to_wav(mp3_path: str, wav_path: str) -> bool:
   os.makedirs(osp.dirname(wav_path), exist_ok=True)
   try:
     subprocess.run(
-      ["ffmpeg", "-y", "-i", mp3_path, wav_path],
-      check=True,
-      stdout=subprocess.DEVNULL,
-      stderr=subprocess.DEVNULL,
+      ["ffmpeg", "-y", "-threads", "4", "-vn", "-i", input_path, wav_path],
+      stdout=subprocess.PIPE,
+      stderr=subprocess.PIPE,
     )
-    logger.success(f"Converted {mp3_path} to {wav_path}")
+    logger.success(f"Converted {input_path} to {wav_path}")
     return True
   except subprocess.CalledProcessError as e:
-    logger.exception(f"ffmpeg failed for {mp3_path}: {e}")
+    logger.exception(f"ffmpeg failed for {input_path}: {e}")
     return False
   except Exception as e:
-    logger.exception(f"Error converting {mp3_path} to WAV: {e}")
+    logger.exception(f"Error converting {input_path} to WAV: {e}")
     return False
 
 
@@ -142,9 +141,8 @@ def combine_wav_files(output_path: str, input_paths: List[str]):
         "copy",
         output_path,
       ],
-      check=True,
-      stdout=subprocess.DEVNULL,
-      stderr=subprocess.DEVNULL,
+      stdout=subprocess.PIPE,
+      stderr=subprocess.PIPE,
     )
 
     # Clean up the temporary list file
@@ -194,7 +192,9 @@ def get_audio_duration(audio_path: str) -> float:
 
 
 def audio_processing(
-  mp3_paths: List[str], update_metadata: bool = True, remove_original_files: bool = True
+  input_paths: List[str],
+  update_metadata: bool = True,
+  remove_original_files: bool = True,
 ):
   """
   Process a single audio file. It contains converting MP3 to WAV and checking sample rate.
@@ -209,20 +209,24 @@ def audio_processing(
   )
 
   # Get audiobook name
-  audiobook_name = osp.basename(mp3_paths[0]).split("_")[0]
+  audiobook_name = osp.basename(input_paths[0]).split("_")[0]
 
   # Convert mp3 to wav
   wav_paths = []
-  for mp3_path in mp3_paths:
+  for input_path in input_paths:
     wav_path = osp.join(
-      constants.AUDIO_QUALIFIED_DIR, osp.basename(mp3_path).replace(".mp3", ".wav")
+      constants.AUDIO_QUALIFIED_DIR, osp.basename(input_path).replace(".mp3", ".wav")
     )
     wav_paths.append(wav_path)
-    convert_mp3_to_wav(mp3_path, wav_path)
+    convert_audio_to_wav(input_path, wav_path)
 
   # Combine mp3 files into a single wav file
   output_wav_path = osp.join(constants.AUDIO_QUALIFIED_DIR, f"{audiobook_name}.wav")
-  combine_wav_files(output_wav_path, wav_paths)
+  if len(wav_paths) == 1:
+    shutil.copy(wav_paths[0], output_wav_path)
+    os.remove(wav_paths[0])  # Remove the original wav file if only one
+  else:
+    combine_wav_files(output_wav_path, wav_paths)
 
   # Check sample rate
   sample_rate = get_sample_rate(output_wav_path)
@@ -258,7 +262,7 @@ def audio_processing(
 
   # Remove the original files
   if remove_original_files:
-    [os.remove(mp3_path) for mp3_path in mp3_paths]
+    [os.remove(input_path) for input_path in input_paths]
 
   return audiobook_name
 
@@ -319,9 +323,7 @@ def split_audiobook(
           split_dir, f"{audio_part}_%03d.mp3"
         ),  # e.g. abc_1_001.mp3, abc_1_002.mp3, etc.
       ]
-      subprocess.run(
-        cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-      )
+      subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
       logger.info(
         f"Successfully split {input_audio_path} into {time_threshold} seconds, total {len(os.listdir(split_dir))} files."
       )
@@ -336,7 +338,7 @@ def split_audiobook(
   for file in glob.glob(new_audio_dir + "/*/*.mp3"):
     # If convert_to_wav is True, convert mp3 to wav, else save splitted mp3
     if convert_to_wav:
-      convert_mp3_to_wav(file, osp.join(new_audio_dir, f"{book_name}_{counter}.wav"))
+      convert_audio_to_wav(file, osp.join(new_audio_dir, f"{book_name}_{counter}.wav"))
       os.remove(file)  # Remove mp3 file after converting to wav
     else:
       shutil.move(file, osp.join(new_audio_dir, f"{book_name}_{counter}.mp3"))

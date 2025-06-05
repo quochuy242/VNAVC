@@ -185,7 +185,6 @@ async def fetch_download_audio_url(book_url: str) -> List[str]:
     page = await browser.new_page()
     await page.goto(book_url)
 
-    # Lấy tất cả các link có class 'ai-track-btn'
     mp3_links = await page.locator("a.ai-track-btn").evaluate_all(
       "elements => elements.map(el => el.href)"
     )

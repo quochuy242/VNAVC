@@ -8,16 +8,23 @@ from typing import Dict, List, Optional, Union
 
 def normalize_name(name: str) -> str:
   """
-  Normalize a name by removing accents, converting to lowercase, and replacing spaces with hyphens.
+  Normalize a name by removing accents, punctuation, converting to lowercase,
+  and replacing spaces with hyphens.
 
   Args:
-    name (str): The input string to normalize.
+      name (str): The input string to normalize.
 
   Returns:
-    str: The normalized string.
+      str: The normalized string.
   """
+  # Remove accents
   output = unicodedata.normalize("NFD", name)
   output = "".join(c for c in output if unicodedata.category(c) != "Mn")
+  
+  # Remove punctuation using regex
+  output = re.sub(r"[^\w\s]", "", output)
+
+  # Convert to lowercase and replace spaces with hyphens
   return output.lower().replace(" ", "-")
 
 
