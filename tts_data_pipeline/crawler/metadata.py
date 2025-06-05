@@ -163,7 +163,7 @@ def get_narrator_metadata():
       headers=headers,
       allow_redirects=True
     )
-    response.raise_for_status()   # Raise an exception for HTTP errors
+    response.raise_for_status()    # Raise an exception for HTTP errors
 
     # Check content-type to debug
     if "text/html" in response.headers.get("content-type", "").lower():
@@ -174,9 +174,13 @@ def get_narrator_metadata():
     # Read CSV from response content
     df = pd.read_csv(
       io.StringIO(response.content.decode("utf-8")),
-      dtype=str,                  # ensure all columns are read as strings  
-      keep_default_na=False       # treat empty cells as NaN
+      dtype=str,                 # ensure all columns are read as strings  
+      keep_default_na=False      # treat empty cells as NaN
     )
+    os.makedirs(os.path.dirname(constants.METADATA_NARRATOR_PATH), exist_ok=True)
+    df.to_csv(constants.METADATA_NARRATOR_PATH, index=False, encoding="utf-8")
+    logger.info(f"Metadata saved to {constants.METADATA_NARRATOR_PATH}")
+    
     return df
 
   except Exception as e:
