@@ -152,7 +152,6 @@ def get_narrator_metadata():
   """
   Get metadata for each narrator from google sheet file.
   """
-  # os.makedirs(os.path.dirname(constants.NARRATOR_DOWNLOAD_URL), exist_ok=True)
   try:
     # Download data directly from GG Sheet
     headers = {
@@ -164,7 +163,7 @@ def get_narrator_metadata():
       headers=headers,
       allow_redirects=True
     )
-    response.raise_for_status()  # Raise an exception for HTTP errors
+    response.raise_for_status()   # Raise an exception for HTTP errors
 
     # Check content-type to debug
     if "text/html" in response.headers.get("content-type", "").lower():
@@ -175,8 +174,8 @@ def get_narrator_metadata():
     # Read CSV from response content
     df = pd.read_csv(
       io.StringIO(response.content.decode("utf-8")),
-      dtype=str,              # ensure all columns are read as strings  
-      keep_default_na=False   # treat empty cells as NaN
+      dtype=str,                  # ensure all columns are read as strings  
+      keep_default_na=False       # treat empty cells as NaN
     )
     return df
 
