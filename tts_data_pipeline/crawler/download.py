@@ -1,6 +1,9 @@
-import os
 import asyncio
-import httpx
+import os
+import shutil
+
+import aiohttp
+
 from tts_data_pipeline import constants
 from tts_data_pipeline.crawler import utils
 from tts_data_pipeline.crawler.utils import logger
@@ -21,6 +24,19 @@ async def download_by_cli(url: str, directory: str, filename: str = None):
     save_path = os.path.join(directory, filename + ext)
   else:
     save_path = os.path.join(directory, url.split("/")[-1])
+
+  # Check if URL is accessible
+  try:
+    async with aiohttp.ClientSession(
+      headers={"User-Agent": constants.USER_AGENTS}
+    ) as session:
+      async with session.head(url) as response:
+        if response.status >= 400:
+          logger.error(f"URL returned status {response.status}: {url}")
+          return False
+  except Exception as e:
+    logger.exception(f"Failed to connect to {url}: {e}")
+    return False
 
   # Configure wget command
   cmd = f'wget {url} -q --user-agent "{constants.USER_AGENTS}" -O {save_path}'
@@ -57,20 +73,35 @@ async def download_full_book(
     # Each downloading URL of audio is the part of the book. Contrast, the text one is a book
     audio_download_urls = await utils.fetch_download_audio_url(audio_url)
 
-    # Download audio
-    tasks = [
-      download_by_cli(
-        url, os.path.join(audio_save_path, name_book), filename=f"{name_book}_{idx}"
-      )
-      for idx, url in enumerate(audio_download_urls, start=1)
-    ]
-
     # Download text
-    tasks.append(download_by_cli(text_url, text_save_path, filename=name_book))
+    tasks = [download_by_cli(text_url, text_save_path, filename=name_book)]
 
-    await asyncio.gather(*tasks)
-  except httpx.HTTPStatusError:
-    return
+    # Download audio
+    tasks.extend(
+      [
+        download_by_cli(
+          url, os.path.join(audio_save_path, name_book), filename=f"{name_book}_{idx}"
+        )
+        for idx, url in enumerate(audio_download_urls, start=1)
+      ]
+    )
+
+    await asyncio.gather(*tasks, return_exceptions=True)
+
+  except asyncio.CancelledError:
+    logger.error(f"Download cancelled for {name_book}.")
+    if os.path.exists(os.path.join(audio_save_path, name_book)):
+      shutil.rmtree(os.path.join(audio_save_path, name_book))
+    text_file = os.path.join(text_save_path, f"{name_book}.txt")
+    if os.path.exists(text_file):
+      os.remove(text_file)
+    return False
+
+  except Exception as e:
+    logger.exception(f"Unhandled exception while downloading {name_book}: {e}")
+    return False
+
+  return True
 
 
 async def download_with_semaphore(

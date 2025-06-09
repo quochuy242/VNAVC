@@ -8,7 +8,7 @@ import httpx
 import pandas as pd
 from tqdm.asyncio import tqdm
 
-from tts_data_pipeline import constants, Book, Narrator, convert_duration
+from tts_data_pipeline import constants, Book, Narrator
 from tts_data_pipeline.crawler import utils
 from tts_data_pipeline.crawler.utils import logger
 

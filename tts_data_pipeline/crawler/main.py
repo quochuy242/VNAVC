@@ -71,8 +71,14 @@ async def main():
   # Get all book's URLs
   if args.save_urls or not osp.exists(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH):
     logger.info("Getting all audiobook URLs and names")
-    audio_urls = await utils.get_all_audiobook_url()
-    logger.info(f"Found {len(audio_urls)} audiobooks")
+    (
+      main_audio_urls,
+      alternate_audio_urls,
+      unvalid_audio_urls,
+    ) = await utils.get_all_audiobook_url()
+    logger.info(
+      f"Found {len(main_audio_urls) + len(alternate_audio_urls)} valid and {len(unvalid_audio_urls)} invalid audiobooks"
+    )
   else:
     logger.info(
       f"Loading all audiobook URLs from {constants.ALL_AUDIOBOOK_URLS_SAVE_PATH} file"
@@ -90,7 +96,9 @@ async def main():
     logger.warning("Not saving all audiobook URLs to text file")
 
   # Fetch metadata
-  text_urls = [f"{constants.TEXT_BASE_URL}{url.split('/')[-1]}" for url in audio_urls]
+  main_text_urls = [
+    f"{constants.TEXT_BASE_URL}{url.split('/')[-1]}" for url in audio_urls
+  ]
   if args.fetch_metadata:
     await metadata.fetch_book_metadata(text_urls, audio_urls)
 
@@ -128,7 +136,6 @@ async def main():
   text_download_urls = [
     await utils.get_text_download_url(url.split("/")[-1]) for url in valid_audio_urls
   ]
-  logger.info("Downloading books concurrently")
   download_semaphore = asyncio.Semaphore(
     constants.DOWNLOAD_BOOK_LIMIT
   )  # Limit concurrent downloads
@@ -144,14 +151,12 @@ async def main():
   ]
   for task in asyncio.as_completed(download_tasks):
     await task
-  logger.success("Download complete!")
 
   # Group audiobook task
   try:
     await asyncio.to_thread(
       utils.group_audiobook, constants.AUDIO_RAW_DIR, constants.AUDIO_UNQUALIFIED_DIR
     )
-    logger.success("Grouping audiobooks")
   except Exception as e:
     logger.exception(f"Error grouping audiobooks: {e}")
 

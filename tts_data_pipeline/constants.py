@@ -11,12 +11,36 @@ TEXT_SAVE_PATH = "./data/text/"
 # Base url
 AUDIO_CATEGORY_URL = "https://sachnoiviet.net/danh-muc-sach/"
 TEXT_BASE_URL = "https://thuviensachpdf.com/"
-TEXT_DOWNLOAD_URL = "https://cloud.thuviensachpdf.com/pdf/vi/"
+TEXT_DOWNLOAD_URL = {
+  "thuviensach": "https://cloud.thuviensachpdf.com/pdf/vi/",
+  "taisachhay": "https://taisachhay.net/download/",
+}
 
 # Crawler config
-USER_AGENTS = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+USER_AGENTS = [
+  # Chrome trên Windows
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  # Chrome trên macOS
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  # Chrome trên Ubuntu Linux
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.208 Safari/537.36",
+  # Firefox trên Windows
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0",
+  # Firefox trên macOS
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 13.4; rv:126.0) Gecko/20100101 Firefox/126.0",
+  # Safari trên macOS
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15",
+  # Edge trên Windows
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.208 Safari/537.36 Edg/124.0.2478.97",
+  # Android Chrome
+  "Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.208 Mobile Safari/537.36",
+  # iPhone Safari
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1",
+]
+
 FETCH_METADATA_LIMIT = 20
 DOWNLOAD_BOOK_LIMIT = 10
+FETCH_URL_LIMIT = 30
 
 # Pre-processing config
 MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
