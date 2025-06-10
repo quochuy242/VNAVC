@@ -11,6 +11,14 @@ import pandas as pd
 from loguru import logger
 from playwright.async_api import async_playwright
 from rich import print
+from rich.progress import (
+  Progress,
+  SpinnerColumn,
+  BarColumn,
+  TextColumn,
+  TimeElapsedColumn,
+)
+from rich.console import Console
 from selectolax.parser import HTMLParser
 
 from tts_data_pipeline import constants
@@ -29,23 +37,32 @@ logger.add(
 )
 
 
-def get_valid_audio_urls(
+def query_download_url(
   query: Optional[str],
-  name: Optional[str],
-  author: Optional[str],
-  narrator: Optional[str],
+  name: Optional[str] = None,
+  author: Optional[str] = None,
+  narrator: Optional[str] = None,
   random: int = 0,
-) -> List[str]:
+) -> Tuple[List[str], List[str]]:
   """
   Get a list of valid audio URLs from the metadata CSV file.
   """
-  df = pd.read_csv(constants.METADATA_BOOK_PATH)
+  try:
+    df = pd.read_csv(constants.METADATA_BOOK_PATH)
+  except FileNotFoundError:
+    logger.error(
+      f"Metadata file not found at {constants.METADATA_BOOK_PATH}. Please run the metadata fetching argument first."
+    )
+    return ([], [])
 
   if random > 0:
-    return randomlib.sample(df["audio_url"].tolist(), random)
+    return (
+      randomlib.sample(df["audio_download_url"].tolist(), random),
+      randomlib.sample(df["text_download_url"].tolist(), random),
+    )
 
   if query == "all":
-    return df["audio_url"].tolist()
+    return df["audio_download_url"].tolist(), df["text_download_url"].tolist()
   else:
     mask = pd.Series([True] * len(df))
     if name:
@@ -54,7 +71,10 @@ def get_valid_audio_urls(
       mask &= df["author"].str.contains(author, na=False)
     if narrator:
       mask &= df["narrator"].str.contains(narrator, na=False)
-    return df[mask]["audio_url"].tolist()
+    return (
+      df[mask]["audio_download_url"].tolist(),
+      df[mask]["text_download_url"].tolist(),
+    )
 
 
 def group_audiobook(
@@ -97,21 +117,60 @@ def group_audiobook(
   return list(groups.values()) if return_group else []
 
 
-async def get_text_download_url(name: str, source: str = "thuviensach") -> str:
+async def get_text_download_url(
+  name: str, source: str = "thuviensach", console: Console = None
+) -> str:
+  """
+  Args:
+    name (str): The name of the book.
+    source (str): The source name of the book, example "thuviensach", "taisachhay".
+
+  Returns:
+      str: The text book URL.
+  """
   if source == "thuviensach":
     return f"{constants.TEXT_DOWNLOAD_URL[source]}{name}.pdf"
   elif source == "taisachhay":
     content = await get_web_content(f"{constants.TEXT_DOWNLOAD_URL[source]}{name}/")
+    if not content:
+      console.log(
+        f"Failed to fetch content for [blue]{name}[/blue] from [yellow]{source}[/yellow]"
+      ) if console else None
+      return ""
+    pdf_link = ""
     for tr in content.css("tr"):
-      if ".PDF" in tr.text():
+      if "PDF" in tr.text():
         a_tag = tr.css_first("a")
         if a_tag:
           pdf_link = a_tag.attributes.get("href")
           break
+    console.log(
+      f"PDF link found: {pdf_link if pdf_link else 'None'}"
+    ) if console else None
     return pdf_link if pdf_link else ""
+  else:
+    return ""  # Unsupported source
 
 
-async def get_web_content(url: str) -> HTMLParser:
+async def get_text_book_url(name: str, source: str = "thuviensach") -> str:
+  """
+  Get the text book URL from the source.
+
+  Args:
+      name (str): The name of the book.
+      source (str): The source of the book, example "thuviensach", "taisachhay".
+
+  Returns:
+      str: The text book URL.
+  """
+  return (
+    constants.TEXT_BASE_URL[source] + name
+    if source != "invalid"
+    else constants.TEXT_BASE_URL["thuviensach"] + name  # Default to thuviensach
+  )
+
+
+async def get_web_content(url: str, console: Console = None) -> Optional[HTMLParser]:
   """
   Asynchronously fetch HTML content from a given URL.
 
@@ -121,13 +180,19 @@ async def get_web_content(url: str) -> HTMLParser:
   Returns:
       HTMLParser: Parsed HTML content.
   """
-  print(f"Fetching content from {url}")
   async with httpx.AsyncClient(
     timeout=30, headers={"User-Agent": randomlib.choice(constants.USER_AGENTS)}
   ) as client:
     response = await client.get(url)
-    response.raise_for_status()
-    return HTMLParser(response.text)
+    return (
+      HTMLParser(response.text)
+      if response.status_code < 400
+      else console.log(
+        f"Failed to fetch HTML content for {url}: {response.status_code}"
+      )
+      if console
+      else None
+    )
 
 
 async def get_num_page(url: str) -> int:
@@ -148,67 +213,60 @@ async def get_num_page(url: str) -> int:
   return num_page
 
 
-async def get_all_audiobook_url() -> Tuple[List[str]]:
+async def print_status(console: Console, url: str, status_code: int):
   """
-  Asynchronously fetch all audiobook URLs from different categories.
+  Print the status of the URL check without breaking the progress bar.
 
-  Returns:
-      List[str]: A list of all audiobook URLs
+  Args:
+      console (Console): The rich Console instance used by Progress.
+      url (str): The URL being checked.
+      status_code (int): The HTTP status code returned.
   """
+  if status_code < 300:
+    color = "green"
+  elif status_code < 400:
+    color = "cyan"
+  elif status_code < 500:
+    color = "yellow"
+  else:
+    color = "red"
+  console.log(
+    f"Checking URL: {url} - Status: [bold {color}]{status_code}[/bold {color}]"
+  )
 
-  async def print_status(url: str, status_code: int):
-    """
-    Print the status of the URL check.
 
-    Args:
-        url (str): The URL being checked.
-        status_code (int): The HTTP status code returned.
-    """
-    if status_code < 300:
-      color = "green"
-    elif status_code < 400:
-      color = "cyan"
-    elif status_code < 500:
-      color = "yellow"
-    else:
-      color = "red"
-    print(f"Checking URL: {url} - Status: [bold {color}]{status_code}[/bold {color}]")
+async def double_check_url(
+  url: str, console: Console, semaphore: asyncio.Semaphore
+) -> str:
+  """
+  Double check if the URL is valid in the text source.
+  """
+  try:
+    for source in constants.TEXT_DOWNLOAD_URL.keys():
+      text_download_url = await get_text_download_url(url.split("/")[-1], source)
+      if not text_download_url:
+        continue
 
-  async def double_check_url(url: str) -> str:
-    """
-    Double check if the URL is valid in the text source.
-
-    Args:
-        url (str): The audio URL to check.
-
-    Returns:
-        bool: The result of the check, True if valid, False otherwise.
-    """
-    text_download_url = await get_text_download_url(url.split("/")[-1])
-    alternate_text_download_url = (
-      constants.TEXT_DOWNLOAD_URL[-1] + url.split("/")[-1] + "/"
-    )
-    try:
-      async with httpx.AsyncClient(
-        timeout=30, headers={"User-Agent": randomlib.choice(constants.USER_AGENTS)}
-      ) as client:
-        response = await client.head(text_download_url)
-        status_code = response.status_code
-        print_status(text_download_url, status_code)
-
-        if response.status_code < 400:
-          return "thuviensach"
-        # If the first URL is not valid, check the alternate URL
-        else:
-          response = await client.head(alternate_text_download_url)
+      async with semaphore:
+        async with httpx.AsyncClient(
+          timeout=30, headers={"User-Agent": randomlib.choice(constants.USER_AGENTS)}
+        ) as client:
+          response = await client.head(text_download_url)
           status_code = response.status_code
-          print_status(alternate_text_download_url, status_code)
-          return "taisachhay" if response.status_code < 400 else "invalid"
+          await print_status(console, text_download_url, status_code)
 
-    except httpx.RequestError as e:
-      logger.error(f"Request error for {text_download_url}: {e}")
-      return False
+          if status_code < 400:
+            return source
 
+    return "invalid"
+
+  except httpx.RequestError as e:
+    logger.exception(f"Request error for {text_download_url}: {e}")
+    return "invalid"
+
+
+async def get_all_book_url() -> pd.DataFrame:
+  # Get all audiobook URLs from the categories on the website.
   categories = [
     "kinh-te-khoi-nghiep",
     "tam-linh-ton-giao",
@@ -217,51 +275,67 @@ async def get_all_audiobook_url() -> Tuple[List[str]]:
     "tu-lieu-lich-su",
   ]
 
-  category_urls = [
-    f"{constants.AUDIO_CATEGORY_URL}{category}" for category in categories
-  ]
-
-  # Get the number of page for each category
+  category_urls = [f"{constants.AUDIO_CATEGORY_URL}{cat}" for cat in categories]
   num_pages = await asyncio.gather(*(get_num_page(url) for url in category_urls))
 
-  # Get the web content from each category in each page
   page_urls = []
-  for url, num_page in zip(category_urls, num_pages):
+  for url, pages in zip(category_urls, num_pages):
     page_urls.append(url)
-    page_urls.extend([f"{url}/page/{page}" for page in range(2, num_page + 1)])
+    page_urls.extend([f"{url}/page/{p}" for p in range(2, pages + 1)])
 
-  semaphore = asyncio.Semaphore(constants.FETCH_URL_LIMIT)  # Limit concurrent requests
+  fetch_semaphore = asyncio.Semaphore(constants.FETCH_URL_LIMIT)
 
   async def get_web_content_limited(url: str) -> HTMLParser:
-    async with semaphore:
+    async with fetch_semaphore:
       return await get_web_content(url)
 
   parsers = await asyncio.gather(*(get_web_content_limited(url) for url in page_urls))
 
-  # Extract all audiobook URLs from each page
-  book_urls = [
+  # Extract audio URLs from the parsers
+  # Each parser corresponds to a page, and we extract audio URLs from each page
+  # The audio URLs are in the format of <div class="poster"><a href="...">
+  # We use a list comprehension to flatten the list of lists
+  # and get all audio URLs in a single list
+  audio_urls = [
     node.attributes.get("href")
     for parser in parsers
     for node in parser.css("div.poster a")
   ]
+  audio_urls = [url for url in audio_urls if url is not None]
 
-  # Remove None values
-  book_urls = [url for url in book_urls if url is not None]
+  # Check if audio URLs are valid in text sources
+  if not audio_urls:
+    logger.error("No audio URLs found. Please check the website structure.")
+    return pd.DataFrame(columns=["audio_url", "text_url", "source"])
+  console = Console()
+  audio_urls_with_text_source = defaultdict(list)
+  check_semaphore = asyncio.Semaphore(constants.CHECK_URL_LIMIT)
+  with Progress(
+    SpinnerColumn(),
+    TextColumn("[bold blue]{task.description}"),
+    BarColumn(),
+    "[progress.percentage]{task.percentage:>3.0f}%",
+    TimeElapsedColumn(),
+    console=console,
+  ) as progress:
+    task = progress.add_task("Checking URLs...", total=len(audio_urls))
 
-  # Double check if the URL is valid in the text source
-  unvalid_urls = []
-  main_valid_urls = []
-  alternate_valid_urls = []
-  for url in book_urls:
-    result = await double_check_url(url)
-    if result == "invalid":
-      unvalid_urls.append(url)
-    elif result == "thuviensach":
-      main_valid_urls.append(url)
-    elif result == "taisachhay":
-      alternate_valid_urls.append(url)
+    async def process_url(url: str):
+      source = await double_check_url(url, console, check_semaphore)
+      asyncio.sleep(0.1)  # Small delay to avoid overwhelming the server
+      audio_urls_with_text_source[source].append(url)
+      progress.update(task, advance=1)
 
-  return main_valid_urls, alternate_valid_urls, unvalid_urls
+    await asyncio.gather(*(process_url(url) for url in audio_urls))
+
+  # Create a DataFrame with audio URLs and their corresponding text URLs
+  text_audio_urls = []
+  for source, urls in audio_urls_with_text_source.items():
+    for audio_url in urls:
+      text_url = await get_text_book_url(audio_url.split("/")[-1], source)
+      text_audio_urls.append((audio_url, text_url, source))
+
+  return pd.DataFrame(text_audio_urls, columns=["audio_url", "text_url", "source"])
 
 
 async def fetch_download_audio_url(book_url: str) -> List[str]:

@@ -4,9 +4,9 @@ import os
 import os.path as osp
 
 import aiofiles
+import pandas as pd
 
 from tts_data_pipeline import constants
-
 from tts_data_pipeline.crawler import download, metadata, utils
 from tts_data_pipeline.crawler.utils import logger
 
@@ -14,10 +14,9 @@ from tts_data_pipeline.crawler.utils import logger
 def parse_args():
   parser = argparse.ArgumentParser(description="Audiobook Download Pipeline")
   parser.add_argument(
-    "-s",
-    "--save-urls",
+    "--check-urls",
     action="store_true",
-    help="Force to save all audiobook URLs to a file",
+    help="Force to check the existance of all both text and audiobook URLs",
   )
   parser.add_argument(
     "-f",
@@ -58,6 +57,20 @@ def parse_args():
   return parser.parse_args()
 
 
+async def load_urls():
+  """
+  Load audio and text URLs from files.
+  """
+  audio_urls = []
+  text_urls = []
+  async with aiofiles.open(constants.ALL_VALID_BOOK_URLS_SAVE_PATH, "r") as f:
+    async for line in f:
+      audio_url, text_url, source = line.strip().split(", ")
+      audio_urls.append(audio_url)
+      text_urls.append((text_url, source))
+  return audio_urls, text_urls
+
+
 async def main():
   """
   Main function to get all audiobook URLs and download them.
@@ -69,37 +82,27 @@ async def main():
   os.makedirs(constants.TEXT_PDF_DIR, exist_ok=True)
 
   # Get all book's URLs
-  if args.save_urls or not osp.exists(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH):
+  if args.check_urls or not osp.exists(constants.ALL_VALID_BOOK_URLS_SAVE_PATH):
     logger.info("Getting all audiobook URLs and names")
-    (
-      main_audio_urls,
-      alternate_audio_urls,
-      unvalid_audio_urls,
-    ) = await utils.get_all_audiobook_url()
+    text_audio_urls: pd.DataFrame = await utils.get_all_book_url()
     logger.info(
-      f"Found {len(main_audio_urls) + len(alternate_audio_urls)} valid and {len(unvalid_audio_urls)} invalid audiobooks"
+      f"Found {len(text_audio_urls[text_audio_urls['source'] == 'invalid'])} ({len(text_audio_urls[text_audio_urls['source'] == 'invalid']) / len(text_audio_urls) * 100:.2f}%) invalid audiobooks"
     )
-  else:
-    logger.info(
-      f"Loading all audiobook URLs from {constants.ALL_AUDIOBOOK_URLS_SAVE_PATH} file"
-    )
-    async with aiofiles.open(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH, "r") as f:
-      audio_urls = (await f.read()).splitlines()
 
-  if args.save_urls:
-    logger.info(
-      f"Saving all audiobook URLs to {constants.ALL_AUDIOBOOK_URLS_SAVE_PATH} file"
-    )
-    async with aiofiles.open(constants.ALL_AUDIOBOOK_URLS_SAVE_PATH, "w") as f:
-      await f.write("\n".join(audio_urls))  # Optimized to write all at once
-  else:
-    logger.warning("Not saving all audiobook URLs to text file")
+    # Save URLs to files
+    async with aiofiles.open(constants.ALL_VALID_BOOK_URLS_SAVE_PATH, "w") as f:
+      valid_urls = [
+        f"{row['audio_url']}, {row['text_url']}, {row['source']}"
+        for _, row in text_audio_urls.iterrows()
+      ]
+      await f.write("\n".join(valid_urls))
 
   # Fetch metadata
-  main_text_urls = [
-    f"{constants.TEXT_BASE_URL}{url.split('/')[-1]}" for url in audio_urls
-  ]
   if args.fetch_metadata:
+    logger.info(
+      f"Loading all audiobook URLs from {constants.ALL_VALID_BOOK_URLS_SAVE_PATH}"
+    )
+    audio_urls, text_urls = await load_urls()
     await metadata.fetch_book_metadata(text_urls, audio_urls)
 
   # Create metadata CSV
@@ -110,17 +113,14 @@ async def main():
   # Download books with limited concurrency
   if args.download.lower() == "all":
     logger.info("Downloading all books")
-    valid_audio_urls = await asyncio.to_thread(
-      utils.get_valid_audio_urls,
+    audio_download_urls, text_download_urls = await asyncio.to_thread(
+      utils.query_download_url,
       query="all",
-      name=None,
-      author=None,
-      narrator=None,
     )
   elif args.download.lower() == "query":
     logger.info("Downloading books by query")
-    valid_audio_urls = await asyncio.to_thread(
-      utils.get_valid_audio_urls,
+    audio_download_urls, text_download_urls = await asyncio.to_thread(
+      utils.query_download_url,
       query="query",
       name=args.name,
       author=args.author,
@@ -133,9 +133,6 @@ async def main():
     logger.error("Invalid download option")
     return
 
-  text_download_urls = [
-    await utils.get_text_download_url(url.split("/")[-1]) for url in valid_audio_urls
-  ]
   download_semaphore = asyncio.Semaphore(
     constants.DOWNLOAD_BOOK_LIMIT
   )  # Limit concurrent downloads
@@ -147,7 +144,7 @@ async def main():
       text_save_path=constants.TEXT_PDF_DIR,
       download_semaphore=download_semaphore,
     )
-    for audio_url, text_url in zip(valid_audio_urls, text_download_urls)
+    for audio_url, text_url in zip(audio_download_urls, text_download_urls)
   ]
   for task in asyncio.as_completed(download_tasks):
     await task

@@ -2,9 +2,11 @@ import glob
 import os
 import os.path as osp
 import shutil
-from typing import List, Optional, Tuple
 import subprocess
+from typing import List, Optional, Tuple
+
 import av
+import ffmpeg
 import pandas as pd
 from loguru import logger
 
@@ -94,56 +96,37 @@ def get_sample_rate(audio_path: str) -> int:
 
 def combine_wav_files(output_path: str, input_paths: List[str]):
   """
-  Combine multiple WAV files into a single WAV file using PyAV.
+  Combine multiple WAV files into a single WAV file using ffmpeg (no re-encoding).
   Args:
       output_path (str): Path to save the combined WAV file.
       input_paths (List[str]): List of WAV file paths to combine.
   """
-
   if not input_paths:
-    logger.warning("No input WAV files provided for combination.")
+    logger.error("No input files provided.")
     return
 
-  input_paths = sorted(input_paths)
+  # Ensure all input files exist
+  for path in input_paths:
+    if not os.path.isfile(path):
+      logger.error(FileNotFoundError(f"File not found: {path}"))
+
+  # Write file list to temporary text file
+  filelist_path = "temp_concat_list.txt"
+  with open(filelist_path, "w") as f:
+    for path in input_paths:
+      f.write(f"file '{os.path.abspath(path)}'\n")
 
   try:
-    # Get audio properties from first file
-    first_container = av.open(input_paths[0])
-    first_stream = first_container.streams.audio[0]
-    sample_rate = first_stream.sample_rate
-    layout = first_stream.layout
-    first_container.close()
-
-    # Create output container
-    output_container = av.open(output_path, "w")
-    output_stream = output_container.add_stream(
-      "pcm_s16le", rate=sample_rate, layout=layout
+    ffmpeg.input(filelist_path, format="concat", safe=0).output(
+      output_path, acodec="copy"
+    ).run(overwrite_output=True, quiet=True)
+    logger.success(
+      f"Successfully combined {len(input_paths)} files into: {output_path}"
     )
-
-    # Process each input file
-    for input_path in input_paths:
-      input_container = av.open(input_path)
-      audio_stream = input_container.streams.audio[0]
-
-      # Decode and encode frames
-      for frame in input_container.decode(audio_stream):
-        for packet in output_stream.encode(frame):
-          output_container.mux(packet)
-
-      input_container.close()
-
-    # Flush encoder
-    for packet in output_stream.encode():
-      output_container.mux(packet)
-
-    output_container.close()
-
-    logger.info(
-      f"Successfully combined {len(input_paths)} WAV files into {output_path}"
-    )
-
-  except Exception as e:
-    logger.error(f"Error combining WAV files: {e}")
+  except ffmpeg.Error as e:
+    logger.exception(f"FFmpeg error: {e.stderr.decode()}")
+  finally:
+    os.remove(filelist_path)
 
 
 def get_audio_duration(audio_path: str) -> float:

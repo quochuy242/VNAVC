@@ -3,14 +3,17 @@ FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</le
 
 # Crawler path
 AUDIO_SAVE_PATH = "./data/audio/"
-ALL_AUDIOBOOK_URLS_SAVE_PATH = "./data/all_audiobook_urls.txt"
+ALL_VALID_BOOK_URLS_SAVE_PATH = "./data/all_valid_book_urls.txt"
 TEXT_BOOK_URLS_SAVE_PATH = "./data/text_book_urls.txt"
 METADATA_SAVE_PATH = "./data/metadata/book/"
 TEXT_SAVE_PATH = "./data/text/"
 
 # Base url
 AUDIO_CATEGORY_URL = "https://sachnoiviet.net/danh-muc-sach/"
-TEXT_BASE_URL = "https://thuviensachpdf.com/"
+TEXT_BASE_URL = {
+  "thuviensach": "https://thuviensachpdf.com/",
+  "taisachhay": "https://taisachhay.net/",
+}
 TEXT_DOWNLOAD_URL = {
   "thuviensach": "https://cloud.thuviensachpdf.com/pdf/vi/",
   "taisachhay": "https://taisachhay.net/download/",
@@ -38,9 +41,10 @@ USER_AGENTS = [
   "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1",
 ]
 
-FETCH_METADATA_LIMIT = 20
+FETCH_METADATA_LIMIT = 8
 DOWNLOAD_BOOK_LIMIT = 10
 FETCH_URL_LIMIT = 30
+CHECK_URL_LIMIT = 30
 
 # Pre-processing config
 MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000

@@ -20,7 +20,7 @@ def normalize_name(name: str) -> str:
   # Remove accents
   output = unicodedata.normalize("NFD", name)
   output = "".join(c for c in output if unicodedata.category(c) != "Mn")
-  
+
   # Remove punctuation using regex
   output = re.sub(r"[^\w\s]", "", output)
 
@@ -68,8 +68,7 @@ def convert_duration(time_str: Optional[str], unit: str = "second") -> Optional[
       print(f"Invalid unit: {unit}")
       return None
 
-  except Exception as e:
-    print(f"Error converting duration: {e}")
+  except Exception:
     return None
 
 
@@ -206,6 +205,8 @@ class Book:
     author: Optional[str] = None,
     text_url: Optional[str] = None,
     audio_url: Optional[str] = None,
+    text_download_url: Optional[str] = None,
+    audio_download_url: Optional[str] = None,
   ):
     """
     Initialize a Book object.
@@ -234,6 +235,8 @@ class Book:
     self.text_url = text_url
     self.audio_url = audio_url
     self.alignment_path = alignment_path
+    self.text_download_url = text_download_url
+    self.audio_download_url = audio_download_url
 
   @classmethod
   def from_json(cls, json_path: Union[str, Path]) -> "Book":
