@@ -181,6 +181,7 @@ data/metadata/book
 data/metadata/narrator
 >>>>>>> 2e4f9a4965b66141834258ed2e64da0119773603
 dataset/
+notebooks/book/
 
 # Tmp folder
 tmp/
