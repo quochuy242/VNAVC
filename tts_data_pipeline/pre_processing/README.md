@@ -18,9 +18,11 @@ This module prepares audiobook audio and text files for alignment and dataset cr
 
 1. Clone the repository and navigate to the project directory.
 2. Install Python dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
+
 3. Make sure `ffmpeg` is installed and available in your PATH.
 
 ## Usage

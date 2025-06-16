@@ -68,7 +68,7 @@ loguru==0.7.3
 lxml==5.3.2
 markdown-it-py==3.0.0
 markupsafe==3.0.2
-matplotlib==3.10.1
+matplotlib==3.10.0
 matplotlib-inline==0.1.7
 maturin==1.8.2
 mdurl==0.1.2
@@ -83,7 +83,7 @@ networkx==3.4.2
 nltk==3.9.1
 notebook==7.4.2
 notebook-shim==0.2.4
-numpy==2.2.3
+numpy==1.26.4
 nvidia-cublas-cu12==12.6.4.1
 nvidia-cuda-cupti-cu12==12.6.80
 nvidia-cuda-nvrtc-cu12==12.6.77
@@ -157,6 +157,7 @@ tqdm==4.67.1
 traitlets==5.14.3
 transformers==4.51.3
 triton==3.3.0
+-e file:///home/quochuy242/project/tts-data-pipeline
 types-python-dateutil==2.9.0.20250516
 typing-extensions==4.12.2
 tzdata==2025.1

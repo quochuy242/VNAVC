@@ -3,7 +3,7 @@ FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</le
 
 # Crawler path
 AUDIO_SAVE_PATH = "./data/audio/"
-ALL_AUDIOBOOK_URLS_SAVE_PATH = "./data/all_audiobook_urls.txt"
+ALL_VALID_BOOK_URLS_SAVE_PATH = "./data/all_valid_book_urls.txt"
 TEXT_BOOK_URLS_SAVE_PATH = "./data/text_book_urls.txt"
 METADATA_SAVE_PATH = "./data/metadata/book/"
 TEXT_SAVE_PATH = "./data/text/"
@@ -15,9 +15,31 @@ TEXT_DOWNLOAD_URL = "https://cloud.thuviensachpdf.com/pdf/vi/"
 NARRATOR_DOWNLOAD_URL = "https://docs.google.com/spreadsheets/d/1kaZ4PRYq_JvJAwWJN89Gcw_BuWHUogvDA43IZOd6MbE/export?format=csv&gid=0"
 
 # Crawler config
-USER_AGENTS = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-FETCH_METADATA_LIMIT = 20
+USER_AGENTS = [
+  # Chrome trên Windows
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  # Chrome trên macOS
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  # Chrome trên Ubuntu Linux
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.208 Safari/537.36",
+  # Firefox trên Windows
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0",
+  # Firefox trên macOS
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 13.4; rv:126.0) Gecko/20100101 Firefox/126.0",
+  # Safari trên macOS
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15",
+  # Edge trên Windows
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.208 Safari/537.36 Edg/124.0.2478.97",
+  # Android Chrome
+  "Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.208 Mobile Safari/537.36",
+  # iPhone Safari
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1",
+]
+
+FETCH_METADATA_LIMIT = 8
 DOWNLOAD_BOOK_LIMIT = 10
+FETCH_URL_LIMIT = 30
+CHECK_URL_LIMIT = 30
 
 # Pre-processing config
 MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
@@ -41,4 +63,4 @@ AENEAS_CONFIG = f"task_language=vie|is_text_type=plain|os_task_file_format={AENE
 # Align path
 AENEAS_OUTPUT_DIR = "./data/alignment/"
 DATASET_DIR = "./dataset/"
-STANDARD_SAMPLE_RATE = 24000
+STANDARD_SAMPLE_RATE = None

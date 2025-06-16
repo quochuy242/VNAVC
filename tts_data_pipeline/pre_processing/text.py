@@ -240,6 +240,11 @@ def text_processing(
         metadata_df["text_url"].str.contains(pdf_filename), "num_sentences"
       ] = len(normalized_sentences)
 
+      # Update text size
+      metadata_df.loc[
+        metadata_df["text_url"].str.contains(pdf_filename), "text_size"
+      ] = os.path.getsize(output_path)
+
       # Save metadata
       metadata_df.to_csv(constants.METADATA_BOOK_PATH, index=False)
 
