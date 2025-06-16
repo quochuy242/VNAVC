@@ -85,9 +85,9 @@ class Narrator:
     age: Optional[int] = None,
     gender: Optional[str] = None,
     dialect: Optional[str] = None,
-    tone: Optional[str] = None,
-    volume: Optional[str] = None,
     speed: Optional[str] = None,
+    stress: Optional[str] = None,
+    volume: Optional[str] = None,
     pitch: Optional[str] = None,
   ):
     self.id = id if id else self.generate_id()
@@ -96,7 +96,7 @@ class Narrator:
     self.gender = gender
     self.age = age
     self.url = url
-    self.tone = tone
+    self.stress = stress
     self.volume = volume
     self.speed = speed
     self.pitch = pitch
@@ -178,12 +178,12 @@ class Narrator:
       id=narrator_id or cls.generate_id(),
       name=row.get("name", ""),
       url=row.get("url"),
-      age=int(row["age"]) if row.get("age") and row["age"].isdigit() else None,
       gender=row.get("gender"),
+      age=int(row["age"]) if row.get("age") and row["age"].isdigit() else None,
       dialect=row.get("dialect"),
-      tone=row.get("tone"),
-      volume=row.get("volume"),
       speed=row.get("speed"),
+      stress=row.get("stress"),
+      volume=row.get("volume"),
       pitch=row.get("pitch"),
     )
 
