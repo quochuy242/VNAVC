@@ -171,14 +171,23 @@ cython_debug/
 .pypirc
 
 # Data
+<<<<<<< HEAD
+<<<<<<< HEAD
+data/
+=======
 data/audio
 data/text
 data/metadata/book
 data/metadata/narrator
+>>>>>>> 2e4f9a4965b66141834258ed2e64da0119773603
 dataset/
+notebooks/book/
 
 # Tmp folder
 tmp/
 
 # Log 
 logs/
+=======
+data/
+>>>>>>> 1559346 ([fix, feature]: convert all metadata json to a single file csv, so I have the valid download URL audio. The downloading progress will be completed soon)

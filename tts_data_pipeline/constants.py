@@ -10,14 +10,9 @@ TEXT_SAVE_PATH = "./data/text/"
 
 # Base url
 AUDIO_CATEGORY_URL = "https://sachnoiviet.net/danh-muc-sach/"
-TEXT_BASE_URL = {
-  "thuviensach": "https://thuviensachpdf.com/",
-  "taisachhay": "https://taisachhay.net/",
-}
-TEXT_DOWNLOAD_URL = {
-  "thuviensach": "https://cloud.thuviensachpdf.com/pdf/vi/",
-  "taisachhay": "https://taisachhay.net/download/",
-}
+TEXT_BASE_URL = "https://thuviensachpdf.com/"
+TEXT_DOWNLOAD_URL = "https://cloud.thuviensachpdf.com/pdf/vi/"
+NARRATOR_DOWNLOAD_URL = "https://docs.google.com/spreadsheets/d/1kaZ4PRYq_JvJAwWJN89Gcw_BuWHUogvDA43IZOd6MbE/export?format=csv&gid=0"
 
 # Crawler config
 USER_AGENTS = [
