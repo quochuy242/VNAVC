@@ -90,6 +90,7 @@ class Narrator:
     stress: Optional[str] = None,
     volume: Optional[str] = None,
     pitch: Optional[str] = None,
+    tone: Optional[str] = None,
   ):
     self.id = id if id else self.generate_id()
     self.name = name
@@ -101,6 +102,7 @@ class Narrator:
     self.volume = volume
     self.speed = speed
     self.pitch = pitch
+    self.tone = tone
 
   def to_dict(self):
     """Convert the narrator to a dictionary."""
