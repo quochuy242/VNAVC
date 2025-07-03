@@ -28,7 +28,7 @@ async def get_book_metadata(
   Asynchronously get book metadata and return a Book instance.
 
   Args:
-      text_url (Tuple[str, str]): The URL of the book page and the source's name.
+      text_url (Tuple[str, str]): The URL of the book page and the source's name (e.g. "thuviensach", "taisachhay").
       audio_url (str): The URL of the audiobook page.
       semaphore (asyncio.Semaphore): Concurrency control.
       save_path (str): Folder path to save metadata JSON (optional).
@@ -44,16 +44,20 @@ async def get_book_metadata(
       return None
 
     # Extract fields from HTML
-    title_tag = text_parser.css_first("h1.title-detail")
-    author_tag = text_parser.css_first("div.product-price span.text-brand")
-    duration_tag = audio_parser.css_first(".featu")
+    title_tag = audio_parser.css_first("div.data h1") if audio_parser else None
+    author_tag = (
+      text_parser.css_first("div.product-price span.text-brand")
+      if text_parser
+      else None
+    )
+    duration_tag = audio_parser.css_first(".featu") if audio_parser else None
 
     title = title_tag.text(strip=True) if title_tag else "Unknown"
     author = author_tag.text(strip=True) if author_tag else "Unknown"
     duration = duration_tag.text(strip=True) if duration_tag else "Unknown"
 
     # Parse narrators
-    narrator_tags = audio_parser.css("i.fa-microphone ~ a")
+    narrator_tags = audio_parser.css("i.fa-microphone ~ a") if audio_parser else []
     narrators: List[Narrator] = []
 
     for tag in narrator_tags:
@@ -78,7 +82,7 @@ async def get_book_metadata(
       author=author,
       duration=duration,
       narrator=narrators if len(narrators) > 1 else narrators[0],
-      text_url=text_url,
+      text_url=text_url[0],
       audio_url=audio_url,
       text_download_url=text_download_url,
       audio_download_url=audio_download_url,
@@ -134,6 +138,12 @@ def convert_metadata_to_csv():
     df["text_size"] = pd.Series([None] * len(df))
 
     return df
+
+  def get_narrator_id_from_narrator_object(narrator: Narrator) -> str:
+    """
+    Get the narrator ID from a Narrator object.
+    """
+    return narrator.url.split("/")[-1] if narrator.url else "Unknown"
 
   metadata_path = Path(constants.METADATA_SAVE_PATH)
 

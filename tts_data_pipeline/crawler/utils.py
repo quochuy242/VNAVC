@@ -5,12 +5,14 @@ import random as randomlib
 import shutil
 from collections import defaultdict
 from typing import List, Optional, Tuple
-
+import sys
 import httpx
 import pandas as pd
 from loguru import logger
-from playwright.async_api import async_playwright
-from rich import print
+from playwright.async_api import (
+  async_playwright,
+  TimeoutError as PlaywrightTimeoutError,
+)
 from rich.progress import (
   Progress,
   SpinnerColumn,
@@ -26,13 +28,14 @@ from tts_data_pipeline.crawler.playwright_server import ensure_playwright_server
 
 logger.remove()
 logger.add(
-  f"{constants.LOG_DIR}/crawler.log",
+  sys.stderr,  # Use stderr for logging to avoid conflicts with other outputs
+  # f"{constants.LOG_DIR}/crawler.log",
+  # rotation="10 MB",
+  # encoding="utf-8",
+  # enqueue=True,
+  # diagnose=True,
+  # colorize=False,
   level="INFO",
-  rotation="10 MB",
-  encoding="utf-8",
-  colorize=False,
-  diagnose=True,
-  enqueue=True,
   format=constants.FORMAT_LOG,
 )
 
@@ -71,6 +74,8 @@ def query_download_url(
       mask &= df["author"].str.contains(author, na=False)
     if narrator:
       mask &= df["narrator"].str.contains(narrator, na=False)
+
+    print(f"Querying with mask: {mask.sum()} matches found")
     return (
       df[mask]["audio_download_url"].tolist(),
       df[mask]["text_download_url"].tolist(),
@@ -118,7 +123,7 @@ def group_audiobook(
 
 
 async def get_text_download_url(
-  name: str, source: str = "thuviensach", console: Console = None
+  name: str, source: str = "thuviensach", console: Optional[Console] = None
 ) -> str:
   """
   Args:
@@ -170,7 +175,9 @@ async def get_text_book_url(name: str, source: str = "thuviensach") -> str:
   )
 
 
-async def get_web_content(url: str, console: Console = None) -> Optional[HTMLParser]:
+async def get_web_content(
+  url: str, console: Optional[Console] = None
+) -> Optional[HTMLParser]:
   """
   Asynchronously fetch HTML content from a given URL.
 
@@ -206,9 +213,9 @@ async def get_num_page(url: str) -> int:
       int: The number of pages in each category
   """
   parser = await get_web_content(url)
-  string = parser.css_first(
-    "div.pagination span"
-  ).text()  # The expect output is "Trang 1 trong X"
+  string = (
+    parser.css_first("div.pagination span").text() if parser else ""
+  )  # The expect output is "Trang 1 trong X"
   num_page = int(string.split(" ")[-1])  # Get X
   return num_page
 
@@ -235,9 +242,9 @@ async def print_status(console: Console, url: str, status_code: int):
   )
 
 
-async def double_check_url(
+async def check_text_url(
   url: str, console: Console, semaphore: asyncio.Semaphore
-) -> str:
+) -> Tuple[str, str]:
   """
   Double check if the URL is valid in the text source.
   """
@@ -256,13 +263,42 @@ async def double_check_url(
           await print_status(console, text_download_url, status_code)
 
           if status_code < 400:
-            return source
+            return source, text_download_url
 
-    return "invalid"
+    return "invalid", ""
 
   except httpx.RequestError as e:
     logger.exception(f"Request error for {text_download_url}: {e}")
-    return "invalid"
+    return "invalid", ""
+
+
+async def check_audio_url(
+  url: str, console: Console, semaphore: asyncio.Semaphore
+) -> Optional[List[str]]:
+  """
+  Double check if the URL is valid in the audio source.
+  """
+  try:
+    audio_download_urls = await fetch_download_audio_url(url)
+    for audio_url in audio_download_urls:
+      if not audio_url:
+        return None  # Skip if the audio URL is empty
+      async with semaphore:
+        async with httpx.AsyncClient(
+          timeout=30, headers={"User-Agent": randomlib.choice(constants.USER_AGENTS)}
+        ) as client:
+          response = await client.head(url)
+          status_code = response.status_code
+          await print_status(console, url, status_code)
+
+          if status_code < 400:
+            continue
+          else:
+            return None
+    return audio_download_urls  # All audio URLs are valid
+  except httpx.RequestError as e:
+    logger.exception(f"Request error for {url}: {e}")
+    return None
 
 
 async def get_all_book_url() -> pd.DataFrame:
@@ -285,7 +321,7 @@ async def get_all_book_url() -> pd.DataFrame:
 
   fetch_semaphore = asyncio.Semaphore(constants.FETCH_URL_LIMIT)
 
-  async def get_web_content_limited(url: str) -> HTMLParser:
+  async def get_web_content_limited(url: str) -> Optional[HTMLParser]:
     async with fetch_semaphore:
       return await get_web_content(url)
 
@@ -299,17 +335,17 @@ async def get_all_book_url() -> pd.DataFrame:
   audio_urls = [
     node.attributes.get("href")
     for parser in parsers
+    if parser
     for node in parser.css("div.poster a")
   ]
-  audio_urls = [url for url in audio_urls if url is not None]
-
-  # Check if audio URLs are valid in text sources
   if not audio_urls:
     logger.error("No audio URLs found. Please check the website structure.")
     return pd.DataFrame(columns=["audio_url", "text_url", "source"])
+
+  # Check if audio URLs are valid in text sources
   console = Console()
-  audio_urls_with_text_source = defaultdict(list)
   check_semaphore = asyncio.Semaphore(constants.CHECK_URL_LIMIT)
+  audio_text_source = defaultdict(list)
   with Progress(
     SpinnerColumn(),
     TextColumn("[bold blue]{task.description}"),
@@ -320,17 +356,35 @@ async def get_all_book_url() -> pd.DataFrame:
   ) as progress:
     task = progress.add_task("Checking URLs...", total=len(audio_urls))
 
+    # Process each audio URL concurrently
+    # If the audio URL is valid, check the text source and append the URL to the
+    # corresponding source
+    # If the audio URL is invalid, log it and skip to the next URL
     async def process_url(url: str):
-      source = await double_check_url(url, console, check_semaphore)
-      asyncio.sleep(0.1)  # Small delay to avoid overwhelming the server
-      audio_urls_with_text_source[source].append(url)
-      progress.update(task, advance=1)
+      if url:
+        audio_download_urls = await check_audio_url(url, console, check_semaphore)
+        if not audio_download_urls:
+          # If the audio URL is valid, check the text source
+          # and append the URL to the corresponding source
+          source, text_download_url = await check_text_url(
+            url, console, check_semaphore
+          )
+          asyncio.sleep(0.1)  # Small delay to avoid overwhelming the server
+          audio_text_source[source].append(url)
+          progress.update(task, advance=1)
+        else:
+          # If the audio URL is invalid, log it
+          console.log(f"[red]Invalid audio URL:[/red] {url} - Skipping...")
+          progress.update(task, advance=1)
+      else:
+        console.log("[red]Empty audio URL - Skipping...[/red]")
+        progress.update(task, advance=1)
 
-    await asyncio.gather(*(process_url(url) for url in audio_urls))
+    await asyncio.gather(*(process_url(url) for url in audio_urls if url))
 
   # Create a DataFrame with audio URLs and their corresponding text URLs
   text_audio_urls = []
-  for source, urls in audio_urls_with_text_source.items():
+  for source, urls in audio_text_source.items():
     for audio_url in urls:
       text_url = await get_text_book_url(audio_url.split("/")[-1], source)
       text_audio_urls.append((audio_url, text_url, source))
@@ -341,14 +395,22 @@ async def get_all_book_url() -> pd.DataFrame:
 async def fetch_download_audio_url(book_url: str) -> List[str]:
   """Fetch all download URLs for a given book using Playwright."""
   await ensure_playwright_server_running()  # Ensure Playwright server is running
-  async with async_playwright() as p:
-    browser = await p.chromium.connect("ws://0.0.0.0:3000/")
-    page = await browser.new_page()
-    await page.goto(book_url)
+  try:
+    async with async_playwright() as p:
+      browser = await p.chromium.connect("ws://0.0.0.0:3000/")
+      page = await browser.new_page()
+      await page.goto(book_url)
 
-    mp3_links = await page.locator("a.ai-track-btn").evaluate_all(
-      "elements => elements.map(el => el.href)"
+      mp3_links = await page.locator("a.ai-track-btn").evaluate_all(
+        "elements => elements.map(el => el.href)"
+      )
+
+      await browser.close()
+      return mp3_links
+  except PlaywrightTimeoutError as e:
+    logger.error(f"Playwright timeout error for {book_url}: {e}")
+  except Exception as e:
+    logger.exception(
+      f"Unhandled exception while fetching audio URLs for {book_url}: {e}"
     )
-
-    await browser.close()
-    return mp3_links
+  return []  # Return an empty list if any error occurs

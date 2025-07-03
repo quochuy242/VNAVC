@@ -1,5 +1,6 @@
 import json
 import re
+import ast
 import secrets
 import unicodedata
 from pathlib import Path
@@ -21,8 +22,8 @@ def normalize_name(name: str) -> str:
   output = unicodedata.normalize("NFD", name)
   output = "".join(c for c in output if unicodedata.category(c) != "Mn")
 
-  # Remove punctuation using regex
-  output = re.sub(r"[^\w\s]", "", output)
+  # Remove punctuation using regex except hyphen
+  output = re.sub(r"[^\w\s\-]", "", output)
 
   # Convert to lowercase and replace spaces with hyphens
   return output.lower().replace(" ", "-")
@@ -206,7 +207,7 @@ class Book:
     text_url: Optional[str] = None,
     audio_url: Optional[str] = None,
     text_download_url: Optional[str] = None,
-    audio_download_url: Optional[str] = None,
+    audio_download_url: Optional[List[str]] = None,
   ):
     """
     Initialize a Book object.
@@ -227,6 +228,9 @@ class Book:
     self.name = normalize_name(name)
     self.text_path = text_path
     self.audio_path = audio_path
+    self.narrator_id = (
+      narrator.id if isinstance(narrator, Narrator) else [n.id for n in narrator]
+    )
     self.narrator = narrator
     self.duration = (
       convert_duration(duration, unit="hour") if isinstance(duration, str) else duration
@@ -268,6 +272,40 @@ class Book:
       narrator=narrators,
     )
 
+  @classmethod
+  def from_dict(cls, data: Dict) -> "Book":
+    """
+    Load a Book object from a dictionary.
+
+    Args:
+      data (Dict): Dictionary of book fields.
+
+    Returns:
+      Book: Loaded book object.
+    """
+    narrators_data = data.get("narrator", [])
+    if isinstance(narrators_data, str):
+      narrators_data = ast.literal_eval(narrators_data)
+    if isinstance(narrators_data, dict):
+      narrators = Narrator.from_dict(narrators_data)
+    else:
+      narrators = [Narrator.from_dict(n) for n in narrators_data]
+
+    return cls(
+      id=data.get("id"),
+      name=data.get("name"),
+      text_url=data.get("text_url"),
+      audio_url=data.get("audio_url"),
+      author=data.get("author"),
+      duration=data.get("duration"),
+      narrator=narrators,
+      text_path=data.get("text_path"),
+      audio_path=data.get("audio_path"),
+      alignment_path=data.get("alignment_path"),
+      text_download_url=data.get("text_download_url"),
+      audio_download_url=data.get("audio_download_url"),
+    )
+
   def to_dict(self):
     """
     Convert the Book object to a dictionary.
@@ -300,7 +338,7 @@ class Book:
       f"\n\tid={self.id}, "
       f"\n\tname={self.name}, "
       f"\n\tauthor={self.author}, "
-      f"\n\tnarrator={self.narrator}, "
+      f"\n\tnarrator_id={self.narrator.id if isinstance(self.narrator, Narrator) else [n.id for n in self.narrator]}, "
       f"\n\tduration={self.duration}, "
       f"\n\ttext_url={self.text_url}, "
       f"\n\taudio_url={self.audio_url}"
@@ -339,3 +377,20 @@ class Book:
       self.audio_path = audio_path
     if alignment_path is not None:
       self.alignment_path = alignment_path
+
+  def update_size(
+    self,
+    audio_size: Optional[int] = None,
+    text_size: Optional[int] = None,
+  ):
+    """
+    Update the sizes of the audio and text files.
+
+    Args:
+      audio_size (int | None): Size of the audio file in bytes.
+      text_size (int | None): Size of the text file in bytes.
+    """
+    if audio_size is not None:
+      self.audio_size = audio_size
+    if text_size is not None:
+      self.text_size = text_size

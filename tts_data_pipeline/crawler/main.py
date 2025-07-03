@@ -63,7 +63,7 @@ async def load_urls():
   """
   audio_urls = []
   text_urls = []
-  async with aiofiles.open(constants.ALL_VALID_BOOK_URLS_SAVE_PATH, "r") as f:
+  async with aiofiles.open(constants.VALID_BOOK_URL_SAVE_PATH, "r") as f:
     async for line in f:
       audio_url, text_url, source = line.strip().split(", ")
       audio_urls.append(audio_url)
@@ -82,7 +82,7 @@ async def main():
   os.makedirs(constants.TEXT_PDF_DIR, exist_ok=True)
 
   # Get all book's URLs
-  if args.check_urls or not osp.exists(constants.ALL_VALID_BOOK_URLS_SAVE_PATH):
+  if args.check_urls or not osp.exists(constants.VALID_BOOK_URL_SAVE_PATH):
     logger.info("Getting all audiobook URLs and names")
     text_audio_urls: pd.DataFrame = await utils.get_all_book_url()
     logger.info(
@@ -90,7 +90,7 @@ async def main():
     )
 
     # Save URLs to files
-    async with aiofiles.open(constants.ALL_VALID_BOOK_URLS_SAVE_PATH, "w") as f:
+    async with aiofiles.open(constants.VALID_BOOK_URL_SAVE_PATH, "w") as f:
       valid_urls = [
         f"{row['audio_url']}, {row['text_url']}, {row['source']}"
         for _, row in text_audio_urls.iterrows()
@@ -99,9 +99,7 @@ async def main():
 
   # Fetch metadata
   if args.fetch_metadata:
-    logger.info(
-      f"Loading all audiobook URLs from {constants.ALL_VALID_BOOK_URLS_SAVE_PATH}"
-    )
+    logger.info(f"Loading all audiobook URLs from {constants.VALID_BOOK_URL_SAVE_PATH}")
     audio_urls, text_urls = await load_urls()
     await metadata.fetch_book_metadata(text_urls, audio_urls)
 

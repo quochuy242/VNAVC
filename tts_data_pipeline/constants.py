@@ -3,8 +3,8 @@ FORMAT_LOG = "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</le
 
 # Crawler path
 AUDIO_SAVE_PATH = "./data/audio/"
-ALL_VALID_BOOK_URLS_SAVE_PATH = "./data/all_valid_book_urls.txt"
-TEXT_BOOK_URLS_SAVE_PATH = "./data/text_book_urls.txt"
+VALID_BOOK_URL_SAVE_PATH = "./data/valid_book_urls.txt"
+DOWNLOAD_URL_SAVE_PATH = "./data/download_urls.json"
 METADATA_SAVE_PATH = "./data/metadata/book/"
 TEXT_SAVE_PATH = "./data/text/"
 
