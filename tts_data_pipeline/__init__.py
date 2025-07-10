@@ -316,6 +316,9 @@ class Book:
       dict: Dictionary representation of the book.
     """
     result = self.__dict__.copy()
+    result["audio_path"] = str(self.audio_path) if self.audio_path else None
+    result["text_path"] = str(self.text_path) if self.text_path else None
+    result["alignment_path"] = str(self.alignment_path) if self.alignment_path else None
     if self.narrator:
       if isinstance(self.narrator, list):
         result["narrator"] = [n.to_dict() for n in self.narrator]
