@@ -1,0 +1,23 @@
+{
+  "text_pdf_dir": "data/text/pdf",
+  "audio_raw_dir": "data/audio/raw",
+  "text_output_dir": "data/text/processed",
+  "audio_qualified_dir": "data/audio/processed",
+  "audio_unqualified_dir": "data/audio/unqualified",
+  "metadata_path": "data/metadata/after_preprocess_metadata.csv",
+  "log_dir": "logs",
+  "min_word_threshold": 20,
+  "min_sample_rate": 16000,
+  "target_sample_rate": 24000,
+  "max_workers": 4,
+  "chunk_size": 100,
+  "audio_format": "wav",
+  "audio_bitrate": "192k",
+  "normalize_audio": true,
+  "remove_punctuation": true,
+  "normalize_unicode": true,
+  "filter_empty_sentences": true,
+  "update_metadata": true,
+  "save_intermediate": false,
+  "remove_original_files": false
+}

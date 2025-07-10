@@ -1,11 +1,10 @@
 import ast
 import asyncio
-import os
 import random as randomlib
 import shutil
 import time
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 
 import aiohttp
 import pandas as pd
@@ -15,7 +14,7 @@ from tts_data_pipeline import constants
 from tts_data_pipeline.crawler.utils import logger
 
 
-class OptimizedDownloader:
+class Downloader:
   def __init__(
     self,
     max_concurrent_books: int = 3,
@@ -271,7 +270,7 @@ async def main():
     "timeout": 10000,
   }
 
-  async with OptimizedDownloader(**downloader_config) as downloader:
+  async with Downloader(**downloader_config) as downloader:
     successful, failed = await downloader.download_all_books(
       metadata_df,
       audio_save_path="./data/audio/raw/",

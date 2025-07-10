@@ -46,15 +46,16 @@ MIN_SAMPLE_RATE = 24000  # Hz, always larger than 16000
 
 # Pre-processing path
 MIN_WORD_THRESHOLD = 20
-TEXT_SENTENCE_DIR = "./data/text/sentence/"
+TEXT_PROCESSED_DIR = "./data/text/processed/"
 TEXT_PDF_DIR = "./data/text/pdf/"
 TEXT_TXT_DIR = "./data/text/txt/"
 AUDIO_RAW_DIR = "./data/audio/raw/"
-AUDIO_QUALIFIED_DIR = "./data/audio/qualified/"
+AUDIO_PROCESSED_DIR = "./data/audio/processed/"
 AUDIO_UNQUALIFIED_DIR = "./data/audio/unqualified/"
 METADATA_BOOK_PATH = "./data/metadata/metadata_book.csv"
 METADATA_NARRATOR_PATH = "./data/metadata/metadata_narrator.csv"
 TEST_DATA_PATH = "./data/test/"
+AFTER_DOWNLOADING_METADATA_PATH = "./data/metadata/after_download_metadata.csv"
 
 # Align config
 AENEAS_OUTPUT_EXT = "tsv"
