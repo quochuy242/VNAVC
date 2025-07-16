@@ -1,0 +1,10 @@
+{
+  "audio_dir": "data/audio/processed",
+  "text_dir": "data/text/processed",
+  "align_dir": "data/alignment",
+  "log_dir": "logs",
+  "remove_outliers": false,
+  "remove_first": false,
+  "split": true,
+  "max_workers": 8
+}

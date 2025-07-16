@@ -259,7 +259,7 @@ class Downloader:
 
 async def main():
   """Main function to run the optimized downloader"""
-  metadata_df = pd.read_csv("./data/metadata/final_metadata.csv")
+  metadata_df = pd.read_csv("./data/metadata/able_download_less_10_hour_metadata.csv")
 
   # Configuration for optimal performance
   downloader_config = {
