@@ -1,11 +1,12 @@
+import json
 import os
 import shutil
 import subprocess
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Tuple
-import threading
 
 import numpy as np
 import pandas as pd
@@ -22,6 +23,7 @@ from rich.progress import (
   SpinnerColumn,
   TextColumn,
   TimeRemainingColumn,
+  TimeElapsedColumn,
 )
 from typing_extensions import Annotated
 
@@ -121,10 +123,10 @@ class AudioTextAligner:
   """Audio-text alignment tool using aeneas."""
 
   def __init__(self, config: Optional[AlignmentConfig] = None):
-    self.setup_logging()
-    self.dependencies = ["ffmpeg", "ffprobe", "espeak"]
-    self.check_dependencies()
     self.config = config or AlignmentConfig()
+    self.dependencies = ["ffmpeg", "ffprobe", "espeak"]
+    self.setup_logging()
+    self.check_dependencies()
     self.setup_directories()
 
   def setup_logging(self):
@@ -205,39 +207,49 @@ class AudioTextAligner:
     output_dir.mkdir(parents=True, exist_ok=True)
     return output_dir
 
-  def process_alignment_output(self, book: Book) -> List[int]:
-    """Process alignment output and identify outliers."""
-    # Load alignment data
-    align_df = pd.read_csv(book.alignment_path, sep="\t", names=["start", "end", "id"])
 
-    # Calculate duration and clean ID column
-    align_df["duration"] = align_df["end"] - align_df["start"]
-    align_df["id"] = align_df["id"].str.replace("f", "").astype(int)
+def process_alignment_output(self, book: Book) -> List[int]:
+  """Process alignment output and remove audio segments that exceed max duration."""
+  # Load alignment data
+  align_df = pd.read_csv(book.alignment_path, sep="\t", names=["start", "end", "id"])
 
-    # Save processed alignment data
-    align_df.to_csv(book.alignment_path, sep="\t", index=False, header=False)
+  # Calculate duration and clean ID column
+  align_df["duration"] = align_df["end"] - align_df["start"]
+  align_df["id"] = align_df["id"].str.replace("f", "").astype(int)
 
-    # Find outliers
-    outlier_indices = []
-    if self.config.remove_first:
-      outlier_indices.append(0)
+  # Save processed alignment data back (optional)
+  align_df.to_csv(book.alignment_path, sep="\t", index=False, header=False)
 
-    if len(align_df) > 3:
-      z_scores = np.abs(
-        (align_df["duration"] - align_df["duration"].mean())
-        / align_df["duration"].std()
-      )
-      outlier_mask = z_scores > 3.0
-      outlier_indices.extend(np.where(outlier_mask)[0].tolist())
+  # Remove long segments
+  outlier_indices = []
+  max_duration = getattr(
+    self.config, "max_duration", 12.0
+  )  # 12s is the default max duration
 
-    # Save outlier indices
-    outlier_indices = sorted(set(outlier_indices))
-    outlier_file = Path(book.alignment_path).parent / "outlier.txt"
-    with open(outlier_file, "w") as f:
-      f.write("\n".join(str(idx) for idx in outlier_indices))
+  for idx, row in align_df.iterrows():
+    if row["duration"] > max_duration:
+      outlier_indices.append(idx)
 
-    logger.info(f"Found {len(outlier_indices)} outliers in alignment for {book.name}")
-    return outlier_indices
+      audio_path = Path(book.audio_dir) / f"{row['id']}.wav"
+
+      if audio_path.exists():
+        audio_path.unlink()
+        logger.info(
+          f"Removed audio {audio_path.name} with duration {row['duration']:.2f}s"
+        )
+      else:
+        logger.warning(f"Audio file {audio_path} not found. Skipping removal.")
+
+  # Save outlier indices
+  outlier_file = Path(book.alignment_path).parent / "outlier.txt"
+  with open(outlier_file, "w") as f:
+    f.write("\n".join(str(idx) for idx in outlier_indices))
+
+  logger.info(
+    f"Removed {len(outlier_indices)} long segments in alignment for {book.name}"
+  )
+
+  return outlier_indices
 
   def _run_ffmpeg_sync(self, cmd: List[str]) -> None:
     """Run ffmpeg command synchronously with semaphore."""
@@ -381,7 +393,7 @@ class AudioTextAligner:
         continue
 
       output_file = str(output_dir / f"{book.id}_{line_id}.txt")
-      text_content = text_lines[line_id]
+      text_content = text_lines[line_id - 1]  # Adjust for 0-based index, line_id is 1-based
 
       tasks.append((output_file, line_id, text_content, book.name))
 
@@ -478,8 +490,6 @@ def create_config(
     if isinstance(value, Path):
       config_dict[key] = str(value)
 
-  import json
-
   with open(output_path, "w") as f:
     json.dump(config_dict, f, indent=2)
 
@@ -489,18 +499,41 @@ def create_config(
 
 @app.command()
 def test(
-  audio: str = typer.Option(..., "-a", "--audio", help="Path to the audio file"),
-  text: str = typer.Option(..., "-t", "--text", help="Path to the text file"),
-  split: bool = typer.Option(False, "-s", "--split", help="Split files into segments"),
-  force: bool = typer.Option(
-    False, "-f", "--force", help="Force realignment even if alignment exists"
-  ),
-  remove_first: bool = typer.Option(
-    True, "--remove-first/--keep-first", help="Remove first segment (usually silence)"
-  ),
-  max_workers: int = typer.Option(
-    os.cpu_count(), "--max-workers", help="Maximum number of workers for splitting"
-  ),
+  audio: Annotated[
+    str, typer.Option(..., "-a", "--audio", help="Path to the audio file")
+  ],
+  text: Annotated[str, typer.Option(..., "-t", "--text", help="Path to the text file")],
+  split: Annotated[
+    bool,
+    typer.Option(False, "-s", "--split/--no-split", help="Split files into segments"),
+  ],
+  force: Annotated[
+    bool,
+    typer.Option(
+      False, "-f", "--force", help="Force realignment even if alignment exists"
+    ),
+  ],
+  remove_outliers: Annotated[
+    bool,
+    typer.Option(
+      False,
+      "-r",
+      "--remove-outliers/--keep-outliers",
+      help="Remove outlier segments based on duration",
+    ),
+  ],
+  remove_first: Annotated[
+    bool,
+    typer.Option(
+      True, "--remove-first/--keep-first", help="Remove first segment (usually silence)"
+    ),
+  ],
+  max_workers: Annotated[
+    int,
+    typer.Option(
+      os.cpu_count(), "--max-workers", help="Maximum number of workers for splitting"
+    ),
+  ],
 ):
   """Align audio and text files using aeneas."""
   config = AlignmentConfig(
@@ -510,7 +543,7 @@ def test(
 
   # Check dependencies
   if not aligner.check_dependencies():
-    typer.echo("Missing dependencies. Please install them and try again.")
+    console.print("Missing dependencies. Please install them and try again.")
     raise typer.Exit(1)
 
   # Validate input files
@@ -518,7 +551,7 @@ def test(
   text_path = Path(text)
 
   if not aligner.validate_files(audio_path, text_path):
-    typer.echo("File validation failed.")
+    console.print("File validation failed.")
     raise typer.Exit(1)
 
   # Setup book object
@@ -527,32 +560,37 @@ def test(
     book = Book.from_json(json_path)
     book.update_paths(text_path=text_path, audio_path=audio_path)
   else:
-    typer.echo(f"Warning: No metadata found for {audio_path}")
-    # Create a basic book object if no metadata is found
+    console.print(
+      f"[bold yellow]Warning[/bold yellow]: No metadata found for {audio_path}"
+    )
     book = Book(name=audio_path.stem, audio_path=audio_path, text_path=text_path)
 
   # Check for existing alignment
   existing_alignment = Path(constants.AENEAS_OUTPUT_DIR) / book.name / "output.tsv"
   if existing_alignment.exists() and not force:
     book.update_paths(alignment_path=str(existing_alignment))
-    typer.echo(f"Using existing alignment: {existing_alignment}")
+    console.print(f"Using existing alignment: {existing_alignment}")
   elif force:
-    typer.echo("Forcing realignment...")
+    console.print("Forcing realignment...")
 
   # Run alignment
-  typer.echo(f"Processing book: {book.name}")
+  console.print(f"Processing book: {book.name}")
   result = aligner.align_book(book)
 
   # Report results
   if result.success:
-    typer.echo(f"✅ Alignment successful for {result.book_name}")
-    typer.echo(f"   Alignment saved to: {result.alignment_path}")
+    console.print(
+      f"[bold green]Success[/bold green]: Alignment successful for {result.book_name}"
+    )
+    console.print(f"\tAlignment saved to: {result.alignment_path}")
     if result.segments_created > 0:
-      typer.echo(f"   Created {result.segments_created} segments")
+      console.print(f"\tCreated {result.segments_created} segments")
     if result.outliers_removed > 0:
-      typer.echo(f"   Removed {result.outliers_removed} outliers")
+      console.print(f"\tRemoved {result.outliers_removed} outliers")
   else:
-    typer.echo(f"❌ Alignment failed for {result.book_name}: {result.error_message}")
+    console.print(
+      f"[bold red]Error[/bold red]: Alignment failed for {result.book_name}: {result.error_message}"
+    )
     raise typer.Exit(1)
 
 
@@ -578,8 +616,6 @@ def run(
 ):
   """Batch align multiple audio-text pairs."""
   if config_file and config_file.exists():
-    import json
-
     with open(config_file, "r") as f:
       config_data = json.load(f)
     config = AlignmentConfig(**config_data)
@@ -601,7 +637,9 @@ def run(
   audio_dir = Path(audio_dir)
   text_dir = Path(text_dir)
   if not audio_dir.exists() or not text_dir.exists():
-    typer.echo(f"Audio directory: {audio_dir} or text directory: {text_dir} not found")
+    console.print(
+      f"Audio directory: {audio_dir} or text directory: {text_dir} not found"
+    )
     raise typer.Exit(1)
 
   # Find audio files
@@ -630,10 +668,10 @@ def run(
 
   with Progress(
     SpinnerColumn(),
-    TextColumn("[bold blue]Aligning..."),
-    BarColumn(),
-    TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-    TextColumn("[progress.completed]{task.completed}/{task.total}"),
+    TextColumn("[bold blue]{task.percentage:>3.0f}%[/bold blue]"),
+    BarColumn(bar_width=None),
+    TextColumn("[green]{task.completed}/{task.total}[/green]"),
+    TimeElapsedColumn(),
     TimeRemainingColumn(),
     console=console,
   ) as progress:
@@ -644,7 +682,7 @@ def run(
       # Validate files
       if not aligner.validate_files(audio_file, text_file):
         console.print(
-          f"❌ Validation failed for {audio_file.name} and {text_file.name}"
+          f"[bold red]Failed[/bold red]: Validation failed for {audio_file.name} and {text_file.name}"
         )
         failed += 1
         continue
@@ -665,10 +703,10 @@ def run(
 
       if result.success:
         successful += 1
-        console.print("✅ Success")
+        console.print("[bold green]Success[/bold green]")
       else:
         failed += 1
-        console.print(f"❌ Failed: {result.error_message}")
+        console.print(f"[bold red]Failed[/bold red]: {result.error_message}")
 
       progress.update(
         task, advance=1, completed=successful + failed, total=len(audio_text_pairs)

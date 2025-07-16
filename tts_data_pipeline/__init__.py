@@ -199,8 +199,8 @@ class Book:
   def __init__(
     self,
     name: str,
-    narrator: Union[Narrator, List[Narrator]],
-    duration: Union[str, float],
+    narrator: Optional[Union[Narrator, List[Narrator]]] = None,
+    duration: Optional[Union[str, float]] = None,
     text_path: Optional[Union[str, Path]] = None,
     audio_path: Optional[Union[str, Path]] = None,
     alignment_path: Optional[Union[str, Path]] = None,
@@ -231,7 +231,9 @@ class Book:
     self.text_path = text_path
     self.audio_path = audio_path
     self.narrator_id = (
-      narrator.id if isinstance(narrator, Narrator) else [n.id for n in narrator]
+      (narrator.id if isinstance(narrator, Narrator) else [n.id for n in narrator])
+      if narrator
+      else None
     )
     self.narrator = narrator
     self.duration = (
