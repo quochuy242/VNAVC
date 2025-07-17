@@ -196,6 +196,7 @@ class VietnameseSemioticNormalizer:
     text = self._normalize_numbers(text)
     text = self._normalize_currency(text)
     text = self._normalize_dates(text)
+    text = self._normalize_numbers_to_words(text)
 
     # Clean and standardize
     text = text.strip()
@@ -220,6 +221,25 @@ class VietnameseSemioticNormalizer:
 
     return self.patterns["number"].sub(replace_number, text)
 
+  def _normalize_numbers_to_words(self, text: str) -> str:
+    def replace_number(match):
+      num_str = match.group()
+      num_str = num_str.replace(",", "").replace(".", "")
+      try:
+        number = int(num_str)
+        return self.number_to_vietnamese_words(number)
+      except Exception as e:
+        logger.error(f"Error converting number to words: {e}")
+        return num_str
+
+    return self.patterns["number"].sub(replace_number, text)
+
+  def number_to_vietnamese_words(self, num: int) -> str:
+    digits = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"]
+    if num < 10:
+      return digits[num]
+    return " ".join(digits[int(d)] for d in str(num))
+
   def _normalize_currency(self, text: str) -> str:
     """Normalize currency representations"""
 
@@ -234,14 +254,16 @@ class VietnameseSemioticNormalizer:
     return self.patterns["currency"].sub(replace_currency, text)
 
   def _normalize_dates(self, text: str) -> str:
-    """Normalize date formats"""
-
     def replace_date(match):
       day, month, year = match.groups()
-      # Convert to ISO format
       if len(year) == 2:
         year = f"20{year}" if int(year) <= 30 else f"19{year}"
-      return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+
+      day_words = self.number_to_vietnamese_words(int(day))
+      month_words = self.number_to_vietnamese_words(int(month))
+      year_words = " ".join([self.number_to_vietnamese_words(int(d)) for d in year])
+
+      return f"ngày {day_words} tháng {month_words} năm {year_words}"
 
     return self.patterns["date"].sub(replace_date, text)
 
@@ -720,9 +742,9 @@ class TTSProcessingPipeline:
     tasks = [
       (book_name, paths, self.config) for book_name, paths in audiobook_groups.items()
     ]
-    with (
-      ProcessPoolExecutor(max_workers=self.config.max_workers) as executor
-    ):  # ProcessPoolExecutor, which use the function having module-level, for CPU-bound tasks
+    with ProcessPoolExecutor(
+      max_workers=self.config.max_workers
+    ) as executor:  # ProcessPoolExecutor, which use the function having module-level, for CPU-bound tasks
       future_to_book = {
         executor.submit(process_audiobook_wrapper, args): args[0]  # book_name
         for args in tasks
