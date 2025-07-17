@@ -77,10 +77,6 @@ class AlignmentConfig(BaseModel):
     default=True,
     description="Remove outlier segments based on duration",
   )
-  remove_first: bool = Field(
-    default=True,
-    description="Remove first segment if it's too short",
-  )
   split: bool = Field(
     default=False,
     description="Split audio and text files into segments based on alignment",
@@ -88,6 +84,14 @@ class AlignmentConfig(BaseModel):
   max_workers: int = Field(
     default=os.cpu_count(),
     description="Maximum number of workers to use for alignment",
+  )
+  min_duration: float = Field(
+    default=3.0,
+    description="Minimum duration of segments to keep (in seconds)",
+  )
+  max_duration: float = Field(
+    default=12.0,
+    description="Maximum duration of segments to keep (in seconds)",
   )
 
   @field_validator("audio_dir", "text_dir", "align_dir", "log_dir")
@@ -194,6 +198,8 @@ class AudioTextAligner:
 
   def get_output_directory(self, book: Book) -> Path:
     """Get the alignment output directory for a book."""
+
+    # Named the directory by the narrator id or name
     if isinstance(book.narrator, Narrator):
       dir_name = str(book.narrator.id) if book.narrator.id else book.narrator.name
     elif isinstance(book.narrator, list):
@@ -207,49 +213,37 @@ class AudioTextAligner:
     output_dir.mkdir(parents=True, exist_ok=True)
     return output_dir
 
+  def process_alignment_output(self, book: Book) -> List[int]:
+    """Process alignment output and remove audio segments that exceed max duration."""
+    # Load alignment data
+    align_df = pd.read_csv(book.alignment_path, sep="\t", names=["start", "end", "id"])
+    align_df["duration"] = round(align_df["end"] - align_df["start"], 4)
 
-def process_alignment_output(self, book: Book) -> List[int]:
-  """Process alignment output and remove audio segments that exceed max duration."""
-  # Load alignment data
-  align_df = pd.read_csv(book.alignment_path, sep="\t", names=["start", "end", "id"])
+    # Calculate duration and clean ID column
+    align_df["id"] = align_df["id"].apply(lambda x: int(str(x).replace("f", "")))
 
-  # Calculate duration and clean ID column
-  align_df["duration"] = align_df["end"] - align_df["start"]
-  align_df["id"] = align_df["id"].str.replace("f", "").astype(int)
+    # Save processed alignment data back (optional)
+    align_df.to_csv(book.alignment_path, sep="\t", index=False, header=False)
 
-  # Save processed alignment data back (optional)
-  align_df.to_csv(book.alignment_path, sep="\t", index=False, header=False)
+    # Remove long segments
+    outlier_indices = []
+    min_duration = self.config.min_duration or 3.0  # 3s is the default min duration
+    max_duration = self.config.max_duration or 12.0  # 12s is the default max duration
 
-  # Remove long segments
-  outlier_indices = []
-  max_duration = getattr(
-    self.config, "max_duration", 12.0
-  )  # 12s is the default max duration
+    for idx, row in align_df.iterrows():
+      if float(row["duration"]) > max_duration or float(row["duration"]) < min_duration:
+        outlier_indices.append(idx)
 
-  for idx, row in align_df.iterrows():
-    if row["duration"] > max_duration:
-      outlier_indices.append(idx)
+    # Save outlier indices
+    outlier_file = Path(book.alignment_path).parent / "outlier.txt"
+    with open(outlier_file, "w") as f:
+      f.write("\n".join(str(idx) for idx in outlier_indices))
 
-      audio_path = Path(book.audio_dir) / f"{row['id']}.wav"
+    logger.info(
+      f"Found {len(outlier_indices)} outlier segments in alignment for {book.name}"
+    )
 
-      if audio_path.exists():
-        audio_path.unlink()
-        logger.info(
-          f"Removed audio {audio_path.name} with duration {row['duration']:.2f}s"
-        )
-      else:
-        logger.warning(f"Audio file {audio_path} not found. Skipping removal.")
-
-  # Save outlier indices
-  outlier_file = Path(book.alignment_path).parent / "outlier.txt"
-  with open(outlier_file, "w") as f:
-    f.write("\n".join(str(idx) for idx in outlier_indices))
-
-  logger.info(
-    f"Removed {len(outlier_indices)} long segments in alignment for {book.name}"
-  )
-
-  return outlier_indices
+    return outlier_indices
 
   def _run_ffmpeg_sync(self, cmd: List[str]) -> None:
     """Run ffmpeg command synchronously with semaphore."""
@@ -268,15 +262,15 @@ def process_alignment_output(self, book: Book) -> List[int]:
 
     cmd = [
       "ffmpeg",
+      "hide_banner", "-loglevel", "error",
       "-y",  # Overwrite existing files
-      "-i",
-      input_file,
       "-ss",
       str(start_time),
+      "-i",
+      input_file,
       "-t",
       str(duration),
-      "-c:a",
-      "pcm_s16le",
+      "-c", "copy",
       "-avoid_negative_ts",
       "make_zero",
       output_file,
@@ -393,7 +387,9 @@ def process_alignment_output(self, book: Book) -> List[int]:
         continue
 
       output_file = str(output_dir / f"{book.id}_{line_id}.txt")
-      text_content = text_lines[line_id - 1]  # Adjust for 0-based index, line_id is 1-based
+      text_content = text_lines[
+        line_id - 1
+      ]  # Adjust for 0-based index, line_id is 1-based
 
       tasks.append((output_file, line_id, text_content, book.name))
 
@@ -505,40 +501,29 @@ def test(
   text: Annotated[str, typer.Option(..., "-t", "--text", help="Path to the text file")],
   split: Annotated[
     bool,
-    typer.Option(False, "-s", "--split/--no-split", help="Split files into segments"),
-  ],
+    typer.Option("-s", "--split/--no-split", help="Split files into segments"),
+  ] = False,
   force: Annotated[
     bool,
     typer.Option(
-      False, "-f", "--force", help="Force realignment even if alignment exists"
+      "-f", "--force/--no-force", help="Force realignment even if alignment exists"
     ),
-  ],
+  ] = False,
   remove_outliers: Annotated[
     bool,
     typer.Option(
-      False,
       "-r",
       "--remove-outliers/--keep-outliers",
       help="Remove outlier segments based on duration",
     ),
-  ],
-  remove_first: Annotated[
-    bool,
-    typer.Option(
-      True, "--remove-first/--keep-first", help="Remove first segment (usually silence)"
-    ),
-  ],
+  ] = True,
   max_workers: Annotated[
-    int,
-    typer.Option(
-      os.cpu_count(), "--max-workers", help="Maximum number of workers for splitting"
-    ),
-  ],
+    Optional[int],
+    typer.Option("--max-workers", help="Maximum number of workers for splitting"),
+  ] = os.cpu_count(),
 ):
   """Align audio and text files using aeneas."""
-  config = AlignmentConfig(
-    split=split, remove_first=remove_first, max_workers=max_workers
-  )
+  config = AlignmentConfig(split=split, max_workers=max_workers)
   aligner = AudioTextAligner(config)
 
   # Check dependencies
@@ -613,6 +598,14 @@ def run(
   max_workers: Annotated[
     int, typer.Option("--max-workers", help="Maximum number of workers for splitting")
   ] = os.cpu_count(),
+  remove_outliers: Annotated[
+    bool,
+    typer.Option(
+      "-r",
+      "--remove-outliers/--keep-outliers",
+      help="Remove outlier segments based on duration",
+    ),
+  ] = True,
 ):
   """Batch align multiple audio-text pairs."""
   if config_file and config_file.exists():
