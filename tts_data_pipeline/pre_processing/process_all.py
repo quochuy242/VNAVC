@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-"""
-Optimized TTS Data Processing Pipeline
-
-Features:
-- Modern libraries (pydantic, asyncio, pathlib)
-- Configurable parallel processing
-- Better error handling and logging
-- Type hints throughout
-- Modular architecture
-- Progress tracking with rich
-- Memory-efficient processing
-- Retry mechanisms
-"""
 
 import asyncio
 import os

@@ -1,0 +1,10 @@
+{
+  "valid_book_urls_path": "data/valid_book_urls.txt",
+  "audio_raw_dir": "data/audio/raw",
+  "text_pdf_dir": "data/text/pdf",
+  "metadata_dir": "data/metadata",
+  "metadata_book_path": "data/metadata.csv",
+  "metadata_narrator_path": "data/narrator_metadata.csv",
+  "narrator_download_url": null,
+  "fetch_metadata_limit": 5
+}

@@ -8,7 +8,7 @@
   "log_dir": "logs",
   "min_word_threshold": 15,
   "min_sample_rate": 16000,
-  "target_sample_rate": 22050,
+  "target_sample_rate": 24000,
   "max_workers": 4,
   "chunk_size": 100,
   "audio_format": "wav",

@@ -1,5 +1,6 @@
 import ast
 import asyncio
+import json
 import random as randomlib
 import shutil
 import time
@@ -8,6 +9,7 @@ from typing import List, Tuple
 
 import aiohttp
 import pandas as pd
+import typer
 from tqdm.asyncio import tqdm
 
 from tts_data_pipeline import constants
@@ -257,36 +259,66 @@ class Downloader:
     return successful, failed
 
 
-async def main():
+app = typer.Typer()
+
+
+@app.command()
+def main(
+  config_path: Path = typer.Option(
+    "download_config.json", help="Path to the configuration JSON file."
+  ),
+  metadata_path: Path = typer.Option(
+    "./data/metadata/able_download_less_10_hour_metadata.csv",
+    help="Path to the metadata CSV file.",
+  ),
+):
   """Main function to run the optimized downloader"""
-  metadata_df = pd.read_csv("./data/metadata/able_download_less_10_hour_metadata.csv")
+  try:
+    with open(config_path, "r") as f:
+      downloader_config = json.load(f)
+  except FileNotFoundError:
+    logger.error(f"Configuration file not found at {config_path}")
+    raise typer.Exit(code=1)
+  except json.JSONDecodeError:
+    logger.error(f"Error decoding JSON from {config_path}. Check file format.")
+    raise typer.Exit(code=1)
 
-  # Configuration for optimal performance
-  downloader_config = {
-    "max_concurrent_books": 3,  # Adjust based on bandwidth and server limits
-    "max_concurrent_files_per_book": 8,  # Files per book in parallel
-    "max_retries": 3,
-    "chunk_size": 8192,  # 8KB chunks for better memory usage
-    "timeout": 10000,
-  }
+  # Load the metadata containing book names and URLs to download
+  try:
+    metadata_df = pd.read_csv(metadata_path)
+  except FileNotFoundError:
+    logger.error(f"Metadata file not found at {metadata_path}")
+    raise typer.Exit(code=1)
+  except Exception as e:
+    logger.error(f"Error loading metadata from {metadata_path}: {e}")
+    raise typer.Exit(code=1)
 
-  async with Downloader(**downloader_config) as downloader:
-    successful, failed = await downloader.download_all_books(
-      metadata_df,
-      audio_save_path="./data/audio/raw/",
-      text_save_path="./data/text/pdf/",
-    )
+  async def run_downloader():
+    audio_save_path = downloader_config.pop("audio_save_path", constants.AUDIO_RAW_DIR)
+    text_save_path = downloader_config.pop("text_save_path", constants.TEXT_PDF_DIR)
 
-    # Print final results
-    print("\n" + "=" * 30)
-    print("\n📊 Final Results:")
-    print("-" * 30)
-    print(f"📚 Total books processed: {len(metadata_df)}")
-    print(f"✅ Successful downloads: {successful}")
-    print(f"❌ Failed downloads: {failed}")
-    print(f"📈 Success rate: {successful / (successful + failed) * 100:.1f}%")
-    print("-" * 30)
+    async with Downloader(**downloader_config) as downloader:
+      successful, failed = await downloader.download_all_books(
+        metadata_df,
+        audio_save_path=audio_save_path,
+        text_save_path=text_save_path,
+      )
+
+      # Print final results
+      print("\n" + "=" * 30)
+      print("\n📊 Final Results:")
+      print("-" * 30)
+      print(f"📚 Total books processed: {len(metadata_df)}")
+      print(f"✅ Successful downloads: {successful}")
+      print(f"❌ Failed downloads: {failed}")
+      if (successful + failed) > 0:
+        print(f"📈 Success rate: {successful / (successful + failed) * 100:.1f}%")
+      else:
+        print("📈 No books were processed.")
+      print("-" * 30)
+
+  asyncio.run(run_downloader())
 
 
 if __name__ == "__main__":
-  asyncio.run(main())
+  app()

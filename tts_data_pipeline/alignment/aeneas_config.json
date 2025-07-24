@@ -1,0 +1,11 @@
+{
+  "audio_dir": "data/audio/align",
+  "text_dir": "data/text/align",
+  "align_dir": "data/alignment",
+  "log_dir": "logs",
+  "remove_outliers": false,
+  "split": true,
+  "max_workers": 12,
+  "min_duration": 3,
+  "max_duration": 20
+}
