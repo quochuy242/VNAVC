@@ -8,7 +8,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-import numpy as np
 import pandas as pd
 import typer
 from aeneas.executetask import ExecuteTask
@@ -220,19 +219,22 @@ class AudioTextAligner:
     align_df["duration"] = round(align_df["end"] - align_df["start"], 4)
 
     # Calculate duration and clean ID column
-    align_df["id"] = align_df["id"].apply(lambda x: int(str(x).replace("f", "")))
+    align_df["id"] = align_df["id"].apply(lambda x: float(str(x).replace("f", "")))
 
     # Save processed alignment data back (optional)
     align_df.to_csv(book.alignment_path, sep="\t", index=False, header=False)
 
     # Remove long segments
-    outlier_indices = []
-    min_duration = self.config.min_duration or 3.0  # 3s is the default min duration
-    max_duration = self.config.max_duration or 12.0  # 12s is the default max duration
+    min_duration = float(self.config.min_duration)
+    max_duration = float(self.config.max_duration)
 
-    for idx, row in align_df.iterrows():
-      if float(row["duration"]) > max_duration or float(row["duration"]) < min_duration:
-        outlier_indices.append(idx)
+    outlier_indices = []
+    if min_duration <= max_duration and min_duration and max_duration:
+      for idx, row in align_df.iterrows():
+        if (
+          float(row["duration"]) > max_duration or float(row["duration"]) < min_duration
+        ):
+          outlier_indices.append(idx)
 
     # Save outlier indices
     outlier_file = Path(book.alignment_path).parent / "outlier.txt"
@@ -262,7 +264,8 @@ class AudioTextAligner:
 
     cmd = [
       "ffmpeg",
-      "hide_banner", "-loglevel", "error",
+      "-loglevel",
+      "error",
       "-y",  # Overwrite existing files
       "-ss",
       str(start_time),
@@ -270,7 +273,8 @@ class AudioTextAligner:
       input_file,
       "-t",
       str(duration),
-      "-c", "copy",
+      "-c",
+      "copy",
       "-avoid_negative_ts",
       "make_zero",
       output_file,
@@ -295,7 +299,9 @@ class AudioTextAligner:
       logger.error(f"Failed to create text segment {output_file}: {e}")
       return False
 
-  def remove_outlier_segments(self, book: Book, segments_created: int) -> int:
+  def remove_outlier_segments(
+    self, book: Book, segments_created: int, file_type: str
+  ) -> int:
     """Remove outlier segments based on alignment data."""
     outlier_file = Path(book.alignment_path).parent / "outlier.txt"
     if not outlier_file.exists():
@@ -308,14 +314,15 @@ class AudioTextAligner:
     removed_count = 0
 
     for idx in outlier_indices:
-      audio_file = output_dir / f"{book.id}_{idx}.wav"
       text_file = output_dir / f"{book.id}_{idx}.txt"
+      audio_file = output_dir / f"{book.id}_{idx}.wav"
 
-      if audio_file.exists():
+      if audio_file.exists() and file_type == "audio":
         audio_file.unlink()
         removed_count += 1
-      if text_file.exists():
+      if text_file.exists() and file_type == "text":
         text_file.unlink()
+        removed_count += 1
 
     return segments_created - removed_count
 
@@ -356,8 +363,10 @@ class AudioTextAligner:
 
     # Remove outlier segments
     if self.config.remove_outliers:
-      segments_created = self.remove_outlier_segments(book, segments_created)
-
+      segments_created = self.remove_outlier_segments(
+        book, segments_created, file_type="audio"
+      )
+      logger.info(f"Removed {segments_created} outlier segments for {book.name}")
     return segments_created
 
   def split_text_segments(self, book: Book) -> int:
@@ -405,6 +414,13 @@ class AudioTextAligner:
           segments_created += 1
 
     logger.info(f"Created {segments_created} text segments for {book.name}")
+
+    # Remove outlier segments
+    if self.config.remove_outliers:
+      segments_created = self.remove_outlier_segments(
+        book, segments_created, file_type="text"
+      )
+      logger.info(f"Removed {segments_created} outlier segments for {book.name}")
     return segments_created
 
   def align_book(self, book: Book) -> AlignmentResult:
@@ -503,20 +519,14 @@ def test(
     bool,
     typer.Option("-s", "--split/--no-split", help="Split files into segments"),
   ] = False,
-  force: Annotated[
-    bool,
+  align_output: Annotated[
+    Optional[str],
     typer.Option(
-      "-f", "--force/--no-force", help="Force realignment even if alignment exists"
+      "-o",
+      "--align-output",
+      help="Path to the output file for alignment results",
     ),
-  ] = False,
-  remove_outliers: Annotated[
-    bool,
-    typer.Option(
-      "-r",
-      "--remove-outliers/--keep-outliers",
-      help="Remove outlier segments based on duration",
-    ),
-  ] = True,
+  ] = None,
   max_workers: Annotated[
     Optional[int],
     typer.Option("--max-workers", help="Maximum number of workers for splitting"),
@@ -552,11 +562,12 @@ def test(
 
   # Check for existing alignment
   existing_alignment = Path(constants.AENEAS_OUTPUT_DIR) / book.name / "output.tsv"
-  if existing_alignment.exists() and not force:
+  if align_output:
+    book.update_paths(alignment_path=align_output)
+    console.print(f"Using provided alignment output: {align_output}")
+  elif existing_alignment.exists():
     book.update_paths(alignment_path=str(existing_alignment))
-    console.print(f"Using existing alignment: {existing_alignment}")
-  elif force:
-    console.print("Forcing realignment...")
+    console.print(f"Using existing alignment output: {existing_alignment}")
 
   # Run alignment
   console.print(f"Processing book: {book.name}")
@@ -585,27 +596,29 @@ def run(
     Path, typer.Option("-c", "--config", help="Path to configuration file")
   ],
   audio_dir: Annotated[
-    str,
+    Optional[str],
     typer.Option("-d", "--audio-dir", help="Directory containing audio files"),
-  ] = constants.AUDIO_PROCESSED_DIR,
+  ] = None,
   text_dir: Annotated[
-    str,
+    Optional[str],
     typer.Option("-t", "--text-dir", help="Directory containing text files"),
-  ] = constants.TEXT_PROCESSED_DIR,
+  ] = None,
   split: Annotated[
-    bool, typer.Option("-s", "--split/--no-split", help="Split files into segments")
-  ] = False,
+    Optional[bool],
+    typer.Option("-s", "--split/--no-split", help="Split files into segments"),
+  ] = None,
   max_workers: Annotated[
-    int, typer.Option("--max-workers", help="Maximum number of workers for splitting")
-  ] = os.cpu_count(),
+    Optional[int],
+    typer.Option("--max-workers", help="Maximum number of workers for splitting"),
+  ] = None,
   remove_outliers: Annotated[
-    bool,
+    Optional[bool],
     typer.Option(
       "-r",
       "--remove-outliers/--keep-outliers",
       help="Remove outlier segments based on duration",
     ),
-  ] = True,
+  ] = None,
 ):
   """Batch align multiple audio-text pairs."""
   if config_file and config_file.exists():
@@ -627,8 +640,8 @@ def run(
 
   aligner = AudioTextAligner(config)
 
-  audio_dir = Path(audio_dir)
-  text_dir = Path(text_dir)
+  audio_dir = Path(config.audio_dir)
+  text_dir = Path(config.text_dir)
   if not audio_dir.exists() or not text_dir.exists():
     console.print(
       f"Audio directory: {audio_dir} or text directory: {text_dir} not found"
