@@ -63,6 +63,11 @@ def main(
     readable=True,
     resolve_path=True,
   ),
+  create_metadata: bool = typer.Option(
+    False,
+    "--create-metadata",
+    help="Create metadata for dataset.",
+  ),
   dataset_id: str = typer.Option(
     "VNAVC",
     "--dataset-id",
@@ -78,7 +83,7 @@ def main(
   private: bool = typer.Option(
     False,
     "--private",
-    help="Make the dataset private on Hugging Face Hub.",
+    help="Make the dataset private on Hugging Face Hub. Required if --push-to-hub is True.",
   ),
   push_to_hub: bool = typer.Option(
     False,
@@ -98,9 +103,21 @@ def main(
   data = []
   sum_duration = 0
 
-  if push_to_hub and not commit_message:
-    typer.echo("Error: --commit is required when --push-to-hub is True.", err=True)
-    raise typer.Exit(code=1)
+  if push_to_hub:
+    if commit_message is None:
+      typer.echo(
+        "[WARNING]: --commit should be provided when --push-to-hub is True. Using default commit message.",
+        err=True,
+      )
+      commit_message = "No commit"
+
+    if private:
+      if commit_message is None:
+        typer.echo(
+          "[WARNING]: --private should be provided when --push-to-hub is True. Set private=True as a default.",
+          err=True,
+        )
+        private = True
 
   typer.echo(f"Starting data processing from: {input_dir}")
 
@@ -114,19 +131,25 @@ def main(
 
     for wav_path in sorted(speaker_dir.glob("*.wav")):
       if not wav_path.exists() or not wav_path.is_file():
-        typer.echo(f"Skipping {wav_path}: not a file or does not exist.", err=True)
+        typer.echo(
+          f"[WARNING]: Skipping {wav_path}: not a file or does not exist.", err=True
+        )
         continue
 
       txt_path = wav_path.with_suffix(".txt")
       if not txt_path.exists() or not txt_path.is_file():
-        typer.echo(f"Skipping {txt_path}: text file does not exist.", err=True)
+        typer.echo(
+          f"[WARNING]: Skipping {txt_path}: text file does not exist.", err=True
+        )
         continue
 
       if calculate_duration:
         try:
           sum_duration += librosa.get_duration(filename=wav_path)
         except Exception as e:
-          typer.echo(f"Error calculating duration for {wav_path}: {e}", err=True)
+          typer.echo(
+            f"[ERROR]: Error calculating duration for {wav_path}: {e}", err=True
+          )
           continue
 
       # Only append data if pushing to hub is requested
@@ -141,16 +164,16 @@ def main(
         )
 
   if calculate_duration:
-    typer.echo(f"Total duration: {sum_duration / 3600:.2f} hours")
+    typer.echo(f"[INFO]: Total duration: {sum_duration / 3600:.2f} hours")
 
   if push_to_hub:
     if not data:
       typer.echo(
-        "No data collected to push. Ensure --input-dir is correct and contains files.",
+        "[ERROR]: No data collected to push. Ensure --input-dir is correct and contains files.",
         err=True,
       )
       raise typer.Exit(code=1)
-    typer.echo(f"Collected {len(data)} entries for pushing to Hugging Face.")
+    typer.echo(f"[INFO]: Collected {len(data)} entries for pushing to Hugging Face.")
     push_to_hf(data, dataset_id, commit=commit_message, private=private)
 
 
