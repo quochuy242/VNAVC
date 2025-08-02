@@ -3,6 +3,8 @@ import csv
 import json
 import os
 import shutil
+import torch
+import gc
 
 import soundfile as sf
 from datasets import load_dataset
@@ -221,6 +223,12 @@ if __name__ == "__main__":
     # Process and tokenize the subset
     ljspeech_formatted_dir = process_subset(dataset_subset, args.data_dir, subset_name)
     processor.tokenize(ljspeech_formatted_dir, args.output_dir, jsonl_path, subset_name)
+
+    # Clean up GPU memory after each subset
+    del ljspeech_formatted_dir, dataset_subset
+    if torch.cuda.is_available():
+      torch.cuda.empty_cache()
+    gc.collect()
 
   print("\nAll subsets have been processed. Pipeline complete.")
 
