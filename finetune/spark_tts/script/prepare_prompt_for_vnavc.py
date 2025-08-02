@@ -4,47 +4,59 @@ import json
 import os
 import shutil
 
-from datasets import load_dataset, Dataset
+import soundfile as sf
+from datasets import load_dataset
 from sparktts.models.audio_tokenizer import BiCodecTokenizer
 from tqdm import tqdm
-
-from huggingface_hub import HfApi
 
 
 class AudioPromptDataset:
   def __init__(self, model_name_or_path, device):
+    """
+    Initializes AudioPromptDataset with the BiCodecTokenizer model.
+    Args:
+      model_name_or_path (str): The path to the audio tokenizer model.
+      device (str): The device to run the model on (e.g., 'cuda', 'cpu').
+    """
     self.audio_tokenizer = BiCodecTokenizer(model_name_or_path, device=device)
 
-  def tokenize(self, data_dir, output_dir):
+  def tokenize(self, data_dir, output_dir, jsonl_file_path, subset_name="subset"):
     """
-    Tokenizes the audio dataset based on LJSpeech format and saves it as a JSONL file.
+    Tokenizes audio files in a specific directory and appends them to a JSONL file.
 
     Args:
-      data_dir (str): Path to the dataset directory in LJSpeech format.
-      output_dir (str): Path to save the tokenized JSONL output.
+      data_dir (str): Path to the directory containing the subset's .wav files and metadata.csv.
+      output_dir (str): Path to save the JSONL file.
+      jsonl_file_path (str): The full path of the output JSONL file.
+      subset_name (str): The name of the current subset for printing.
     """
     os.makedirs(output_dir, exist_ok=True)
-    jsonl_filename = os.path.basename(data_dir) + ".jsonl"
-    jsonl_path = os.path.join(output_dir, jsonl_filename)
 
-    print(f"Tokenizing audio and saving to {jsonl_path}...")
-    with open(jsonl_path, "w") as f:
-      with open(
-        os.path.join(data_dir, "metadata.csv"), mode="r", encoding="utf-8"
-      ) as file:
+    print(f"Tokenizing audio and appending to {jsonl_file_path} for {subset_name}...")
+
+    # Open the JSONL file in 'a' (append) mode to add data to the end
+    with open(jsonl_file_path, "a") as f:
+      metadata_path = os.path.join(data_dir, "metadata.csv")
+      if not os.path.exists(metadata_path):
+        print(
+          f"Warning: metadata.csv not found in {data_dir}. Skipping tokenization for this subset."
+        )
+        return
+
+      with open(metadata_path, mode="r", encoding="utf-8") as file:
         reader = csv.reader(file, delimiter="|")
         for row in tqdm(reader):
           try:
-            audio_name, text, _ = row
+            # If the speaker_id is missing, skip this row
+            audio_name, text, *_ = row
           except Exception as e:
             print(f"Error parsing row: {row}. {e}")
-            audio_name, text = row
+            continue
 
-          # Skip header or malformed rows
           if not audio_name or not text:
             continue
 
-          audio_path = os.path.join(data_dir, "wavs", audio_name + ".wav")
+          audio_path = os.path.join(data_dir, "wavs", audio_name)
           if not os.path.exists(audio_path):
             print(f"Warning: Audio file not found at {audio_path}. Skipping.")
             continue
@@ -74,26 +86,31 @@ class AudioPromptDataset:
           inputs = "".join(inputs)
           prompt = {"text": inputs}
           f.write(json.dumps(prompt, ensure_ascii=False) + "\n")
-    print(f"Tokenization complete. Output saved to {jsonl_path}")
-    return jsonl_path
+
+    print(f"Tokenization complete for {subset_name}.")
+
+    # Delete the temporary directory to free up disk space
+    print(f"Deleting temporary directory: {data_dir}...")
+    shutil.rmtree(data_dir)
+    print("Deletion successful.")
 
 
-def download_and_process_vnavc(output_dir):
+def process_subset(dataset_subset, output_dir, subset_name):
   """
-  Downloads the qhuy242/VNAVC dataset and formats it like LJSpeech.
+  Downloads and processes a subset of the VNAVC dataset, formatting it in LJSpeech style.
 
   Args:
-    output_dir (str): The base directory to save the formatted dataset.
+    dataset_subset (Dataset): A subset of the dataset.
+    output_dir (str): The directory to save the temporary files for the subset.
+    subset_name (str): The name of the subset for printing.
 
   Returns:
-    str: The path to the newly created dataset directory.
+    str: The path to the temporary directory of the subset.
   """
-  print("Downloading and processing the qhuy242/VNAVC dataset...")
-  # Load the dataset from Hugging Face Hub
-  dataset = load_dataset("qhuy242/VNAVC", split="train")
+  print(f"\nProcessing {len(dataset_subset)} samples for {subset_name}...")
 
   # Create the LJSpeech-style directory structure
-  dataset_dir = os.path.join(output_dir, "VNAVC_LJSpeech_format")
+  dataset_dir = os.path.join(output_dir, subset_name)
   wavs_dir = os.path.join(dataset_dir, "wavs")
   os.makedirs(wavs_dir, exist_ok=True)
 
@@ -101,20 +118,25 @@ def download_and_process_vnavc(output_dir):
   metadata_path = os.path.join(dataset_dir, "metadata.csv")
   with open(metadata_path, "w", newline="", encoding="utf-8") as csvfile:
     writer = csv.writer(csvfile, delimiter="|")
-    for item in tqdm(dataset):
-      audio_path = item["audio"]["path"]
-      text = item["sentence"]
 
-      # Use the filename as the unique identifier
-      audio_filename = os.path.basename(audio_path).replace(".wav", "")
+    for item in tqdm(dataset_subset):
+      audio_arr = item["audio"]["array"]
+      audio_sr = item["audio"]["sampling_rate"]
+      text = item["text"]
+      speaker_id = item["speaker_id"]
+      new_filename = os.path.basename(item["audio"]["path"])
 
-      # Copy the audio file to the new wavs directory
-      shutil.copy(audio_path, os.path.join(wavs_dir, audio_filename + ".wav"))
+      new_audio_path = os.path.join(wavs_dir, new_filename)
 
-      # Write the metadata row: filename|text|
-      writer.writerow([audio_filename, text, ""])
+      try:
+        sf.write(new_audio_path, audio_arr, audio_sr, format="WAV")
+      except sf.LibsndfileError as e:
+        print(f"Error saving {new_audio_path}: {e}")
+        continue
 
-  print(f"Dataset successfully formatted in LJSpeech style at {dataset_dir}")
+      # Write a metadata row to the CSV file
+      writer.writerow([new_filename, text, speaker_id])
+
   return dataset_dir
 
 
@@ -126,13 +148,13 @@ if __name__ == "__main__":
     "--data_dir",
     type=str,
     default="VNAVC_raw_data",
-    help="Path to the directory where the VNAVC dataset will be downloaded and processed.",
+    help="Path to the directory where temporary subset data will be stored.",
   )
   parser.add_argument(
     "--output_dir",
     type=str,
     default="output_prompt",
-    help="Path to save the tokenized output.",
+    help="Path to save the final tokenized JSONL output.",
   )
   parser.add_argument(
     "--push_prompt_to_hub",
@@ -142,7 +164,7 @@ if __name__ == "__main__":
   parser.add_argument(
     "--dataset_id",
     type=str,
-    help="The Hugging Face dataset ID to push to (e.g., 'your-username/your-dataset-name'). Required if --push_prompt_to_hub is set.",
+    help="The Hugging Face dataset ID to push to.",
   )
   parser.add_argument(
     "--commit_message",
@@ -155,34 +177,63 @@ if __name__ == "__main__":
     action="store_true",
     help="Whether to create a private repository on the Hub.",
   )
+  parser.add_argument(
+    "--num_samples_per_subset",
+    type=int,
+    default=500,  # Number of samples to process in each subset
+    help="Number of samples to process in each subset.",
+  )
 
   args = parser.parse_args()
 
-  # First, download and process the VNAVC dataset to the specified data_dir
-  ljspeech_formatted_dir = download_and_process_vnavc(args.data_dir)
+  # Create the output directory if it doesn't exist
+  os.makedirs(args.output_dir, exist_ok=True)
+  jsonl_path = os.path.join(args.output_dir, "tokenized_vnavc.jsonl")
 
-  # Then, tokenize the formatted dataset
+  # Ensure the output JSONL file is empty before starting
+  if os.path.exists(jsonl_path):
+    os.remove(jsonl_path)
+
+  print("Loading the full VNAVC dataset from Hugging Face Hub...")
+  dataset = load_dataset("qhuy242/VNAVC", split="train")
+  total_samples = len(dataset)
+  num_subsets = (
+    total_samples + args.num_samples_per_subset - 1
+  ) // args.num_samples_per_subset
+
+  print(f"Total samples: {total_samples}")
+  print(f"Number of samples per subset: {args.num_samples_per_subset}")
+  print(f"Total subsets to process: {num_subsets}")
+
+  # Initialize the tokenizer only once
   processor = AudioPromptDataset(
     model_name_or_path="pretrained_models/Spark-TTS-0.5B", device="cuda"
   )
-  jsonl_path = processor.tokenize(ljspeech_formatted_dir, args.output_dir)
 
-  # If the flag is set, push the tokenized output to the Hugging Face Hub
+  for i in range(num_subsets):
+    start_index = i * args.num_samples_per_subset
+    end_index = min((i + 1) * args.num_samples_per_subset, total_samples)
+    subset_name = f"subset_{i + 1:02d}"
+
+    # Select the current subset
+    dataset_subset = dataset.select(range(start_index, end_index))
+
+    # Process and tokenize the subset
+    ljspeech_formatted_dir = process_subset(dataset_subset, args.data_dir, subset_name)
+    processor.tokenize(ljspeech_formatted_dir, args.output_dir, jsonl_path, subset_name)
+
+  print("\nAll subsets have been processed. Pipeline complete.")
+
+  # If the flag is set, push the tokenized data to the Hugging Face Hub
   if args.push_prompt_to_hub:
     if not args.dataset_id:
       raise ValueError(
         "Argument --dataset_id is required when --push_prompt_to_hub is set."
       )
-
     print(f"\nPushing tokenized dataset to Hugging Face Hub as '{args.dataset_id}'...")
     print("Remember to log in with `huggingface-cli login` if you haven't already.")
 
-    # Load the tokenized JSONL file into a datasets.Dataset object
-    # The file path is a list because load_dataset accepts a list of files.
     ds = load_dataset("json", data_files={"train": jsonl_path}, split="train")
-
-    # Push the dataset to the specified Hugging Face repository
-    # The 'private' argument is passed to make the repo private if the flag is set
     ds.push_to_hub(
       repo_id=args.dataset_id,
       commit_message=args.commit_message,
