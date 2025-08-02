@@ -8,7 +8,7 @@ strict: false
 
 datasets:
   - path: json
-    data_files: ["output_prompt/LJSpeech-1.1.jsonl"]
+    data_files: ["output_prompt/VNAVC_LJSpeech_format.jsonl"]
     type: completion
     
 dataset_prepared_path:
