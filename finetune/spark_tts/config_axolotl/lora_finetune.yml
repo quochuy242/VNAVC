@@ -135,8 +135,8 @@ local_rank:
 logging_steps: 50
 # Legacy attention implementation. Prefer `flash_attention`.
 xformers_attention: true
-# Flash Attention for faster and more memory-efficient attention.
-flash_attention: 
+# Flash Attention for faster and more memory-efficient attention but setup it manually in Kaggle is very hard.
+flash_attention: false
 
 # ==============================================================================
 # Schedule and Debugging
