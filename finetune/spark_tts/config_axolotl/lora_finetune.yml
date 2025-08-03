@@ -144,9 +144,9 @@ flash_attention: true
 # Defines the proportion of total steps to use for a warmup learning rate.
 warmup_ratio: 0.03
 # Number of evaluation runs per epoch.
-evals_per_epoch: 1
+eval_steps: 250
 # Number of steps after which to save a checkpoint.
-save_steps: 100
+save_steps: 500
 # Debugging mode flag.
 debug:
 # Path to a DeepSpeed config file. Left empty as it's not needed for this setup.
