@@ -5,7 +5,7 @@
 # This model will be loaded and used as the starting point for finetuning.
 base_model: pretrained_models/Spark-TTS-0.5B/LLM
 # Optional: Specify a Hugging Face Hub model ID for automatic upload after training.
-hub_model_id: qhuy242/Vi-Spark-TTS-0.5B-VNAVC
+hub_model_id: qhuy242/Vi-Spark-TTS-0.5B-Lora-VNAVC
 
 # Allows loading custom code from the model's repository. Essential for custom architectures.
 trust_remote_code: true
@@ -34,6 +34,26 @@ output_dir: ./outputs/out
 
 
 # ==============================================================================
+# LoRA/QLoRA Settings - Memory and Performance Optimization
+# ==============================================================================
+# Activates and configures LoRA for efficient finetuning.
+lora:
+  # LoRA rank. A higher value allows the model to learn more but consumes more VRAM.
+  r: 16
+  # LoRA Alpha scale. A higher value increases the impact of the LoRA matrices.
+  alpha: 32
+  # Dropout rate for the LoRA matrices to prevent overfitting.
+  dropout: 0.05
+  # List of target modules within the model where LoRA will be applied.
+  # Common targets for Transformer models are attention layers.
+  target_modules:
+    - "q_proj"
+    - "v_proj"
+    - "k_proj"
+    - "o_proj"
+
+
+# ==============================================================================
 # Training Parameters
 # ==============================================================================
 # Maximum sequence length for padding and truncation.
@@ -51,7 +71,7 @@ pad_to_sequence_len: true
 wandb_project: spark-tts-finetuning
 wandb_entity: your_wandb_entity
 wandb_watch: all
-wandb_name: spark-tts-0.5b_2epochs
+wandb_name: spark-tts-0.5b-lora_2epochs
 wandb_log_model: end
 
 
@@ -63,38 +83,39 @@ wandb_log_model: end
 gradient_accumulation_steps: 4
 # Batch size per GPU.
 micro_batch_size: 4
-# Number of training epochs. Adjusted from 50 to 2 to prevent overfitting and save time.
-num_epochs: 2
+# Number of training epochs.
+num_epochs: 10
 # AdamW optimizer, optimized for PyTorch on GPUs.
 optimizer: adamw_torch_fused
-# Learning rate scheduler. `cosine_with_warmup` is a good choice for fine-tuning.
+# Learning rate scheduler. `cosine_with_warmup` is a good choice.
 lr_scheduler: cosine_with_warmup
-# Learning rate for the optimizer. Adjusted to a smaller value (0.00002) for stability.
-learning_rate: 0.00002
+# Learning rate for LoRA is typically higher than for full finetuning.
+learning_rate: 0.0003
 
 # Limit the total number of checkpoints to save. Saves storage space.
 save_total_limit: 5 
 # Loads the best-performing model (based on validation loss) at the end of training.
 load_best_model_at_end: true 
 # Number of epochs to wait for validation loss to improve before stopping training.
-early_stopping_patience:
+early_stopping_patience: 3 
 
 # Specifies whether to calculate loss on the input tokens as well.
 # Setting to false focuses on generating the output tokens.
 train_on_inputs: false
 # Groups samples of similar lengths into the same batch to minimize padding.
 group_by_length: false
-# Automatically uses bfloat16 mixed-precision if the hardware supports it.
+# Automatically uses bfloat16 if the hardware supports it.
 bf16: auto
-# Explicitly set fp16 precision (if bf16 is not supported or desired).
+# Explicitly set fp16 precision (if bf16 is not supported).
 fp16:
 # Enables tensor core acceleration for matrix multiplications.
 tf32: true
 
+
 # ==============================================================================
 # Performance and Memory Optimizations
 # ==============================================================================
-# Enables gradient checkpointing to trade computation for memory, reducing VRAM usage.
+# Enables gradient checkpointing to trade computation for memory, reducing VRAM.
 gradient_checkpointing: true
 # Configuration for gradient checkpointing.
 gradient_checkpointing_kwargs:
@@ -107,7 +128,7 @@ local_rank:
 logging_steps: 50
 # Legacy attention implementation. Prefer `flash_attention`.
 xformers_attention:
-# Enables Flash Attention for faster and more memory-efficient attention computation.
+# Enables Flash Attention for faster and more memory-efficient attention.
 flash_attention: true
 
 # ==============================================================================
