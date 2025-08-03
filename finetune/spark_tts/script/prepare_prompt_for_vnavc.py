@@ -21,7 +21,8 @@ class AudioPromptDataset:
       device (str): The device to run the model on (e.g., 'cuda', 'cpu').
     """
     self.audio_tokenizer = BiCodecTokenizer(model_name_or_path, device=device)
-
+  
+  @torch.inference_mode()
   def tokenize(self, data_dir, output_dir, jsonl_file_path, subset_name="subset"):
     """
     Tokenizes audio files in a specific directory and appends them to a JSONL file.
@@ -88,6 +89,12 @@ class AudioPromptDataset:
           inputs = "".join(inputs)
           prompt = {"text": inputs}
           f.write(json.dumps(prompt, ensure_ascii=False) + "\n")
+          
+          # Clean up the tokens after processing
+          del global_token_ids
+          del semantic_token_ids
+          torch.cuda.empty_cache()
+          gc.collect()
 
     print(f"Tokenization complete for {subset_name}.")
 
@@ -207,15 +214,17 @@ if __name__ == "__main__":
   print(f"Number of samples per subset: {args.num_samples_per_subset}")
   print(f"Total subsets to process: {num_subsets}")
 
-  # Initialize the tokenizer only once
-  processor = AudioPromptDataset(
-    model_name_or_path="pretrained_models/Spark-TTS-0.5B", device="cuda"
-  )
+  
 
   for i in range(num_subsets):
     start_index = i * args.num_samples_per_subset
     end_index = min((i + 1) * args.num_samples_per_subset, total_samples)
     subset_name = f"subset_{i + 1:02d}"
+    
+    # Initialize the model each subset
+    processor = AudioPromptDataset(
+      model_name_or_path="pretrained_models/Spark-TTS-0.5B", device="cuda"
+    )
 
     # Select the current subset
     dataset_subset = dataset.select(range(start_index, end_index))
@@ -223,9 +232,12 @@ if __name__ == "__main__":
     # Process and tokenize the subset
     ljspeech_formatted_dir = process_subset(dataset_subset, args.data_dir, subset_name)
     processor.tokenize(ljspeech_formatted_dir, args.output_dir, jsonl_path, subset_name)
+    
+    print(f"VRAM used: {torch.cuda.memory_allocated() / 1024**2:.2f} MB")
 
     # Clean up GPU memory after each subset
     del ljspeech_formatted_dir, dataset_subset
+    del processor
     if torch.cuda.is_available():
       torch.cuda.empty_cache()
     gc.collect()
