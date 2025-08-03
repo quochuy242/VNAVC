@@ -71,7 +71,7 @@ pad_to_sequence_len: true
 # ==============================================================================
 # Configuration for Weights & Biases. Uncomment and fill to enable.
 wandb_project: spark-tts-finetuning
-wandb_entity: your_wandb_entity
+wandb_entity: truongquochuy-240203
 wandb_watch: gradients
 wandb_name: spark-tts-0.5b-lora_2epochs
 wandb_log_model: checkpoint_and_end
