@@ -20,11 +20,11 @@ output_dir: ./outputs/out
 # ==============================================================================
 # Define the dataset to be used for training.
 datasets:
-  path: qhuy242/VNAVC_prompt
+  - path: qhuy242/VNAVC_prompt
   # Specifies the dataset format. 'completion' means the model learns to
   # complete the provided text.
-  type: completion
-  split: train
+    type: completion
+    split: train
     
 # Path to a pre-prepared dataset if it's already tokenized and formatted.
 dataset_prepared_path:
