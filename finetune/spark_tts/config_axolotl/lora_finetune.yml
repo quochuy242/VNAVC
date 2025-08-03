@@ -18,12 +18,10 @@ strict: false
 # ==============================================================================
 # Define the dataset to be used for training.
 datasets:
-  - path: json
-    # Path to the JSONL file containing the tokenized data.
-    data_files: ["output_prompt/tokenized_vnavc.jsonl"]
-    # Specifies the dataset format. 'completion' means the model learns to
-    # complete the provided text.
-    type: completion
+  path: ./output_prompt/tokenized_vnavc.jsonl
+  # Specifies the dataset format. 'completion' means the model learns to
+  # complete the provided text.
+  type: completion
     
 # Path to a pre-prepared dataset if it's already tokenized and formatted.
 dataset_prepared_path:
