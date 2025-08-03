@@ -37,20 +37,22 @@ output_dir: ./outputs/out
 # LoRA/QLoRA Settings - Memory and Performance Optimization
 # ==============================================================================
 # Activates and configures LoRA for efficient finetuning.
-lora:
-  # LoRA rank. A higher value allows the model to learn more but consumes more VRAM.
-  r: 16
-  # LoRA Alpha scale. A higher value increases the impact of the LoRA matrices.
-  alpha: 32
-  # Dropout rate for the LoRA matrices to prevent overfitting.
-  dropout: 0.05
-  # List of target modules within the model where LoRA will be applied.
-  # Common targets for Transformer models are attention layers.
-  target_modules:
-    - "q_proj"
-    - "v_proj"
-    - "k_proj"
-    - "o_proj"
+adapter: lora
+load_in_8bit: false
+load_in_4bit: false
+
+lora_r: 32              # Increased from 16 for better capacity
+lora_alpha: 64          # Increased proportionally (2x lora_r)
+lora_dropout: 0.1       # Slightly increased for better regularization
+lora_target_linear: true # Automatically targets all linear layers
+lora_target_modules:
+  - q_proj
+  - v_proj
+  - k_proj
+  - o_proj
+  - gate_proj           # Added for better coverage
+  - up_proj             # Added for better coverage
+  - down_proj           # Added for better coverage
 
 
 # ==============================================================================
@@ -70,9 +72,10 @@ pad_to_sequence_len: true
 # Configuration for Weights & Biases. Uncomment and fill to enable.
 wandb_project: spark-tts-finetuning
 wandb_entity: your_wandb_entity
-wandb_watch: all
+wandb_watch: gradients
 wandb_name: spark-tts-0.5b-lora_2epochs
-wandb_log_model: end
+wandb_log_model: checkpoint_and_end
+wandb_run_id: 
 
 
 # ==============================================================================
@@ -80,24 +83,28 @@ wandb_log_model: end
 # ==============================================================================
 # Number of steps to accumulate gradients before performing a parameter update.
 # Effective batch size = micro_batch_size * gradient_accumulation_steps * num_gpus.
-gradient_accumulation_steps: 4
-# Batch size per GPU.
-micro_batch_size: 4
+gradient_accumulation_steps: 8
+micro_batch_size: 2
 # Number of training epochs.
 num_epochs: 10
 # AdamW optimizer, optimized for PyTorch on GPUs.
 optimizer: adamw_torch_fused
-# Learning rate scheduler. `cosine_with_warmup` is a good choice.
-lr_scheduler: cosine_with_warmup
+# Learning rate scheduler. 
+lr_scheduler: cosine_with_restarts
+# L2 regularization to prevent overfitting.
+weight_decay: 0.01
+adam_beta1: 0.9
+adam_beta2: 0.999                    # Standard for full fine-tuning
+adam_epsilon: 1e-8
 # Learning rate for LoRA is typically higher than for full finetuning.
-learning_rate: 0.0003
+learning_rate: 5e-4
 
 # Limit the total number of checkpoints to save. Saves storage space.
 save_total_limit: 5 
 # Loads the best-performing model (based on validation loss) at the end of training.
 load_best_model_at_end: true 
 # Number of epochs to wait for validation loss to improve before stopping training.
-early_stopping_patience: 3 
+early_stopping_patience: 2
 
 # Specifies whether to calculate loss on the input tokens as well.
 # Setting to false focuses on generating the output tokens.
@@ -144,6 +151,4 @@ save_steps: 100
 debug:
 # Path to a DeepSpeed config file. Left empty as it's not needed for this setup.
 deepspeed:
-# L2 regularization to prevent overfitting.
-weight_decay: 0.01
 

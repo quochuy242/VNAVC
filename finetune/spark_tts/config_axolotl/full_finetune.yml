@@ -50,9 +50,10 @@ pad_to_sequence_len: true
 # Configuration for Weights & Biases. Uncomment and fill to enable.
 wandb_project: spark-tts-finetuning
 wandb_entity: your_wandb_entity
-wandb_watch: all
-wandb_name: spark-tts-0.5b_2epochs
-wandb_log_model: end
+wandb_watch: gradients
+wandb_name: spark-tts-0.5b-lora_2epochs
+wandb_log_model: checkpoint_and_end
+wandb_run_id: 
 
 
 # ==============================================================================
@@ -67,17 +68,22 @@ micro_batch_size: 4
 num_epochs: 2
 # AdamW optimizer, optimized for PyTorch on GPUs.
 optimizer: adamw_torch_fused
-# Learning rate scheduler. `cosine_with_warmup` is a good choice for fine-tuning.
-lr_scheduler: cosine_with_warmup
-# Learning rate for the optimizer. Adjusted to a smaller value (0.00002) for stability.
-learning_rate: 0.00002
+# Learning rate scheduler. 
+lr_scheduler: cosine_with_restarts
+# L2 regularization to prevent overfitting.
+weight_decay: 0.01
+adam_beta1: 0.9
+adam_beta2: 0.999                    # Standard for full fine-tuning
+adam_epsilon: 1e-8
+# Learning rate for LoRA is typically higher than for full finetuning.
+learning_rate: 5e-4
 
 # Limit the total number of checkpoints to save. Saves storage space.
 save_total_limit: 5 
 # Loads the best-performing model (based on validation loss) at the end of training.
 load_best_model_at_end: true 
 # Number of epochs to wait for validation loss to improve before stopping training.
-early_stopping_patience:
+early_stopping_patience: 
 
 # Specifies whether to calculate loss on the input tokens as well.
 # Setting to false focuses on generating the output tokens.
@@ -123,6 +129,3 @@ save_steps: 100
 debug:
 # Path to a DeepSpeed config file. Left empty as it's not needed for this setup.
 deepspeed:
-# L2 regularization to prevent overfitting.
-weight_decay: 0.01
-
