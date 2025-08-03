@@ -3,7 +3,7 @@
 # ==============================================================================
 # Path to the base model's local directory. 
 # This model will be loaded and used as the starting point for finetuning.
-base_model: pretrained_models/Spark-TTS-0.5B/LLM
+base_model: ./pretrained_models/Spark-TTS-0.5B/LLM
 # Optional: Specify a Hugging Face Hub model ID for automatic upload after training.
 hub_model_id: qhuy242/Vi-Spark-TTS-0.5B-Lora-VNAVC
 
