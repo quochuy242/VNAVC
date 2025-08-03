@@ -116,7 +116,7 @@ bf16: auto
 # Explicitly set fp16 precision (if bf16 is not supported).
 fp16:
 # Enables tensor core acceleration for matrix multiplications.
-tf32: true
+tf32: false
 
 
 # ==============================================================================
