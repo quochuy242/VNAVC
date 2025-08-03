@@ -134,9 +134,9 @@ local_rank:
 # Number of steps after which to log training metrics.
 logging_steps: 50
 # Legacy attention implementation. Prefer `flash_attention`.
-xformers_attention:
-# Enables Flash Attention for faster and more memory-efficient attention.
-flash_attention: true
+xformers_attention: true
+# Flash Attention for faster and more memory-efficient attention.
+flash_attention: 
 
 # ==============================================================================
 # Schedule and Debugging
