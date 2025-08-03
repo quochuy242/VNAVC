@@ -12,23 +12,25 @@ trust_remote_code: true
 # Ensures strict parameter matching when loading the model. Setting to false is
 # useful if the base model has unexpected parameters (e.g., from an older version).
 strict: false
+# Directory where the trained model and checkpoints will be saved.
+output_dir: ./outputs/out
 
 # ==============================================================================
 # Dataset Configuration
 # ==============================================================================
 # Define the dataset to be used for training.
 datasets:
-  path: ./output_prompt/tokenized_vnavc.jsonl
+  path: qhuy242/VNAVC_prompt
   # Specifies the dataset format. 'completion' means the model learns to
   # complete the provided text.
   type: completion
+  split: train
     
 # Path to a pre-prepared dataset if it's already tokenized and formatted.
 dataset_prepared_path:
 # Percentage of the training data to use as a validation set.
 val_set_size: 0.05
-# Directory where the trained model and checkpoints will be saved.
-output_dir: ./outputs/out
+
 
 
 # ==============================================================================
@@ -102,7 +104,7 @@ save_total_limit: 5
 # Loads the best-performing model (based on validation loss) at the end of training.
 load_best_model_at_end: true 
 # Number of epochs to wait for validation loss to improve before stopping training.
-early_stopping_patience: 2
+early_stopping_patience: 5
 
 # Specifies whether to calculate loss on the input tokens as well.
 # Setting to false focuses on generating the output tokens.
