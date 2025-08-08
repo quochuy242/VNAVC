@@ -190,3 +190,6 @@ tmp.py
 
 # Log 
 logs/
+
+# Kaggle output
+kaggle
